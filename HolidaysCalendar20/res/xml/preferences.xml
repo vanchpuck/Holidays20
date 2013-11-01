@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <PreferenceScreen
+        android:key="key_holidays_list"
+        android:title="@string/pref_holidays_list"
+        android:persistent="false">
+        
+        <CheckBoxPreference
+	        android:key="key_world_holidays"
+	        android:title="@string/pref_world_holidays"
+	        android:defaultValue="true" />
+
+        <CheckBoxPreference
+	        android:key="key_russian_holidays"
+	        android:title="@string/pref_russian_holidays"
+	        android:defaultValue="true" />
+        
+        <CheckBoxPreference
+	        android:key="key_belorussian_holidays"
+	        android:title="@string/pref_belorussian_holidays"
+	        android:defaultValue="true" />
+        
+        <CheckBoxPreference
+	        android:key="key_ukrane_holidays"
+	        android:title="@string/pref_ukrane_holidays"
+	        android:defaultValue="true" />
+        
+                
+    </PreferenceScreen>
+    
+</PreferenceScreen>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Holidays1</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <!-- /Настройки\ -->
+    <string name="pref_holidays_list">Список праздников</string>    
+    <string name="pref_russian_holidays">Праздники России</string>
+    <string name="pref_belorussian_holidays">Праздники Белоруссии</string>
+    <string name="pref_ukrane_holidays">Праздники Украины</string>
+    <string name="pref_world_holidays">Мировые праздники</string>
+    
+    <string name="pref_widget_optionst">Настройки виджетов</string>
+    
+    <string name="pref_face_options">Внешний вид</string>  
+    <!-- \Настройки/ -->
+
+</resources>
