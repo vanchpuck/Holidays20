@@ -1,10 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" 
 	xmlns:app="http://schemas.android.com/apk/res-auto" >
 
+    <item android:id="@+id/action_search"
+          android:title="action_search"
+          android:icon="@drawable/abc_ic_search"
+          app:showAsAction="ifRoom|collapseActionView"
+          app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_add_holiday"
+        android:icon="@drawable/abc_ic_go"
+        android:title="@string/action_settings"
+        app:showAsAction="always" />
+    
+    <item
+        android:id="@+id/action_preferences"
         android:icon="@drawable/ic_launcher"
         android:title="@string/action_settings"
         app:showAsAction="always" />
+    
 
 </menu>

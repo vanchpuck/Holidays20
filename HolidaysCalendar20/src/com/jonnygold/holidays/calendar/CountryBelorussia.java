@@ -13,5 +13,10 @@ public class CountryBelorussia extends Country {
 	public String getName() {
 		return "Belorussia";
 	}
+	
+	@Override
+	int getId() {
+		return ID;
+	}
 
 }

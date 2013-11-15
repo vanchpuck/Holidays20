@@ -1,8 +1,11 @@
 package com.jonnygold.holidays.calendar;
 
 import java.io.ByteArrayInputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +35,7 @@ public class HolidaysDataSource {
 	private final static int COL_HOLIDAY_ID = 10;
 	
 	private final static String HOLIDAYS_QUERY = 
-			"SELECT " 																+
+			"SELECT DISTINCT" 																+
 			"		TH.title " 														+
 			"	,	TH.description " 												+
 			"	,	TH.actualDateStr " 												+
@@ -44,12 +47,14 @@ public class HolidaysDataSource {
 			"	,	TMFH.dayOffset "												+
 			"	,	TYFH.day "														+
 			"	,	TH._id "														+
+			"	,	TH.month "														+
 			"FROM " 																+
 			"		T_HOLIDAYS TH " 												+
 			"	LEFT JOIN T_Images TI ON TH.id_image = TI._id "						+
 			"	LEFT JOIN T_Priority TP ON TH.id_priority = TP._id "				+
 			"	LEFT JOIN T_MonthFloatHolidays TMFH ON TH._id = TMFH.id_holiday "	+
-			"	LEFT JOIN T_YearFloatHolidays TYFH ON TH._id = TYFH.id_holiday "
+			"	LEFT JOIN T_YearFloatHolidays TYFH ON TH._id = TYFH.id_holiday "	+
+			"	LEFT JOIN T_CountryHolidays TCH ON TH._id = TCH.id_holiday "
 	;
 	
 	private final static String HOLIDAYS_DATE_TERMS = 
@@ -61,6 +66,57 @@ public class HolidaysDataSource {
 	private final static String HOLIDAYS_LIMIT = 
 			"LIMIT 20 " 
 	;
+	
+	public static class QueryRestriction{
+		
+		private StringBuilder restriction = new StringBuilder(10);
+		private List<Integer>countries = Collections.emptyList();
+		private Integer month;
+		private Integer day;
+		private Integer limit;
+		
+		public QueryRestriction(){
+			restriction.append("WHERE 1=1 ");
+		}
+		
+		public QueryRestriction setCountryes(List<Integer> countries){
+			this.countries = countries;
+//			for(Iterator<Country> itr=countries.iterator(); itr.hasNext(); ){
+//				countryIdList.add(itr.next().getId());
+//			}
+			return this;
+		}
+		
+		public QueryRestriction setDate(int month, int day){
+			this.month = Integer.valueOf(month);
+			this.day = Integer.valueOf(day);
+			return this;
+		}
+		
+		public QueryRestriction setLimit(int limit){
+			this.limit = Integer.valueOf(limit);
+			return this;
+		}
+		
+		private String getWhereClause(){
+			restriction.append("AND ( 0>1 ");
+			for(Iterator<Integer> itr=countries.iterator(); itr.hasNext(); ){
+				restriction.append("OR TCH.id_country = "+itr.next()+" ");
+			}
+			restriction.append(") ");
+			
+			if(month != null && day != null){
+				restriction.append("AND TH.month = "+month+" AND TH.day = "+day);
+			}
+			
+			if(limit != null){
+				restriction.append("LIMIT "+limit);
+			}
+			
+			return restriction.toString();
+		}
+		
+	}
 	
 	
 	private SQLiteDatabase db;
@@ -120,14 +176,16 @@ public class HolidaysDataSource {
 		return holidays;
 	}
 	
-	
-	public List<Holiday> getHolidays(int nonth, int day){
+	public List<Holiday> getHolidays(QueryRestriction restriction){
 		// Prepare query
-		String query = HOLIDAYS_QUERY + HOLIDAYS_DATE_TERMS;
+		String query = HOLIDAYS_QUERY;
+		if(restriction != null){
+			query += restriction.getWhereClause();
+		}
 		Log.w("QUERY", query);
 		
 		// Execute query
-		Cursor c = db.rawQuery(query, new String[]{String.valueOf(nonth), String.valueOf(day)});
+		Cursor c = db.rawQuery(query, new String[]{});
 		
 		List<Holiday> holidays = getHolidays(c);
 		
@@ -136,6 +194,131 @@ public class HolidaysDataSource {
 		return holidays;
 	}	
 	
+	public void updateFloatHolidays(int year){
+		updateEasterDate(year);
+		updateMonthFloatDates(year);
+		updateYearFloatDates(year);
+	}
+	
+	public void updateMonthFloatDates(int year){
+		String query = 
+				"UPDATE " 																																			+
+				"		t_holidays " 																																+
+				"SET " 																																				+
+				"		day = ( " 																																	+
+				"				SELECT " 																															+
+				"						strftime('%d', date('"+year+"-01-01','+'||month||' months','weekday '||weekDay||'', ''||dayOffset||' days')) " 				+
+				"				FROM " 																																+
+				"						t_MonthFloatHolidays " 																										+
+				"				WHERE " 																															+
+				"						id_holiday = t_holidays._id " 																								+
+				"		) " 																																		+
+				"	,	month = ( " 																																+
+				"				SELECT " 																															+
+				"						CASE WHEN dayOffset < 0 THEN month-1 "				 																		+
+				"							WHEN dayOffset >= 0 THEN month" 																						+
+				"						END" 																														+
+				"				FROM " 																																+
+				"						t_MonthFloatHolidays " 																										+
+				"				WHERE " 																															+
+				"						id_holiday = t_holidays._id " 																								+
+				"		) " 																																		+
+				"WHERE " 																																			+
+				"		_id in ( " 																																	+
+				"				SELECT " 																															+
+				"						id_holiday " 																												+
+				"				FROM " 																																+
+				"						t_MonthFloatHolidays "																							 			+
+				"		) "
+		;	
+		Cursor cursor = db.rawQuery(query, new String[]{});
+		cursor.moveToFirst();
+		cursor.close();
+	}
+	
+	public void updateYearFloatDates(int year){
+		String query = 
+				"UPDATE " 																				+
+				"		t_holidays " 																	+
+				"SET " 																					+
+				"		day = ( " 																		+
+				"				SELECT " 																+
+				"						strftime('%d', date('"+year+"-01-01','+'||day||' days')) " 		+
+				"				FROM " 																	+
+				"						t_YearFloatHolidays " 											+
+				"				WHERE " 																+
+				"						id_holiday = t_holidays._id " 									+
+				"		) " 																			+
+				"WHERE " 																				+
+				"		_id in ( " 																		+
+				"				SELECT " 																+
+				"						id_holiday " 													+
+				"				FROM " 																	+
+				"						t_YearFloatHolidays "											+
+				"		) "
+		;	
+		Cursor cursor = db.rawQuery(query, new String[]{});
+		cursor.moveToFirst();
+		cursor.close();
+	}
+	
+	public void updateEasterDate(int year){
+		int day, month;		
+        int a = year % 19;
+        int b = year % 4;
+        int c = year % 7;
+        int d = (19 * a + 15) % 30;
+        int e = (2*b + 4*c + 6*d + 6) % 7;        
+        int marchDay = 22 + d + e;
+        int aprilDay = d + e - 9;    
+
+        if(marchDay < 31 && marchDay > 0 ){
+        	day = marchDay;
+        	month = 3;
+        }
+        
+        else{
+        	day = aprilDay;
+        	month = 4;
+        }
+        
+        Log.w("easter", year+"/"+month+"/"+day);
+        DecimalFormat formatter = new DecimalFormat("00");
+        
+        String query = 
+				"UPDATE " 																	+
+				"		t_holidays " 														+
+				"SET " 																		+
+				"		day = ( " 															+
+				"				SELECT " 													+
+				"						strftime('%d', date('"+year+"-"+formatter.format(month)+"-"+formatter.format(day)+"', ''||(13 + dayOffset)||' days')) "  +
+				"				FROM " 														+
+				"						t_easterHolidays " 									+
+				"				WHERE " 													+
+				"						id_holiday = t_holidays._id " 						+
+				"		) " +
+				"	,	month = ( " 														+
+				"				SELECT " 													+
+				"						strftime('%m', date('"+year+"-"+formatter.format(month)+"-"+formatter.format(day)+"', ''||(13 + dayOffset)||' days')) - 1 "  +
+				"				FROM " 														+
+				"						t_easterHolidays " 									+
+				"				WHERE " 													+
+				"						id_holiday = t_holidays._id " 						+
+				"		) " 																+
+				"WHERE " 																	+
+				"		_id in ( " 															+
+				"				SELECT " 													+
+				"						id_holiday " 										+
+				"				FROM " 														+
+				"						t_easterHolidays "									+
+				"		) "
+		;
+        Log.w("easter", query);
+
+    	Cursor cursor = db.rawQuery(query, new String[]{});
+		cursor.moveToFirst();
+		cursor.close();
+	}
 	
 	private List<Holiday> getHolidays(Cursor cursor){
 		
@@ -143,7 +326,7 @@ public class HolidaysDataSource {
 		
 		// Prepare temporary objects
 		Holiday holiday = null;
-		List<Country> countries = null;
+		Set<Country> countries = null;
 		ByteArrayInputStream inStream = null;
 		Drawable icon = null;
 		
@@ -163,7 +346,9 @@ public class HolidaysDataSource {
 					cursor.getInt(COL_PRIORITY_ID), 
 					icon, 
 					cursor.getString(COL_HOLIDAY_DESCRIPTION), 
-					countries
+					countries,
+					cursor.getInt(11),
+					cursor.getInt(3)
 			);
 									
 			holidays.add(holiday);
@@ -175,8 +360,8 @@ public class HolidaysDataSource {
 	}
 	
 	
-	private List<Country> getCountries(int idHoliday){
-		List<Country> countries = new ArrayList<Country>();
+	private Set<Country> getCountries(int idHoliday){
+		Set<Country> countries = new HashSet<Country>();
 		
 		// Prepare query
 		String query = 

@@ -14,4 +14,8 @@ public class CountryWorld extends Country {
 		return "World";
 	}
 	
+	@Override
+	int getId() {
+		return ID;
+	}
 }

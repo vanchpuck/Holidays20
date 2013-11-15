@@ -12,13 +12,13 @@ public class CountryManager {
 		}
 	}
 	
-	public static Class[] getCountries(){
-		return new Class[]{
-				CountryWorld.class, 
-				CountryRussia.class, 
-				CountryBelorussia.class, 
-				CountryUkrane.class}
-		;
-	}
+//	public static Class[] getCountries(){
+//		return new Class[]{
+//				CountryWorld.class, 
+//				CountryRussia.class, 
+//				CountryBelorussia.class, 
+//				CountryUkrane.class}
+//		;
+//	}
 	
 }

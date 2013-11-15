@@ -8,4 +8,6 @@ abstract class Country {
 	
 	abstract String getName();
 	
+	abstract int getId();
+	
 }

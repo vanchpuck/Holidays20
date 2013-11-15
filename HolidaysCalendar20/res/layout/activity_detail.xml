@@ -11,7 +11,7 @@
 		android:orientation="horizontal">
 		
 		<ImageView
-			android:id="@+id/holiday_icon"
+			android:id="@+id/view_icon_detail"
     		android:layout_width="match_parent"
  			android:layout_height="wrap_content"
  			android:layout_gravity="center_vertical"
@@ -21,7 +21,7 @@
  			android:src="@drawable/ic_launcher"/>
 			
         <TextView
-			android:id="@+id/holiday_title"
+			android:id="@+id/view_title_detail"
 			android:layout_width="match_parent"
        		android:layout_height="wrap_content"
        		android:layout_weight="0.30"
@@ -31,7 +31,7 @@
 	</LinearLayout>
 	
 	<TextView
-		android:id="@+id/holiday_text"
+		android:id="@+id/view_description_detail"
 		android:layout_width="match_parent"
        	android:layout_height="0dp"
        	android:layout_weight="1"
