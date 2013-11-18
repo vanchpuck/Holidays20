@@ -56,9 +56,9 @@ public class DaysPagerAdapter extends PagerAdapter{
 ////		sharedPref = PreferenceManager.getDefaultSharedPreferences(collection.getContext());
 //	}
 	
-	public DaysPagerAdapter(Activity activity, HolidaysDataSource holidaysBase){
+	public DaysPagerAdapter(Activity activity, HolidaysDataSource holidaysBase, Calendar calendar){
 		this.previousPosition = START_POSITION;
-		this.calendar = Calendar.getInstance();
+		this.calendar = calendar;
 		this.activity = activity;
 		this.holidaysBase = holidaysBase;
 		this.sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -93,23 +93,14 @@ public class DaysPagerAdapter extends PagerAdapter{
 		final List<Holiday> holidays = getHolidays();
 		
 		// Retrieving ListView adapter
-		HolidaysAdapter listAdapter = new HolidaysAdapter(collection.getContext(), holidays);
+//		HolidaysAdapter listAdapter = new HolidaysAdapter(collection.getContext(), holidays);
 		
 		// Configure holidays ListView
-		ListView holidaysView = (ListView)page.findViewById(R.id.view_holidays);
-		holidaysView.setAdapter(listAdapter);
+		HolidaysListView holidaysView = (HolidaysListView)page.findViewById(R.id.view_holidays);
+//		holidaysView.setAdapter(listAdapter);
 		
-		holidaysView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int idx,	long id) {
-				Holiday holiday = holidays.get(idx);
-				
-				Builder builder = new AlertDialog.Builder(activity);				
-				builder.setPositiveButton("Ок", null)
-					.setView(getHolidayDetail(holiday)) 
-					.show();
-			}
-		});
+		holidaysView.setHolidays(holidays);
+		holidaysView.setOnItemClickListener(new HolidaysListView.OnHolidayClickListener());
 		
 		previousPosition = position;
         
@@ -162,26 +153,26 @@ public class DaysPagerAdapter extends PagerAdapter{
 		return holidays;
 	}
 	
-	private final View getHolidayDetail(Holiday holiday){
-		Log.w("Test", "0");
-		View holidayDetail = activity.getLayoutInflater().inflate(R.layout.dialog_detail, null);
-				
-		((TextView) holidayDetail.findViewById(R.id.view_txt_holiday_date)).setText(holiday.getDateString());
-		((TextView) holidayDetail.findViewById(R.id.view_txt_holiday_title)).setText(holiday.getTitle().toUpperCase(Locale.getDefault()));
-		((ImageView) holidayDetail.findViewById(R.id.view_img_holiday_picture)).setImageDrawable(holiday.getDrawable());
-		((TextView) holidayDetail.findViewById(R.id.view_txt_holiday_description)).setText(holiday.getDescription());
-		
-		int[] flagViews = new int[]{R.id.view_img_info_flag_1, R.id.view_img_info_flag_2, R.id.view_img_info_flag_3, R.id.view_img_info_flag_4};
-		
-		int i=0;
-		ImageView flagView = null;
-		for(Country country : holiday.getCountries()){
-			flagView = (ImageView)holidayDetail.findViewById(flagViews[i]);
-			flagView.setImageResource(country.getDrawableId());
-			i++;
-		}
-		
-		return holidayDetail;
-	}
+//	private final View getHolidayDetail(Holiday holiday){
+//		Log.w("Test", "0");
+//		View holidayDetail = activity.getLayoutInflater().inflate(R.layout.dialog_detail, null);
+//				
+//		((TextView) holidayDetail.findViewById(R.id.view_txt_holiday_date)).setText(holiday.getDateString());
+//		((TextView) holidayDetail.findViewById(R.id.view_txt_holiday_title)).setText(holiday.getTitle().toUpperCase(Locale.getDefault()));
+//		((ImageView) holidayDetail.findViewById(R.id.view_img_holiday_picture)).setImageDrawable(holiday.getDrawable());
+//		((TextView) holidayDetail.findViewById(R.id.view_txt_holiday_description)).setText(holiday.getDescription());
+//		
+//		int[] flagViews = new int[]{R.id.view_img_info_flag_1, R.id.view_img_info_flag_2, R.id.view_img_info_flag_3, R.id.view_img_info_flag_4};
+//		
+//		int i=0;
+//		ImageView flagView = null;
+//		for(Country country : holiday.getCountries()){
+//			flagView = (ImageView)holidayDetail.findViewById(flagViews[i]);
+//			flagView.setImageResource(country.getDrawableId());
+//			i++;
+//		}
+//		
+//		return holidayDetail;
+//	}
 
 }

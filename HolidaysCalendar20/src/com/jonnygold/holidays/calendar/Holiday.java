@@ -163,5 +163,22 @@ public class Holiday implements Parcelable{
 		return actualDay;
 	}
 
-			
+	@Override
+	public boolean equals(Object o) {
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof Holiday)){
+			return false;
+		}
+		if(this.getId() == ((Holiday)o).getId()){
+			return true;
+		}
+		return false;
+	}	
+	
+	@Override
+		public int hashCode() {
+			return this.getId();
+		}
 }

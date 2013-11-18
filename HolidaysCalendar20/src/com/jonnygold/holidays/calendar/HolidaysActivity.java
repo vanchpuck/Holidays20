@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.SearchManager;
@@ -47,18 +48,33 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		setContentView(R.layout.activity_holidays);
 		
 		holidaysBase = HolidaysDataSource.getInstance(this);
-		holidaysBase.openForReading();
+//		calendar = Calendar.getInstance();
 		
-		calendar = Calendar.getInstance();
+		Intent intent = getIntent();
+	    if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	String query = intent.getStringExtra(SearchManager.QUERY);
+	    	Log.w("Start", query);
+	    }
+		
+	    Log.w("Start", "1");
+		
 	}
 	
 	@Override
 	protected void onStart() {
+		Log.w("Start", "2");
 		super.onStart();
+		Log.w("Start", "3");
+		if(holidaysBase == null){
+			Log.w("Test1", "NULL");
+		}
+		calendar = Calendar.getInstance();
 		
+		holidaysBase.openForReading();
+		Log.w("Start", "4");
 		holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
-		
-		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase);
+		Log.w("Start", "5");
+		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, calendar);
         ViewPager viewPager = new ViewPager(this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setSaveEnabled(false);
@@ -92,6 +108,19 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 //	  if (searchView != null) {
 //	     searchView.setOnQueryTextListener(this);
 //	  }
+	  
+	  SearchableActivity act = new SearchableActivity();
+	  
+	  if(searchManager.getSearchableInfo(getComponentName()) == null){
+		  Log.w("NULL1", "NULL11");
+	  }
+	  if(searchManager.getSearchableInfo(act.getComponentName()) == null){
+		  Log.w("NULL1", "NULL11");
+	  }
+	  
+	  Log.w("1", getComponentName().getClassName());
+	  Log.w("1", getComponentName().getShortClassName());
+	  Log.w("1", getComponentName().getPackageName());
 	  
 	  searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //	  searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
@@ -168,7 +197,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 		Log.w("sdfsdfsd", "dfsdf");
 		
-		Toast.makeText(this, "Searching for: " + query + "...", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "Searching for: " + query + "...", Toast.LENGTH_SHORT).show();
 		return false;
 	}
 	

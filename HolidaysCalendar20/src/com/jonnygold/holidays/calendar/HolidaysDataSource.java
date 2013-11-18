@@ -74,6 +74,7 @@ public class HolidaysDataSource {
 		private Integer month;
 		private Integer day;
 		private Integer limit;
+		private String title;
 		
 		public QueryRestriction(){
 			restriction.append("WHERE 1=1 ");
@@ -98,19 +99,30 @@ public class HolidaysDataSource {
 			return this;
 		}
 		
+		public QueryRestriction setTitle(String title){
+			this.title = title;
+			return this;
+		}
+		
 		private String getWhereClause(){
-			restriction.append("AND ( 0>1 ");
-			for(Iterator<Integer> itr=countries.iterator(); itr.hasNext(); ){
-				restriction.append("OR TCH.id_country = "+itr.next()+" ");
+			if(!countries.isEmpty()){
+				restriction.append("AND ( 0>1 ");
+				for(Iterator<Integer> itr=countries.iterator(); itr.hasNext(); ){
+					restriction.append("OR TCH.id_country = "+itr.next()+" ");
+				}
+				restriction.append(") ");
 			}
-			restriction.append(") ");
+			
+			if(title != null){
+				restriction.append("AND TH.title LIKE '%"+title+"%' ");
+			}
 			
 			if(month != null && day != null){
-				restriction.append("AND TH.month = "+month+" AND TH.day = "+day);
+				restriction.append("AND TH.month = "+month+" AND TH.day = "+day+" ");
 			}
 			
 			if(limit != null){
-				restriction.append("LIMIT "+limit);
+				restriction.append("LIMIT "+limit+" ");
 			}
 			
 			return restriction.toString();
@@ -121,7 +133,7 @@ public class HolidaysDataSource {
 	
 	private SQLiteDatabase db;
 	
-	private static HolidaysBaseHelper dbHelper;
+	private HolidaysBaseHelper dbHelper;
 	
 	private static HolidaysDataSource dataSource;
 	
@@ -130,23 +142,29 @@ public class HolidaysDataSource {
 	}
 	
 	public static HolidaysDataSource getInstance(Context context){
-		if(dbHelper == null){
-			return new HolidaysDataSource(context);
+		if(dataSource == null){
+			dataSource = new HolidaysDataSource(context);
 		}
 		return dataSource;
 	}
 	
 	public boolean openForReading() {
+		if(db != null && db.isOpen()){
+			Log.w("DB", "REOPEN");
+			return true;
+		}
 		try{
 			db = dbHelper.getReadableDatabase();
+			Log.w("DB", "OPEN");
 			return true;
+			
 		}catch(SQLiteException exc){
+			Log.w("DB", "NOT OPEN");
 			return false;
+			
 		}
 	}
-	
-	
-	
+		
 	public boolean openForWriting() {
 		try{	
 			db = dbHelper.getWritableDatabase();
@@ -154,6 +172,10 @@ public class HolidaysDataSource {
 		}catch(SQLiteException exc){
 			return false;
 		}
+	}
+	
+	public boolean isOpen(){
+		return db.isOpen();
 	}
 	
 	public void close(){
@@ -198,6 +220,7 @@ public class HolidaysDataSource {
 		updateEasterDate(year);
 		updateMonthFloatDates(year);
 		updateYearFloatDates(year);
+		Log.w("UPDATE", "UPDATE");
 	}
 	
 	public void updateMonthFloatDates(int year){
