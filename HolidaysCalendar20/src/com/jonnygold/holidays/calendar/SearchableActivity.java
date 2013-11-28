@@ -13,11 +13,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchableActivity extends ActionBarActivity{
@@ -61,6 +68,38 @@ public class SearchableActivity extends ActionBarActivity{
 			
 	    }
 	    holidaysBase.close();
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(Menu.NONE, R.id.action_add_holiday, Menu.NONE, R.string.action_add_to_calendar);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_add_holiday) {
+			
+			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
+			
+			Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
+						
+			Calendar date = Calendar.getInstance();
+			date.set(Calendar.MONTH, holiday.getActualMonth());
+			date.set(Calendar.DAY_OF_MONTH, holiday.getActualDay());
+			Intent intent = new Intent(Intent.ACTION_EDIT)
+//			        .setData(Uri.parse("content://com.android.calendar/events"))
+			        .setType("vnd.android.cursor.item/event")
+			        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+			        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
+			        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
+			        .putExtra(Events.TITLE, holiday.getTitle())
+			        .putExtra(Events.DESCRIPTION, holiday.getDescription());
+			startActivity(intent);
+			
+			return true;
+		}
+		return super.onContextItemSelected(item);
 	}
 	
 	private List<Holiday> getHolidays(String query){

@@ -60,4 +60,9 @@ public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 		return holidays.get(position).getId();
 	}
 	
+	@Override
+	public Holiday getItem(int position) {
+		return super.getItem(position);
+	}
+	
 }

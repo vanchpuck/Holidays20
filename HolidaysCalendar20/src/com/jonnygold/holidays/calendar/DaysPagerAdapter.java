@@ -102,6 +102,8 @@ public class DaysPagerAdapter extends PagerAdapter{
 		holidaysView.setHolidays(holidays);
 		holidaysView.setOnItemClickListener(new HolidaysListView.OnHolidayClickListener());
 		
+		activity.registerForContextMenu(holidaysView);
+		
 		previousPosition = position;
         
         ((ViewPager) collection).addView(page, 0);

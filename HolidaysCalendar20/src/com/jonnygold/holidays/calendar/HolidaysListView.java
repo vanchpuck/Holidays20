@@ -31,6 +31,8 @@ public final class HolidaysListView extends ListView{
 		}
 	}
 	
+	
+	
 //	public static class HolidayDetailView extends View{
 //
 //		public HolidayDetailView(Context context, AttributeSet attrs) {
