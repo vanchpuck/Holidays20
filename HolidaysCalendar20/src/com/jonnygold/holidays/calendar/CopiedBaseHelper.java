@@ -1,6 +1,7 @@
 package com.jonnygold.holidays.calendar;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -15,7 +16,7 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	
 	protected final String databaseName;
 	
-	public CopiedBaseHelper(Context context, String name, int version){
+	public CopiedBaseHelper(Context context, String name, int version) throws IOException{
 		super(context, name, null, version);
 		this.context = context;
 		
@@ -27,6 +28,7 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 		// Check whether the database file exists. If not - copy file from assets
 		if(!isDatabaseExist(path)){
 			copyDatabaseFile(path);
+//			throw new IOException();
 		}
 	}
 
@@ -65,15 +67,16 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	 * @param path - path to working directory
 	 * @param name - database name
 	 * @return - whether file was copied or not
+	 * @throws IOException 
 	 */
-	private boolean copyDatabaseFile(String path){
+	private boolean copyDatabaseFile(String path) throws IOException{
 		boolean copied = true;
 				
 		// Create database file
 		SQLiteDatabase tempDb = getReadableDatabase();
 		tempDb.close();
 		
-		try{
+//		try{
 			//Open your local db as the input stream
 	    	InputStream input = context.getAssets().open(databaseName);
 	 
@@ -92,9 +95,9 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	    	output.close();
 	    	input.close();
 	    	
-		} catch (Exception exc){
-			copied = false;
-		}
+//		} catch (Exception exc){
+//			copied = false;
+//		}
     	
 		return copied;
 	}

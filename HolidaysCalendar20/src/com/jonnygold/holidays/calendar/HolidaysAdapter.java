@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 
+	private static final int MAX_TITLE_LENGTH = 47;
+	
 	protected List<Holiday> holidays;
 	
 	protected LayoutInflater inflater;
@@ -37,7 +39,15 @@ public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 		View listItem = inflater.inflate(R.layout.item, null);
 		
 		TextView titeView = (TextView)listItem.findViewById(R.id.view_title);
-		titeView.setText(holiday.getTitle().toUpperCase(Locale.getDefault()));
+		String title = null;
+		if(holiday.getTitle().length() > MAX_TITLE_LENGTH){
+			title = holiday.getTitle().subSequence(0, MAX_TITLE_LENGTH).toString()+" ...";
+		}
+		else{
+			title = holiday.getTitle().toString();
+		}
+		titeView.setText(title.toUpperCase(Locale.getDefault()));
+//		titeView.setText(holiday.getTitle().toUpperCase(Locale.getDefault()));
 		
 		ImageView pictureView = (ImageView)listItem.findViewById(R.id.view_picture);
 		pictureView.setImageDrawable(holiday.getDrawable());

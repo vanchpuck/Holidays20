@@ -18,9 +18,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,36 +41,32 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class DaysPagerAdapter extends PagerAdapter{
+public final class DaysPagerAdapter extends PagerAdapter{
 	
 	public static final int PAGE_COUNT = Integer.MAX_VALUE;
-	public static final int START_POSITION = PAGE_COUNT>>1;
+	public static final int START_POSITION = 10000;
 	
 	
 	private Calendar calendar;
 	
-	protected int previousPosition;
-	protected int currentPosition;
+	private int previousPosition;
+	private int currentPosition;
 	
-	protected HolidaysDataSource holidaysBase;
+	private HolidaysDataSource holidaysBase;
 	
-	protected SharedPreferences sharedPref;
+	private SharedPreferences sharedPref;
 	
-	protected Activity activity;
+	private Activity activity;
 	
-//	public DaysPagerAdapter(Calendar calendar, HolidaysDataSource holidaysBase){
-//		this.calendar = Calendar.getInstance();
-//		this.holidaysBase = holidaysBase;
-//		this.previousPosition = START_POSITION;
-////		sharedPref = PreferenceManager.getDefaultSharedPreferences(collection.getContext());
-//	}
-	
+	private Date initialDate;
+
 	public DaysPagerAdapter(Activity activity, HolidaysDataSource holidaysBase, Calendar calendar){
 		this.previousPosition = START_POSITION;
 		this.calendar = calendar;
 		this.activity = activity;
 		this.holidaysBase = holidaysBase;
 		this.sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+		this.initialDate = calendar.getTime();
 	}
 	
 	@Override
@@ -75,25 +80,26 @@ public class DaysPagerAdapter extends PagerAdapter{
     }
 
 	@Override
+	public CharSequence getPageTitle(int position) {
+		calendar.setTime(initialDate);
+		calendar.add(Calendar.DAY_OF_YEAR, position - START_POSITION);
+		String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+		String month = Month.values()[calendar.get(Calendar.MONTH)].getGenitive();
+		return day+" "+month;
+	}
+	
+	@Override
 	public Object instantiateItem(View collection, int position){
-		
-		Log.w("INSATANTIATE", "INSATANTIATE");
-		
-		currentPosition = position;
-		
+	
 		// Set appropriate date to calendar
-		calendar.add(Calendar.DAY_OF_YEAR, position - previousPosition);
-		Log.w("Position", position+"");
-		Log.w("ADD", position - previousPosition+" days");
+		calendar.setTime(initialDate);
+		calendar.add(Calendar.DAY_OF_YEAR, position - START_POSITION);
 		
 		// Inflate view
 		View page = activity.getLayoutInflater().inflate(R.layout.activity_holidays, null);
 				
 		// Get holidays from database
 		final List<Holiday> holidays = getHolidays();
-		
-		// Retrieving ListView adapter
-//		HolidaysAdapter listAdapter = new HolidaysAdapter(collection.getContext(), holidays);
 		
 		// Configure holidays ListView
 		HolidaysListView holidaysView = (HolidaysListView)page.findViewById(R.id.view_holidays);
@@ -103,8 +109,6 @@ public class DaysPagerAdapter extends PagerAdapter{
 		holidaysView.setOnItemClickListener(new HolidaysListView.OnHolidayClickListener());
 		
 		activity.registerForContextMenu(holidaysView);
-		
-		previousPosition = position;
         
         ((ViewPager) collection).addView(page, 0);
         return page;
@@ -112,7 +116,6 @@ public class DaysPagerAdapter extends PagerAdapter{
 	
 	@Override
     public void destroyItem(View collection, int position, Object view){
-    	Log.w("DEL", "DEL");
         ((ViewPager) collection).removeView((View) view);
     }
 	
@@ -122,10 +125,6 @@ public class DaysPagerAdapter extends PagerAdapter{
 	
 	public void setDate(Date date){
 		calendar.setTime(date);
-	}
-//	
-	public int getCurrentPosition() {
-		return previousPosition;
 	}
 	
 	private List<Holiday> getHolidays(){
@@ -148,12 +147,16 @@ public class DaysPagerAdapter extends PagerAdapter{
 		if(sharedPref.getBoolean(SettingsActivity.KEY_UKRANE_HOLIDAYS, true)){
 			countryIdList.add(CountryUkrane.ID);
 		}
+		if(sharedPref.getBoolean(SettingsActivity.KEY_USER_HOLIDAYS, true)){
+			countryIdList.add(CountryUser.ID);
+		}
 		restriction.setCountryes(countryIdList);
 		
-		
+		holidaysBase.openForReading();
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
 		return holidays;
 	}
+
 	
 //	private final View getHolidayDetail(Holiday holiday){
 //		Log.w("Test", "0");

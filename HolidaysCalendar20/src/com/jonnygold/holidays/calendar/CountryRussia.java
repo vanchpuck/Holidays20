@@ -5,8 +5,8 @@ public class CountryRussia extends Country {
 	public static final int ID = 2;
 		
 	@Override
-	int getDrawableId() {
-		return R.drawable.russia_circle_s_1;
+	public int getDrawableId() {
+		return R.drawable.flag_rus;
 	}
 	
 	@Override
@@ -15,7 +15,7 @@ public class CountryRussia extends Country {
 	}
 
 	@Override
-	int getId() {
+	public int getId() {
 		return ID;
 	}
 

@@ -2,23 +2,35 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item android:id="@+id/action_search"
-          android:title="action_search"
-          android:icon="@drawable/abc_ic_search"
+          android:title="@string/action_search"
+          android:icon="@drawable/action_search"
           app:showAsAction="ifRoom|collapseActionView"
           app:actionViewClass="android.support.v7.widget.SearchView" />
 
     
     <item
+        android:id="@+id/action_go_to_current_date"
+        android:icon="@drawable/collections_go_to_today"
+        android:title="@string/action_go_to_current_date"
+        app:showAsAction="ifRoom" />
+    
+    <item
+        android:id="@+id/action_go_to_date"
+        android:icon="@drawable/collections_go_to"
+        android:title="@string/action_go_to_date"
+        app:showAsAction="ifRoom" />
+    
+    <item
         android:id="@+id/action_add_holiday"
-        android:icon="@drawable/abc_ic_go"
-        android:title="@string/action_settings"
-        app:showAsAction="always" />
+        android:icon="@drawable/content_edit"
+        android:title="@string/action_add_holiday"
+        app:showAsAction="ifRoom" />
     
     <item
         android:id="@+id/action_preferences"
-        android:icon="@drawable/ic_launcher"
-        android:title="@string/action_settings"
-        app:showAsAction="always" />
+        android:icon="@drawable/action_settings"
+        android:title="@string/action_preferences"
+        app:showAsAction="never" />
     
 
 </menu>

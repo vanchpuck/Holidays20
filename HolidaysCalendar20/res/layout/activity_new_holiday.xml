@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HolidaysActivity" >
+
+    <EditText
+		android:id="@+id/view_txt_new_title"
+ 		android:layout_width="match_parent"
+ 		android:layout_height="wrap_content"
+		android:hint="Название"
+		android:singleLine="true" 
+		android:imeOptions="actionNext"	/>
+    
+    <EditText
+		android:id="@+id/view_txt_new_description"
+ 		android:layout_width="match_parent"
+ 		android:layout_height="wrap_content"
+		android:hint="Описание"
+		android:singleLine="true" 
+		android:imeOptions="actionDone"	/>
+       
+    <com.jonnygold.holidays.calendar.HolidayDateChooser
+ 		android:id="@+id/view_date_chooser"
+ 		android:layout_width="match_parent"
+ 		android:layout_height="match_parent" 
+ 		android:orientation="vertical">
+ 	</com.jonnygold.holidays.calendar.HolidayDateChooser>
+ 	
+    
+
+</LinearLayout>

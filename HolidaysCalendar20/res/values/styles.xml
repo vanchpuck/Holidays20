@@ -17,8 +17,12 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
-    <style name="PreferencesTheme">
+    <!--<style name="PreferencesTheme">
 	    <item name="android:background">#FF555555</item>
-	</style>
+	</style> -->
+	
+	<style name="PreferencesTheme" parent="android:Theme.Holo"/>
+	
+    <style name="DialogBaseTheme" parent="android:Theme.Dialog"/>
 
 </resources>

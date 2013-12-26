@@ -18,15 +18,16 @@ import android.util.Log;
 
 public class Holiday implements Parcelable{
 
-//	public static final class Type{
-//		public static final int INTERNATIONAL_HOLIDAY = 1;
-//		public static final int PROFESSIONAL_HOLIDAY = 2;
-//		public static final int FIELD_DAY = 3;
-//		public static final int OTHER_HOLIDAY = 4;
-//		public static final int NATIONAL_HOLIDAY = 5;
-//		public static final int MEMORIAL_DAY = 6;
-//		public static final int GLORY_DAY = 7;
-//	}
+	public static final class Type{
+		public static final int INTERNATIONAL_HOLIDAY = 1;
+		public static final int PROFESSIONAL_HOLIDAY = 2;
+		public static final int FIELD_DAY = 3;
+		public static final int OTHER_HOLIDAY = 4;
+		public static final int NATIONAL_HOLIDAY = 5;
+		public static final int MEMORIAL_DAY = 6;
+		public static final int GLORY_DAY = 7;
+		public static final int USER_HOLIDAY = 9;
+	}
 	
 	public static final Parcelable.Creator<Holiday> CREATOR = new Parcelable.Creator<Holiday>() {
 		public Holiday createFromParcel(Parcel in) {
@@ -53,9 +54,11 @@ public class Holiday implements Parcelable{
 	
 	private Set<Country> countries;
 	
-	private int actualMonth;
+	private HolidayDate date;
 	
-	private int actualDay;
+//	private int actualMonth;
+//	
+//	private int actualDay;
 	
 	
 	public Holiday(Parcel in){
@@ -64,9 +67,9 @@ public class Holiday implements Parcelable{
 		this.dateSrt = in.readString();
 		this.type = in.readInt();
 		this.description = in.readString();
-		this.actualMonth = in.readInt();
-		this.actualDay = in.readInt();
 		
+		HolidayDate.Builder builder = new HolidayDate.Builder();
+		this.date = builder.setActualMonth(in.readInt()).setActualDay(in.readInt()).create();
 		
 		
 		byte[] pictureData = in.createByteArray();
@@ -86,8 +89,7 @@ public class Holiday implements Parcelable{
 			Drawable picture, 
 			String description, 
 			Set<Country> countries,
-			int actualMonth,
-			int actualDay){
+			HolidayDate date){
 		
 		this.id = id;
 		this.title = tittle;
@@ -96,8 +98,7 @@ public class Holiday implements Parcelable{
 		this.picture = picture;
 		this.description = description;
 		this.countries = countries;
-		this.actualMonth = actualMonth;
-		this.actualDay = actualDay;
+		this.date = date;
 	}
 	
 	@Override
@@ -112,8 +113,8 @@ public class Holiday implements Parcelable{
 		out.writeString(dateSrt);
 		out.writeInt(type);
 		out.writeString(description);
-		out.writeInt(actualMonth);
-		out.writeInt(actualDay);
+		out.writeInt(date.getActualMonth());
+		out.writeInt(date.getActualDay());
 		
 		// Write picture
 		Bitmap bitmap = ((BitmapDrawable)picture).getBitmap();
@@ -155,14 +156,19 @@ public class Holiday implements Parcelable{
 		return countries;
 	}
 	
-	public int getActualMonth(){
-		return actualMonth;
-	}
-	
-	public int getActualDay(){
-		return actualDay;
+	public HolidayDate getDate(){
+		return date;
 	}
 
+	public boolean isDeletable(){
+		for(Country c : getCountries()){
+			if(CountryUser.class.equals(c.getClass())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if(this == o){
@@ -178,7 +184,7 @@ public class Holiday implements Parcelable{
 	}	
 	
 	@Override
-		public int hashCode() {
-			return this.getId();
-		}
+	public int hashCode() {
+		return this.getId();
+	}
 }

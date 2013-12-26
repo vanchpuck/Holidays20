@@ -2,41 +2,43 @@ package com.jonnygold.holidays.calendar;
 
 
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import android.net.Uri;
+import com.jonnygold.holidays.calendar.widget.HolidaysWidget4x1;
+import com.jonnygold.holidays.calendar.widget.HolidaysWidget4x2;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.SearchManager;
-import android.content.ContentResolver;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -44,59 +46,133 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 
 //	public static SharedPreferences prefere;// = PreferenceManager.getDefaultSharedPreferences(collection.getContext());
 	
+//	private static class NewHolidayView extends LinearLayout{
+//		public NewHolidayView(Context context, AttributeSet attrs) {
+//			super(context, attrs);
+//		}
+//	}
+	
+	private class NewHolidayDialog extends AlertDialog{
+				
+		private class OnClickListener implements DialogInterface.OnClickListener{
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				HolidayDateChooser dateChooser = (HolidayDateChooser) findViewById(R.id.view_date_chooser);
+				EditText title = (EditText) findViewById(R.id.view_txt_new_title); 
+				EditText description = (EditText) findViewById(R.id.view_txt_new_description); 
+				
+				if(title.length() == 0){
+					Toast.makeText(getContext(), "Не указано название праздника.", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				HolidayDate date = dateChooser.getDate();
+				if(date == null)
+					return;
+				
+				holidaysBase = HolidaysDataSource.getInstance(getContext());
+				
+				holidaysBase.openForWriting();
+				
+				Set<Country> country = new HashSet<Country>();
+				country.add(new CountryUser());
+				
+				Holiday holiday = new Holiday(
+						-1, 
+						title.getText().toString(), 
+						date.toString(), 
+						Holiday.Type.USER_HOLIDAY, 
+						getContext().getResources().getDrawable(R.drawable.ic_launcher), 
+						description.getText().toString(), 
+						country, 
+						date
+				);
+				
+				
+				try{
+					holidaysBase.saveHoliday(holiday);
+					holidaysBase.updateFloatHolidays(Calendar.getInstance().get(Calendar.YEAR));
+					
+					setPager(Calendar.getInstance());
+					Toast.makeText(getContext(), "Запись добавлена.", Toast.LENGTH_SHORT).show();
+				}
+				catch(SQLiteException exc){
+					Toast.makeText(getContext(), "Не удалось сохранить запись.", Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+		
+		private HolidaysDataSource holidaysBase;
+		
+		public NewHolidayDialog(Context context) {
+			super(context);
+			this.setView(View.inflate(getContext(), R.layout.view_new_holiday, null));
+			this.setButton(BUTTON_POSITIVE, "Сохранить", new OnClickListener());
+			this.setTitle("Новый праздник");
+		}	
+
+
+	}
+	
+	
+	
+	private static final int DATE_PICKER_DIALOG = 1;
+	
 	private HolidaysDataSource holidaysBase;
 	
-	private Calendar calendar;
+//	private Calendar calendar;
 	
-	private DaysPagerAdapter pagerAdapter;
-	ViewPager viewPager;
+//	private DaysPagerAdapter pagerAdapter;
+	
+	private ViewPager viewPager;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_holidays);
 		
 		holidaysBase = HolidaysDataSource.getInstance(this);
-//		calendar = Calendar.getInstance();
+		if(holidaysBase == null){
+			showMountError();
+			return;
+		}
 		
-		Intent intent = getIntent();
-	    if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	    	String query = intent.getStringExtra(SearchManager.QUERY);
-	    	Log.w("Start", query);
-	    }
+		holidaysBase.openForReading();
 		
-	    Log.w("Start", "1");
-		
+		getSupportActionBar().setTitle("Праздники");
+	    
 //	    registerForContextMenu(findViewById(R.id.view_holidays));
 	    
 	}
 	
 	@Override
 	protected void onStart() {
-		Log.w("Start", "2");
 		super.onStart();
-		Log.w("Start", "3");
-		if(holidaysBase == null){
-			Log.w("Test1", "NULL");
-		}
-		calendar = Calendar.getInstance();
+		
+		if(holidaysBase == null)
+			return;
+			
+		Calendar calendar = Calendar.getInstance();
 		
 		holidaysBase.openForReading();
-		Log.w("Start", "4");
+		
 		holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
-		Log.w("Start", "5");
-		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, calendar);
-        ViewPager viewPager = new ViewPager(this);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setSaveEnabled(false);
-        viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);     
+				
+		setPager(calendar);
         
-        setContentView(viewPager);
+        updateWidgets();
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
+		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 		holidaysBase.close();
 	}
 	
@@ -109,33 +185,57 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(Menu.NONE, R.id.action_add_holiday, Menu.NONE, R.string.action_add_to_calendar);
+		menu.add(Menu.NONE, R.id.action_add_to_calendar, Menu.NONE, R.string.action_add_to_calendar);
+		menu.add(Menu.NONE, R.id.action_del_holiday, Menu.NONE, R.string.action_del_holiday);
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_add_holiday) {
-			
-			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-			
-			Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
-						
-			Calendar date = Calendar.getInstance();
-			date.set(Calendar.MONTH, holiday.getActualMonth());
-			date.set(Calendar.DAY_OF_MONTH, holiday.getActualDay());
-			Intent intent = new Intent(Intent.ACTION_EDIT)
-//			        .setData(Uri.parse("content://com.android.calendar/events"))
-			        .setType("vnd.android.cursor.item/event")
-			        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-			        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
-			        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
-			        .putExtra(Events.TITLE, holiday.getTitle())
-			        .putExtra(Events.DESCRIPTION, holiday.getDescription());
-			startActivity(intent);
-			
+		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+		Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
+		
+		holidaysBase.openForReading();
+		
+		switch(item.getItemId()){
+		case R.id.action_add_to_calendar : 
+			exportToCalendar(holiday);
+			return true;
+		case R.id.action_del_holiday :
+			if(holiday.isDeletable()){
+				holidaysBase.deleteHoliday(holiday);
+				setPager(Calendar.getInstance());
+			}
+			else{
+				Toast.makeText(this, "Только праздники пользователя доступны для удаления.", Toast.LENGTH_LONG).show();
+			}
 			return true;
 		}
 		return super.onContextItemSelected(item);
+//		
+//		
+//		if (item.getItemId() == R.id.action_add_to_calendar) {
+//			
+//			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
+//			
+//			Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
+//						
+//			Calendar date = Calendar.getInstance();
+//			date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
+//			date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
+//			Intent intent = new Intent(Intent.ACTION_EDIT)
+////			        .setData(Uri.parse("content://com.android.calendar/events"))
+//			        .setType("vnd.android.cursor.item/event")
+//			        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+//			        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
+//			        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
+//			        .putExtra(Events.TITLE, holiday.getTitle())
+//			        .putExtra(Events.DESCRIPTION, holiday.getDescription());
+//			startActivity(intent);
+//			
+//			return true;
+//		}
+//		return super.onContextItemSelected(item);
 	}
 	
 	@Override
@@ -161,13 +261,13 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		  Log.w("NULL1", "NULL11");
 	  }
 	  
-	  Log.w("1", getComponentName().getClassName());
-	  Log.w("1", getComponentName().getShortClassName());
-	  Log.w("1", getComponentName().getPackageName());
+//	  Log.w("1", getComponentName().getClassName());
+//	  Log.w("1", getComponentName().getShortClassName());
+//	  Log.w("1", getComponentName().getPackageName());
 	  
 	  searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //	  searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
+	  searchView.setQueryHint("Поиск праздника");
 
 	  return super.onCreateOptionsMenu(menu);
 	}
@@ -216,13 +316,21 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	            Intent intent = new Intent(this, SettingsActivity.class);
 	            startActivity(intent);
 	            return true; 
-//	        case R.id.action_search :
-//	        	Intent intent = new Intent(this, SearchActivity.class);
-//	            startActivity(intent);
 	        case R.id.action_add_holiday :
-	        	Intent newHolidayIntent = new Intent(this, NewHolidayActivity.class);
-	            startActivity(newHolidayIntent);
+	        	NewHolidayDialog addDialog = new NewHolidayDialog(this);
+//	        	addDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//					@Override
+//					public void onDismiss(DialogInterface dialog) {
+//						Log.w("D", "D");
+//						setPager(Calendar.getInstance());
+//					}
+//				});
+	        	addDialog.show();
 	            return true; 
+	        case R.id.action_go_to_date :
+	        	showDialog(DATE_PICKER_DIALOG);
+	        case R.id.action_go_to_current_date :
+	        	setPager(Calendar.getInstance());
 	        default :
 	        	return true;
 	    }
@@ -241,13 +349,98 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		
-		Log.w("sdfsdfsd", "dfsdf");
-		
-//		Toast.makeText(this, "Searching for: " + query + "...", Toast.LENGTH_SHORT).show();
 		return false;
 	}
 	
-
+	protected Dialog onCreateDialog(int id) {
+		if (id == DATE_PICKER_DIALOG) {
+			/*
+			 * При открытии диалога сбрасывается дата
+			 */
+			OnDateSetListener myCallBack = new OnDateSetListener() {
+	    		@Override
+	    	    public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
+	    			Calendar calendar = Calendar.getInstance();
+	    			calendar.clear();
+	    			calendar.set(year, monthOfYear, dayOfMonth);
+	    			
+	    			setPager(calendar);
+	    	    }
+        	};
+        	Calendar calend = Calendar.getInstance();
+			DatePickerDialog dpd = new DatePickerDialog(this, myCallBack, calend.get(Calendar.YEAR), calend.get(Calendar.MONTH), calend.get(Calendar.DAY_OF_MONTH));
+			return dpd;
+		}
+		return super.onCreateDialog(id);
+	}
+	
+//	private void setPager(Holiday holiday){
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.set(Calendar.MONTH, holiday.getDate().getActualMonth());
+//		calendar.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
+//		setPager(calendar);
+//	}
+	
+	private void setPager(Calendar onDate){
+		
+		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
+		viewPager = new ViewPager(this);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setSaveEnabled(true);
+        viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);     
+        Log.w("Limit", viewPager.getOffscreenPageLimit()+"");
+//        viewPager.
+        
+        PagerTitleStrip strip = new PagerTitleStrip(this);
+		ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
+		layoutParams.height = ViewPager.LayoutParams.WRAP_CONTENT;
+		layoutParams.width = ViewPager.LayoutParams.MATCH_PARENT;
+		layoutParams.gravity = Gravity.TOP;
+        viewPager.addView(strip, layoutParams);
+        
+        setContentView(viewPager);  
+	}
+	
+	private void exportToCalendar(Holiday holiday){
+		Calendar date = Calendar.getInstance();
+		date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
+		date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
+		Intent intent = new Intent(Intent.ACTION_EDIT)
+//		        .setData(Uri.parse("content://com.android.calendar/events"))
+		        .setType("vnd.android.cursor.item/event")
+		        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+		        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
+		        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
+		        .putExtra(Events.TITLE, holiday.getTitle())
+		        .putExtra(Events.DESCRIPTION, holiday.getDescription());
+		startActivity(intent);
+	}
+	
+	private void updateWidgets(){
+        int[] ids1 = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), HolidaysWidget4x1.class));
+        int[] ids2 = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), HolidaysWidget4x2.class));
+        
+        Intent intent = new Intent(this, HolidaysWidget4x1.class);
+        intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids1);
+        sendBroadcast(intent); 
+        
+        intent = new Intent(this, HolidaysWidget4x2.class);
+        intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids2);
+        sendBroadcast(intent); 
+    }
+	
+	private void showMountError(){
+		Builder builder = new AlertDialog.Builder(this); 
+		builder.setPositiveButton("Ок", new AlertDialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				System.exit(0);
+			}
+		});
+		builder.setTitle(R.string.db_err_title).setMessage(R.string.db_err_message).show();
+	}
 
 }

@@ -29,6 +29,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchableActivity extends ActionBarActivity{
 
+	private static final int MAX_ROW_COUNT = 20;
+	
 	private HolidaysDataSource holidaysBase;
 	
 	@Override
@@ -46,7 +48,7 @@ public class SearchableActivity extends ActionBarActivity{
 	    	
 //	    	List<Holiday> holidays = getHolidays(query);
 	    	HolidaysListView holidaysView = (HolidaysListView)findViewById(R.id.view_holidays);
-	    	holidaysView.setHolidays(getHolidays("морской"));
+	    	holidaysView.setHolidays(getHolidays(query));
 	    	holidaysView.setOnItemClickListener(new HolidaysListView.OnHolidayClickListener());
 	      
 	    	// Configure holidays ListView
@@ -73,20 +75,20 @@ public class SearchableActivity extends ActionBarActivity{
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(Menu.NONE, R.id.action_add_holiday, Menu.NONE, R.string.action_add_to_calendar);
+		menu.add(Menu.NONE, R.id.action_add_to_calendar, Menu.NONE, R.string.action_add_to_calendar);
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_add_holiday) {
+		if (item.getItemId() == R.id.action_add_to_calendar) {
 			
 			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
 			
 			Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
 						
 			Calendar date = Calendar.getInstance();
-			date.set(Calendar.MONTH, holiday.getActualMonth());
-			date.set(Calendar.DAY_OF_MONTH, holiday.getActualDay());
+			date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
+			date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
 			Intent intent = new Intent(Intent.ACTION_EDIT)
 //			        .setData(Uri.parse("content://com.android.calendar/events"))
 			        .setType("vnd.android.cursor.item/event")
@@ -102,40 +104,42 @@ public class SearchableActivity extends ActionBarActivity{
 		return super.onContextItemSelected(item);
 	}
 	
+//	private List<Holiday> getHolidays(String query){
+//		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
+//    	restriction.setTitle(query);
+//    	restriction.setLimit(MAX_ROW_COUNT);
+//    	return holidaysBase.getHolidays(restriction);
+//	}
+		
 	private List<Holiday> getHolidays(String query){
 		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
-    	restriction.setTitle(query);
-    	return holidaysBase.getHolidays(restriction);
-	}
 		
-//	private List<Holiday> getHolidays(){
-//		
-//		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//		
-//		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
-//		restriction.setDate(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-//		
-//		
-//		List<Integer> countryIdList = new ArrayList<Integer>(4);		
-//		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
-//			Log.w("WorldCountry", sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)+"");
-//			countryIdList.add(CountryWorld.ID);
-//		}
-//		if(sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)){
-//			Log.w("RusCountry", sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)+"");
-//			countryIdList.add(CountryRussia.ID);
-//		}
-//		if(sharedPref.getBoolean(SettingsActivity.KEY_BELORUSSIAN_HOLIDAYS, true)){
-//			countryIdList.add(CountryBelorussia.ID);
-//		}
-//		if(sharedPref.getBoolean(SettingsActivity.KEY_UKRANE_HOLIDAYS, true)){
-//			countryIdList.add(CountryUkrane.ID);
-//		}
-//		restriction.setCountryes(countryIdList);
-//		
-//		
-//		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
-//		return holidays;
-//	}
+    	restriction.setTitle(query);
+    	restriction.setLimit(MAX_ROW_COUNT);
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		List<Integer> countryIdList = new ArrayList<Integer>(4);		
+		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
+			countryIdList.add(CountryWorld.ID);
+		}
+		if(sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)){
+			countryIdList.add(CountryRussia.ID);
+		}
+		if(sharedPref.getBoolean(SettingsActivity.KEY_BELORUSSIAN_HOLIDAYS, true)){
+			countryIdList.add(CountryBelorussia.ID);
+		}
+		if(sharedPref.getBoolean(SettingsActivity.KEY_UKRANE_HOLIDAYS, true)){
+			countryIdList.add(CountryUkrane.ID);
+		}
+		if(sharedPref.getBoolean(SettingsActivity.KEY_USER_HOLIDAYS, true)){
+			countryIdList.add(CountryUser.ID);
+		}
+		restriction.setCountryes(countryIdList);
+		
+		holidaysBase.openForReading();
+		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
+		return holidays;
+	}
 	
 }

@@ -1,6 +1,5 @@
 package com.jonnygold.holidays.calendar;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -39,17 +38,17 @@ public final class HolidayDateChooser extends LinearLayout{
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 		        // An item was selected. You can retrieve the selected item using
 		        // parent.getItemAtPosition(pos)
-
+				DateChooser dateChooser = null;
 				if("‘иксированна€ дата".equals(parent.getItemAtPosition(pos).toString())){
-					StableDateView sdv = (StableDateView) inflate(getContext(), R.layout.view_stable_date, null);
-					setDateChooser(sdv);
+					dateChooser = (StableDateView) inflate(getContext(), R.layout.view_stable_date, null);
 				}
 				else if("ѕлавающа€ дата (мес€ц)".equals(parent.getItemAtPosition(pos).toString())){
-					clearDateView();
+					dateChooser = (FloatMonthDateView) inflate(getContext(), R.layout.view_float_month_date, null);
 				}
 				else if("ѕлавающа€ дата (год)".equals(parent.getItemAtPosition(pos).toString())){
-					clearDateView();
+					dateChooser = (FloatYearDateView) inflate(getContext(), R.layout.view_float_year_date, null);
 				}
+				setDateChooser(dateChooser);
 		    }
 
 			@Override
@@ -63,11 +62,13 @@ public final class HolidayDateChooser extends LinearLayout{
 
 	}
 	
-	public ContentValues getDateInfo(){
-		return chooser.getValues();
+	public HolidayDate getDate(){
+		if(chooser.checkData()){
+			return chooser.getDate();
+		}
+		return null;
 	}
 	
-	public String
 	
 	private void setDateChooser(DateChooser dateChooser){
 		clearDateView();

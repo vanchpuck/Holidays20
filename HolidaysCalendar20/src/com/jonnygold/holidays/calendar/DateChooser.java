@@ -16,8 +16,6 @@ public abstract class DateChooser extends LinearLayout{
 	}
 	
 	public abstract boolean checkData();
-	
-	public abstract ContentValues getValues();
-	
-	public abstract String getType();
+
+	public abstract HolidayDate getDate();
 }

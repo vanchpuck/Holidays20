@@ -26,7 +26,49 @@
 	        android:title="@string/pref_ukrane_holidays"
 	        android:defaultValue="true" />
         
+        <CheckBoxPreference
+	        android:key="key_user_holidays"
+	        android:title="@string/pref_user_holidays"
+	        android:defaultValue="true" />
+        
                 
     </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:key="key_widget"
+        android:title="@string/pref_widget_options"
+        android:persistent="true">
+    
+        <PreferenceCategory 
+	        android:title="@string/pref_widget_4x1"
+	        android:key="key_widget_4x1">
+	        
+	        <ListPreference
+		        android:key="key_widget_4x1_rows"
+		        android:title="@string/pref_widget_rows"
+		        android:dialogTitle="@string/pref_widget_rows"
+		        android:entries="@array/widget_4x1_rows"
+		        android:entryValues="@array/widget_4x1_rows"
+		        android:defaultValue="4" />
+	        
+	    </PreferenceCategory>
+	    
+        <PreferenceCategory 
+	        android:title="@string/pref_widget_4x2"
+	        android:key="key_widget_4x2">
+	        
+	        <ListPreference
+		        android:key="key_widget_4x2_rows"
+		        android:title="@string/pref_widget_rows"
+		        android:dialogTitle="@string/pref_widget_rows"
+		        android:entries="@array/widget_4x2_rows"
+		        android:entryValues="@array/widget_4x2_rows"
+		        android:defaultValue="9" />
+	        
+	    </PreferenceCategory>
+        
+    </PreferenceScreen>
+    
+    	
     
 </PreferenceScreen>

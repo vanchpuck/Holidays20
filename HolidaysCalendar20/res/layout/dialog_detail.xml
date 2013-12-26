@@ -22,28 +22,28 @@
 			android:id="@+id/view_img_info_flag_1"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:src="@drawable/black_circle_s" 
+			android:src="@drawable/hole" 
 			android:contentDescription="@string/app_name" />
 	    
 	    <ImageView
 			android:id="@+id/view_img_info_flag_2"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:src="@drawable/black_circle_s"
+			android:src="@drawable/hole"
 			android:contentDescription="@string/app_name" />
 	    
 	    <ImageView
 			android:id="@+id/view_img_info_flag_3"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:src="@drawable/black_circle_s"
+			android:src="@drawable/hole"
 			android:contentDescription="@string/app_name" />
 	    
 	    <ImageView
 			android:id="@+id/view_img_info_flag_4"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:src="@drawable/black_circle_s"
+			android:src="@drawable/hole"
 			android:contentDescription="@string/app_name" />
 
 	</LinearLayout>
@@ -80,14 +80,19 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="2dp"
 	    android:background="#FF222222" />    
-	    
-    <TextView
-		android:id="@+id/view_txt_holiday_description"
-		android:layout_width="match_parent"
-       	android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp" />	
-    
+	
+    <ScrollView 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+		
+	    <TextView
+			android:id="@+id/view_txt_holiday_description"
+			android:layout_width="match_parent"
+	       	android:layout_height="wrap_content"
+	        android:textSize="13sp"
+	        android:layout_marginLeft="6dp"
+	        android:layout_marginRight="6dp" />	
+	        
+    </ScrollView> 
 	
 </com.jonnygold.holidays.calendar.HolidayDetailView>

@@ -1,6 +1,7 @@
 package com.jonnygold.holidays.calendar;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,9 +18,7 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
-import android.widget.BaseAdapter;
 
 public class HolidaysDataSource {
 
@@ -75,6 +75,7 @@ public class HolidaysDataSource {
 		private Integer day;
 		private Integer limit;
 		private String title;
+		private boolean includeAfter = false;
 		
 		public QueryRestriction(){
 			restriction.append("WHERE 1=1 ");
@@ -88,9 +89,18 @@ public class HolidaysDataSource {
 			return this;
 		}
 		
+		public List<Integer> getCountries(){
+			return this.countries;
+		}
+		
 		public QueryRestriction setDate(int month, int day){
 			this.month = Integer.valueOf(month);
 			this.day = Integer.valueOf(day);
+			return this;
+		}
+		
+		public QueryRestriction includeAfter(){
+			includeAfter = true;
 			return this;
 		}
 		
@@ -118,10 +128,31 @@ public class HolidaysDataSource {
 			}
 			
 			if(month != null && day != null){
-				restriction.append("AND TH.month = "+month+" AND TH.day = "+day+" ");
+				if(includeAfter){
+					String condition = "AND (date('now','start of year','+'||TH.month||' months','+'||TH.day||' days') >= date('now','start of year','+"+month+" months','+"+day+" days') "+
+											"OR (TH.month = 0 AND "+month+"=11) )";
+					restriction.append(condition);
+				}
+				else{
+					restriction.append("AND TH.month = "+month+" AND TH.day = "+day+" ");
+				}
+//				restriction.append("AND TH.month = "+month+" AND TH.day = "+day+" ");
+//				if(includeAfter){
+//					restriction.append("AND date('now','start of year','+'||TH.month||' months','+'||TH.day||' days') >= date('now','start of year','+"+month+" months','+"+day+" days') ");
+//				}
 			}
 			
+//			if(includeAfter){
+//				restriction.append("AND date('now','start of year','+'||TH.month||' months','+'||TH.day||' days') >= date('now','start of year','+"+month+" months','+"+day+" days') ");
+//			}
+			
 			if(limit != null){
+				if(month != null && month == 11){
+					restriction.append("ORDER BY TH.month DESC, TH.day ASC ");
+				}
+				else{
+					restriction.append("ORDER BY TH.month, TH.day ");
+				}
 				restriction.append("LIMIT "+limit+" ");
 			}
 			
@@ -137,29 +168,32 @@ public class HolidaysDataSource {
 	
 	private static HolidaysDataSource dataSource;
 	
-	private HolidaysDataSource(Context context){
+	private HolidaysDataSource(Context context) throws IOException{
 		dbHelper = new HolidaysBaseHelper(context);
 	}
 	
 	public static HolidaysDataSource getInstance(Context context){
 		if(dataSource == null){
-			dataSource = new HolidaysDataSource(context);
+			try {
+				dataSource = new HolidaysDataSource(context);
+			} catch (IOException e) {
+				dataSource = null;
+			}
+//			dataSource = new HolidaysDataSource(context);
+//			dataSource = null;
 		}
 		return dataSource;
 	}
 	
 	public boolean openForReading() {
-		if(db != null && db.isOpen()){
-			Log.w("DB", "REOPEN");
+		if(db != null && db.isOpen())
 			return true;
-		}
 		try{
 			db = dbHelper.getReadableDatabase();
-			Log.w("DB", "OPEN");
+//			db.execSQL("PRAGMA foreign_keys=ON;");
 			return true;
 			
 		}catch(SQLiteException exc){
-			Log.w("DB", "NOT OPEN");
 			return false;
 			
 		}
@@ -168,6 +202,7 @@ public class HolidaysDataSource {
 	public boolean openForWriting() {
 		try{	
 			db = dbHelper.getWritableDatabase();
+//			db.execSQL("PRAGMA foreign_keys=ON;");
 			return true;
 		}catch(SQLiteException exc){
 			return false;
@@ -183,20 +218,20 @@ public class HolidaysDataSource {
 	}
 	
 	
-	public List<Holiday> getHolidays(){
-		// Prepare query
-		String query = HOLIDAYS_QUERY + HOLIDAYS_LIMIT;
-		Log.w("QUERY", query);
-		
-		// Execute query
-		Cursor c = db.rawQuery(query, new String[]{});
-		
-		List<Holiday> holidays = getHolidays(c);
-		
-		c.close();
-		
-		return holidays;
-	}
+//	public List<Holiday> getHolidays(){
+//		// Prepare query
+//		String query = HOLIDAYS_QUERY + HOLIDAYS_LIMIT;
+//		Log.w("QUERY", query);
+//		
+//		// Execute query
+//		Cursor c = db.rawQuery(query, new String[]{});
+//		
+//		List<Holiday> holidays = getHolidays(c);
+//		
+//		c.close();
+//		
+//		return holidays;
+//	}
 	
 	public List<Holiday> getHolidays(QueryRestriction restriction){
 		// Prepare query
@@ -209,7 +244,7 @@ public class HolidaysDataSource {
 		// Execute query
 		Cursor c = db.rawQuery(query, new String[]{});
 		
-		List<Holiday> holidays = getHolidays(c);
+		List<Holiday> holidays = getHolidays(c, restriction);
 		
 		c.close();
 		
@@ -230,7 +265,11 @@ public class HolidaysDataSource {
 				"SET " 																																				+
 				"		day = ( " 																																	+
 				"				SELECT " 																															+
-				"						strftime('%d', date('"+year+"-01-01','+'||month||' months','weekday '||weekDay||'', ''||dayOffset||' days')) " 				+
+				"						CASE WHEN month = 0 AND dayOffset < 0 THEN " 				+
+				"							strftime('%d', date('"+(year+1)+"-01-01','+'||month||' months','weekday '||weekDay||'', ''||dayOffset||' days')) " 				+
+				"						ELSE " 				+
+				"							strftime('%d', date('"+year+"-01-01','+'||month||' months','weekday '||weekDay||'', ''||dayOffset||' days')) " 				+
+				"						END " 				+
 				"				FROM " 																																+
 				"						t_MonthFloatHolidays " 																										+
 				"				WHERE " 																															+
@@ -238,7 +277,8 @@ public class HolidaysDataSource {
 				"		) " 																																		+
 				"	,	month = ( " 																																+
 				"				SELECT " 																															+
-				"						CASE WHEN dayOffset < 0 THEN month-1 "				 																		+
+				"						CASE WHEN dayOffset < 0 AND month <> 0 THEN month-1 "				 														+
+				"							WHEN dayOffset < 0 AND month = 0 THEN 11"	+	
 				"							WHEN dayOffset >= 0 THEN month" 																						+
 				"						END" 																														+
 				"				FROM " 																																+
@@ -271,7 +311,15 @@ public class HolidaysDataSource {
 				"						t_YearFloatHolidays " 											+
 				"				WHERE " 																+
 				"						id_holiday = t_holidays._id " 									+
-				"		) " 																			+
+				"		), " 																			+
+				"		month = ( " 																		+
+				"				SELECT " 																+
+				"						strftime('%m', date('"+year+"-01-01','+'||day||' days'))-1 " 		+
+				"				FROM " 																	+
+				"						t_YearFloatHolidays " 											+
+				"				WHERE " 																+
+				"						id_holiday = t_holidays._id " 									+
+				"		) " +
 				"WHERE " 																				+
 				"		_id in ( " 																		+
 				"				SELECT " 																+
@@ -280,6 +328,8 @@ public class HolidaysDataSource {
 				"						t_YearFloatHolidays "											+
 				"		) "
 		;	
+		Log.w("Year", query);
+		
 		Cursor cursor = db.rawQuery(query, new String[]{});
 		cursor.moveToFirst();
 		cursor.close();
@@ -343,7 +393,7 @@ public class HolidaysDataSource {
 		cursor.close();
 	}
 	
-	private List<Holiday> getHolidays(Cursor cursor){
+	private List<Holiday> getHolidays(Cursor cursor, QueryRestriction restriction){
 		
 		List<Holiday> holidays = new ArrayList<Holiday>();
 		
@@ -356,10 +406,13 @@ public class HolidaysDataSource {
 		// Put holidays into the Set
 		while(cursor.moveToNext()){
 			// Get countries where holiday is celebrated
-			countries = getCountries(cursor.getInt(COL_HOLIDAY_ID));
+			countries = getCountries(cursor.getInt(COL_HOLIDAY_ID), restriction);
 			
 			inStream = new ByteArrayInputStream(cursor.getBlob(COL_IMAGE));
 			icon = new BitmapDrawable(BitmapFactory.decodeStream(inStream)); 
+			
+			HolidayDate.Builder builder = new HolidayDate.Builder();
+			HolidayDate date = builder.setActualMonth(cursor.getInt(11)).setActualDay(cursor.getInt(3)).create();
 			
 			// Construct Holiday object
 			holiday = new Holiday(
@@ -370,8 +423,7 @@ public class HolidaysDataSource {
 					icon, 
 					cursor.getString(COL_HOLIDAY_DESCRIPTION), 
 					countries,
-					cursor.getInt(11),
-					cursor.getInt(3)
+					date
 			);
 									
 			holidays.add(holiday);
@@ -383,7 +435,7 @@ public class HolidaysDataSource {
 	}
 	
 	
-	private Set<Country> getCountries(int idHoliday){
+	private Set<Country> getCountries(int idHoliday, QueryRestriction restriction){
 		Set<Country> countries = new HashSet<Country>();
 		
 		// Prepare query
@@ -398,10 +450,14 @@ public class HolidaysDataSource {
 				"		TCH.id_country "									
 		;
 		Cursor c = db.rawQuery(query, new String[]{String.valueOf(idHoliday)});
-				
+		
+		Country country = null;
 		// Fill the collection of countries 
 		while(c.moveToNext()){
-			countries.add(CountryManager.getCountry(c.getInt(0)));
+			country = CountryManager.getCountry(c.getInt(0));
+			if(restriction.getCountries().contains(country.getId())){
+				countries.add(CountryManager.getCountry(c.getInt(0)));
+			}
 		}
 		
 		c.close();
@@ -409,7 +465,129 @@ public class HolidaysDataSource {
 		return countries;
 	}
 	
+	public void deleteHoliday(Holiday holiday){
+		if(holiday.getId() == -1){
+			return;
+		}
+		db.beginTransaction();
+		try{
+			db.delete("t_countryholidays", "id_country=?", new String[]{String.valueOf(holiday.getId())});
+			if(holiday.getDate().isMonthFloat()){
+				db.delete("t_MonthFloatHolidays", "id_country=?", new String[]{String.valueOf(holiday.getId())});
+			}
+			if(holiday.getDate().isYearFloat()){
+				db.delete("t_YearFloatholidays", "id_country=?", new String[]{String.valueOf(holiday.getId())});
+			}
+			db.delete("t_holidays", "_id=?", new String[]{String.valueOf(holiday.getId())});
+			db.setTransactionSuccessful();
+		}
+		catch(SQLiteException exc){
+			exc.getMessage();
+			throw new SQLiteException();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+		
 	public void saveHoliday(Holiday holiday){
+		db.beginTransaction();
+		
+		if(holiday.getId() != -1){
+			deleteHoliday(holiday);
+		}
+		
+		ContentValues values = null;
+		
+		try{
+			
+			Log.w("SAVE", "begin");
+			
+//			Log.w("actualDateStr", "1-й пон янв.");
+//			Log.w("title", holiday.getTitle().toString());
+//			Log.w("description", holiday.getDescription());
+//			Log.w("month", 1+"");
+//			Log.w("day", 1+"");
+//			Log.w("id_priority", holiday.getType()+"");
+			
+			HolidayDate date = holiday.getDate();
+			
+			
+			Log.w("SAVE", "holiday");
+			
+			values = new ContentValues();
+			Log.w("title", holiday.getTitle());
+			values.put("title", holiday.getTitle());
+			
+			Log.w("description", holiday.getDescription());
+			values.put("description", holiday.getDescription());
+			
+			Log.w("month", holiday.getDate().getActualMonth()+"");
+			values.put("month", holiday.getDate().getActualMonth());
+			
+			Log.w("day", holiday.getDate().getActualDay()+"");
+			values.put("day", holiday.getDate().getActualDay());
+			
+			Log.w("day", holiday.getDate().toString());
+			values.put("actualDateStr", holiday.getDate().toString());
+			
+			Log.w("type", holiday.getType()+"");
+			values.put("id_priority", holiday.getType());
+		
+			// Предположим, что сохранять можно только пользовательские праздники:
+			values.put("id_image", 23);
+			long id = db.insertOrThrow("t_holidays", null, values);
+			
+			values.clear();
+			for(Country country : holiday.getCountries()){
+				values.put("id_country", country.getId());
+				values.put("id_holiday", id);
+				db.insertOrThrow("t_countryholidays", null, values);
+			}
+			
+			
+			if(date.isMonthFloat()){
+				Log.w("SAVE", "month");
+				
+				values.clear();
+				Log.w("id_holiday", id+"");
+				values.put("id_holiday", id);
+				
+				Log.w("month", holiday.getDate().getFloatMonth()+"");
+				values.put("month", holiday.getDate().getFloatMonth());
+				
+				Log.w("weekDay", holiday.getDate().getWeekDay()+"");
+				values.put("weekDay", holiday.getDate().getWeekDay());
+				
+				Log.w("dayOffset", holiday.getDate().getOffset()+"");
+				values.put("dayOffset", holiday.getDate().getOffset());
+				
+				db.insertOrThrow("t_MonthFloatHolidays", null, values);
+			}
+			
+			else if(date.isYearFloat()){
+				Log.w("SAVE", "year");
+				
+				values.clear();
+				Log.w("id_holiday", id+"");
+				values.put("id_holiday", id);
+				
+				Log.w("day", holiday.getDate().getYearDay()+"");
+				values.put("day", holiday.getDate().getYearDay());
+				
+				db.insertOrThrow("t_YearFloatHolidays", null, values);
+			}
+						
+			db.setTransactionSuccessful();
+		}
+		catch(SQLiteException exc){
+			Log.w("HolidaySaving", "Exception");
+			exc.printStackTrace();
+			throw new SQLiteException();
+		}
+		finally{
+			db.endTransaction();
+		}
 		
 	}
 	

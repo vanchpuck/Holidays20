@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="holiday_date_types">
+        <item>Фиксированная дата</item>
+        <item>Плавающая дата (месяц)</item>
+        <item>Плавающая дата (год)</item>
+    </string-array>
+</resources>

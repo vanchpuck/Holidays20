@@ -5,8 +5,8 @@ public class CountryWorld extends Country {
 	public static final int ID = 1;
 	
 	@Override
-	int getDrawableId() {
-		return R.drawable.earth_s_1;
+	public int getDrawableId() {
+		return R.drawable.flag_wrld;
 	}
 
 	@Override
@@ -15,7 +15,7 @@ public class CountryWorld extends Country {
 	}
 	
 	@Override
-	int getId() {
+	public int getId() {
 		return ID;
 	}
 }

@@ -1,6 +1,5 @@
 package com.jonnygold.holidays.calendar;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,51 +11,12 @@ import android.widget.TextView;
 
 public class StableDateView extends DateChooser{
 
-	public enum Month{
-		JANUARY("Январь", 31),
-		FEBRARY("Февраль", 29),
-		MARCH("Март", 31),
-		APRIL("Апрель", 30),
-		MAY("Май", 31),
-		JUNE("Июнь", 30),
-		JULY("Июль", 31),
-		AUGUST("Август", 31),
-		SEPTEMBER("Сентябрь", 30),
-		OCTOBER("Октябрь", 31),
-		NOVEMBER("Ноябрь", 30),
-		DECEMBER("Декабрь", 31);
 		
-		private String name;
-		private int dayCount;
-		
-		private Month(String name, int dayCount){
-			this.name = name;
-			this.dayCount = dayCount;
-		}
-		
-		public String[] getDays(){
-			String[] days = new String[dayCount];
-			for(int i=0; i<dayCount; i++){
-				days[i] = String.valueOf(i+1);
-			}
-			return days;
-		}
-		
-		@Override
-		public String toString() {
-			return name;
-		}
-		
-	}
-	
 	public static class MonthAdapter extends ArrayAdapter<Month>{
-
 		public MonthAdapter(Context context) {
 			super(context, android.R.layout.simple_spinner_item, Month.values());
 			setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		}
-		
-		
 	}
 	
 	public static class DaysAdapter extends ArrayAdapter<String>{
@@ -129,21 +89,18 @@ public class StableDateView extends DateChooser{
 
 	@Override
 	public boolean checkData() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
-	public ContentValues getValues() {
-		ContentValues values = new ContentValues(2);
-		values.put("stableMonth", monthSpinner.getSelectedItemPosition());
-		values.put("stableDay", daySpinner.getSelectedItemPosition());
-		return values;
-	}
-
-	@Override
-	public String getType() {
-		return null;
+	public HolidayDate getDate() {
+		HolidayDate.Builder builder = new HolidayDate.Builder();
+		HolidayDate date = builder
+				.setActualMonth(monthSpinner.getSelectedItemPosition())
+				.setActualDay(daySpinner.getSelectedItemPosition()+1)
+				.create()
+		;
+		return date;
 	}
 	
 }

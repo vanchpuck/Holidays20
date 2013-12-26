@@ -8,6 +8,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,14 +21,16 @@ public final class HolidaysListView extends ListView{
 		public void onItemClick(AdapterView<?> parent, View view, int idx,long id) {
 			Holiday holiday = (Holiday) parent.getAdapter().getItem(idx);
 			
-			HolidayDetailView detailView = (HolidayDetailView)View.inflate(view.getContext(), R.layout.dialog_detail, null);
+			
+			ContextThemeWrapper wrapper = new ContextThemeWrapper(view.getContext(), R.style.DialogBaseTheme);
+
+			HolidayDetailView detailView = (HolidayDetailView)LayoutInflater.from(wrapper).inflate(R.layout.dialog_detail, null);
 			detailView.setHoliday(holiday);
 			
-			Builder builder = new AlertDialog.Builder(view.getContext());				
+			Builder builder = new AlertDialog.Builder(wrapper);				
 			builder.setPositiveButton("Ok", null)
 				.setView(detailView) 
 				.show();
-			
 		}
 	}
 	

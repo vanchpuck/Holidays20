@@ -5,8 +5,8 @@ public class CountryBelorussia extends Country {
 	public static final int ID = 3;
 	
 	@Override
-	int getDrawableId() {
-		return R.drawable.bel_circle_s_1;
+	public int getDrawableId() {
+		return R.drawable.flag_bel;
 	}
 
 	@Override
@@ -15,7 +15,7 @@ public class CountryBelorussia extends Country {
 	}
 	
 	@Override
-	int getId() {
+	public int getId() {
 		return ID;
 	}
 

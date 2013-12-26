@@ -1,0 +1,9 @@
+<resources>
+
+    <dimen name="widget_margin">0dp</dimen>
+    <dimen name="widget_header_height">14dp</dimen>
+    <dimen name="widget_margin_content">-2dp</dimen>
+    <dimen name="widget_margin_flag">3dp</dimen>
+    <dimen name="widget_margin_date">6dp</dimen>
+
+</resources>

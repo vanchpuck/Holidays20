@@ -1,14 +1,14 @@
 package com.jonnygold.holidays.calendar;
 
-abstract class Country {
+public abstract class Country {
 	
 	protected Country(){};
 	
-	abstract int getDrawableId();
+	public abstract int getDrawableId();
 	
-	abstract String getName();
+	public abstract String getName();
 	
-	abstract int getId();
+	public abstract int getId();
 	
 	@Override
 	public boolean equals(Object o) {
