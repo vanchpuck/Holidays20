@@ -2,6 +2,7 @@ package com.jonnygold.holidays.calendar;
 
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -92,9 +93,16 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				
 				try{
 					holidaysBase.saveHoliday(holiday);
+										
 					holidaysBase.updateFloatHolidays(Calendar.getInstance().get(Calendar.YEAR));
 					
-					setPager(Calendar.getInstance());
+//					Calendar calend = Calendar.getInstance();
+//					calend.set(Calendar.YEAR, dateTag.getYear());
+								
+					DaysPagerAdapter adapter = (DaysPagerAdapter)viewPager.getAdapter();
+					setPager(adapter.getCurrentView());
+//					viewPager.setCurrentItem(viewPager.getCurrentItem());
+					
 					Toast.makeText(getContext(), "Запись добавлена.", Toast.LENGTH_SHORT).show();
 				}
 				catch(SQLiteException exc){
@@ -383,14 +391,16 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	private void setPager(Calendar onDate){
 		
+		holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
+//		holidaysBase.updateFloatHolidays(Calendar.getInstance().get(Calendar.YEAR));
+		
 		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
 		viewPager = new ViewPager(this);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setSaveEnabled(true);
+        viewPager.setSaveEnabled(false);
         viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);     
         Log.w("Limit", viewPager.getOffscreenPageLimit()+"");
-//        viewPager.
-        
+
         PagerTitleStrip strip = new PagerTitleStrip(this);
 		ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
 		layoutParams.height = ViewPager.LayoutParams.WRAP_CONTENT;
