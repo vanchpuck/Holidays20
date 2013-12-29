@@ -15,7 +15,7 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	protected final Context context;
 	
 	protected final String databaseName;
-	
+		
 	public CopiedBaseHelper(Context context, String name, int version) throws IOException{
 		super(context, name, null, version);
 		this.context = context;
@@ -36,7 +36,15 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if(newVersion > oldVersion){
+			try {
+				updateDataBaseFile(db);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	/**
 	 * Return the name of the database. 
@@ -61,6 +69,27 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 		return exists;
 	}
 	
+	private boolean updateDataBaseFile(SQLiteDatabase db) throws IOException{
+
+		InputStream input = context.getAssets().open(databaseName);
+		 
+    	//Open the empty db as the output stream
+    	OutputStream output = new FileOutputStream(db.getPath());
+    	    	
+    	//transfer bytes from the inputfile to the outputfile
+    	byte[] buffer = new byte[1024];
+    	int length;
+    	while ((length = input.read(buffer)) != -1){
+    		output.write(buffer, 0, length);
+    	}
+    	
+    	//Close the streams
+    	output.flush();
+    	output.close();
+    	input.close();
+    	
+    	return true;
+	}
 	
 	/**
 	 * Copy database file from assets to working directory.
@@ -76,28 +105,7 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 		SQLiteDatabase tempDb = getReadableDatabase();
 		tempDb.close();
 		
-//		try{
-			//Open your local db as the input stream
-	    	InputStream input = context.getAssets().open(databaseName);
-	 
-	    	//Open the empty db as the output stream
-	    	OutputStream output = new FileOutputStream(path);
-	    	
-	    	//transfer bytes from the inputfile to the outputfile
-	    	byte[] buffer = new byte[1024];
-	    	int length;
-	    	while ((length = input.read(buffer)) != -1){
-	    		output.write(buffer, 0, length);
-	    	}
-	    	
-	    	//Close the streams
-	    	output.flush();
-	    	output.close();
-	    	input.close();
-	    	
-//		} catch (Exception exc){
-//			copied = false;
-//		}
+		updateDataBaseFile(tempDb);
     	
 		return copied;
 	}

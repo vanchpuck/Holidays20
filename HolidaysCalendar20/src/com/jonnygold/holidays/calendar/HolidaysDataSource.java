@@ -194,8 +194,10 @@ public class HolidaysDataSource {
 			return true;
 			
 		}catch(SQLiteException exc){
+			Log.w("!!!!!", "---------|");
+			exc.printStackTrace();
+			Log.w("!!!!!", "---------|");
 			return false;
-			
 		}
 	}
 		

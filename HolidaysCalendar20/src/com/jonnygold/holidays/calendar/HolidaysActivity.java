@@ -40,18 +40,11 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class HolidaysActivity extends ActionBarActivity implements OnQueryTextListener {
-
-//	public static SharedPreferences prefere;// = PreferenceManager.getDefaultSharedPreferences(collection.getContext());
-	
-//	private static class NewHolidayView extends LinearLayout{
-//		public NewHolidayView(Context context, AttributeSet attrs) {
-//			super(context, attrs);
-//		}
-//	}
 	
 	private class NewHolidayDialog extends AlertDialog{
 				
@@ -93,15 +86,8 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				
 				try{
 					holidaysBase.saveHoliday(holiday);
-										
-					holidaysBase.updateFloatHolidays(Calendar.getInstance().get(Calendar.YEAR));
 					
-//					Calendar calend = Calendar.getInstance();
-//					calend.set(Calendar.YEAR, dateTag.getYear());
-								
-					DaysPagerAdapter adapter = (DaysPagerAdapter)viewPager.getAdapter();
-					setPager(adapter.getCurrentView());
-//					viewPager.setCurrentItem(viewPager.getCurrentItem());
+					updatePager();
 					
 					Toast.makeText(getContext(), "Запись добавлена.", Toast.LENGTH_SHORT).show();
 				}
@@ -120,7 +106,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			this.setTitle("Новый праздник");
 		}	
 
-
 	}
 	
 	
@@ -128,10 +113,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	private static final int DATE_PICKER_DIALOG = 1;
 	
 	private HolidaysDataSource holidaysBase;
-	
-//	private Calendar calendar;
-	
-//	private DaysPagerAdapter pagerAdapter;
 	
 	private ViewPager viewPager;
 	
@@ -141,16 +122,14 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		setContentView(R.layout.activity_holidays);
 		
 		holidaysBase = HolidaysDataSource.getInstance(this);
-		if(holidaysBase == null){
+		if(holidaysBase == null ){
 			showMountError();
 			return;
 		}
 		
-		holidaysBase.openForReading();
+		holidaysBase.openForWriting();
 		
 		getSupportActionBar().setTitle("Праздники");
-	    
-//	    registerForContextMenu(findViewById(R.id.view_holidays));
 	    
 	}
 	
@@ -212,7 +191,8 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		case R.id.action_del_holiday :
 			if(holiday.isDeletable()){
 				holidaysBase.deleteHoliday(holiday);
-				setPager(Calendar.getInstance());
+				updatePager();
+//				setPager(Calendar.getInstance());
 			}
 			else{
 				Toast.makeText(this, "Только праздники пользователя доступны для удаления.", Toast.LENGTH_LONG).show();
@@ -220,30 +200,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return true;
 		}
 		return super.onContextItemSelected(item);
-//		
-//		
-//		if (item.getItemId() == R.id.action_add_to_calendar) {
-//			
-//			AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-//			
-//			Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
-//						
-//			Calendar date = Calendar.getInstance();
-//			date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
-//			date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
-//			Intent intent = new Intent(Intent.ACTION_EDIT)
-////			        .setData(Uri.parse("content://com.android.calendar/events"))
-//			        .setType("vnd.android.cursor.item/event")
-//			        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-//			        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
-//			        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
-//			        .putExtra(Events.TITLE, holiday.getTitle())
-//			        .putExtra(Events.DESCRIPTION, holiday.getDescription());
-//			startActivity(intent);
-//			
-//			return true;
-//		}
-//		return super.onContextItemSelected(item);
+
 	}
 	
 	@Override
@@ -256,9 +213,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	  
 	  MenuItem searchItem = menu.findItem(R.id.action_search);
 	  SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//	  if (searchView != null) {
-//	     searchView.setOnQueryTextListener(this);
-//	  }
 	  
 	  SearchableActivity act = new SearchableActivity();
 	  
@@ -269,52 +223,13 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		  Log.w("NULL1", "NULL11");
 	  }
 	  
-//	  Log.w("1", getComponentName().getClassName());
-//	  Log.w("1", getComponentName().getShortClassName());
-//	  Log.w("1", getComponentName().getPackageName());
-	  
 	  searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //	  searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 	  searchView.setQueryHint("Поиск праздника");
 
 	  return super.onCreateOptionsMenu(menu);
 	}
-	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.holidays, menu);
-//		
-//		Log.w("test1", "1");
-//		
-//		// Get the SearchView and set the searchable configuration
-//	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//	    
-//	    Log.w("test1", "2");
-//	    
-//	    MenuItem searchItem = menu.findItem(R.id.action_search);
-//	    
-//	    
-////	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-////        if (searchView != null) {
-////            SearchViewCompat.setOnQueryTextListener(searchView, mOnQueryTextListener);
-////            searchView.setIconifiedByDefault(false);
-////            Log.d("Test","SearchView not null");
-////        } else
-////            Log.d("Test", "SearchView is null");
-//	    
-//	    
-//
-//	    // Assumes current activity is the searchable activity
-//	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//	    
-//	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-//
-//	    Log.w("test1", "6");
-//		
-//		return true;
-//	}
+
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -326,13 +241,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	            return true; 
 	        case R.id.action_add_holiday :
 	        	NewHolidayDialog addDialog = new NewHolidayDialog(this);
-//	        	addDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//					@Override
-//					public void onDismiss(DialogInterface dialog) {
-//						Log.w("D", "D");
-//						setPager(Calendar.getInstance());
-//					}
-//				});
 	        	addDialog.show();
 	            return true; 
 	        case R.id.action_go_to_date :
@@ -381,18 +289,18 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		}
 		return super.onCreateDialog(id);
 	}
-	
-//	private void setPager(Holiday holiday){
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.set(Calendar.MONTH, holiday.getDate().getActualMonth());
-//		calendar.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
-//		setPager(calendar);
-//	}
+
+	private void updatePager(){
+		LinearLayout v = (LinearLayout)viewPager.findViewWithTag(viewPager.getCurrentItem());
+		View vv = v.getChildAt(0);
+		HolidaysListView hList = (HolidaysListView) vv;
+		
+		setPager(hList.getCalendar());
+	}
 	
 	private void setPager(Calendar onDate){
 		
 		holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
-//		holidaysBase.updateFloatHolidays(Calendar.getInstance().get(Calendar.YEAR));
 		
 		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
 		viewPager = new ViewPager(this);

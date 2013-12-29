@@ -1,5 +1,6 @@
 package com.jonnygold.holidays.calendar;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,21 +35,7 @@ public final class HolidaysListView extends ListView{
 		}
 	}
 	
-	
-	
-//	public static class HolidayDetailView extends View{
-//
-//		public HolidayDetailView(Context context, AttributeSet attrs) {
-//			super(context, attrs);
-//		}
-//		
-//		set
-//		
-//		public void setHoliday(Holiday holiday){
-//			
-//		}
-//		
-//	}
+	private Calendar calendar;
 	
 	public HolidaysListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -57,6 +44,16 @@ public final class HolidaysListView extends ListView{
 	public void setHolidays(List<Holiday> holidays){
 		HolidaysAdapter listAdapter = new HolidaysAdapter(getContext(), holidays);
 		setAdapter(listAdapter);
+	}
+	
+	public void setCalendar(Calendar calendar){
+		Calendar calend = Calendar.getInstance();
+		calend.setTime(calendar.getTime());
+		this.calendar = calend;
+	}
+	
+	public Calendar getCalendar(){
+		return calendar;
 	}
 	
 }

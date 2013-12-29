@@ -63,12 +63,12 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		return day+" "+month;
 	}
 	
-	@Override
-	public void setPrimaryItem(ViewGroup container, int position, Object object) {
-		currItem = Calendar.getInstance();
-		currItem.setTime(calendar.getTime());
-		//super.setPrimaryItem(container, position, object);
-	}
+//	@Override
+//	public void setPrimaryItem(ViewGroup container, int position, Object object) {
+//		currItem = Calendar.getInstance();
+//		currItem.setTime(calendar.getTime());
+//		//super.setPrimaryItem(container, position, object);
+//	}
 		
 	@Override
 	public Object instantiateItem(View collection, int position){
@@ -85,7 +85,8 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		
 		// Inflate view
 		View page = activity.getLayoutInflater().inflate(R.layout.activity_holidays, null);
-				
+		page.setTag(position);
+		
 		// Get holidays from database
 		final List<Holiday> holidays = getHolidays();
 		
@@ -94,6 +95,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
 //		holidaysView.setAdapter(listAdapter);
 		
 		holidaysView.setHolidays(holidays);
+		holidaysView.setCalendar(calendar);
 		holidaysView.setOnItemClickListener(new HolidaysListView.OnHolidayClickListener());
 		
 		activity.registerForContextMenu(holidaysView);
