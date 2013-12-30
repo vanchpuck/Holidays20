@@ -52,13 +52,14 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		
-		db = HolidaysDataSource.getInstance(context);
+		db = HolidaysDataSource.newInstance(context);
+		db.openForReading();
 		
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		DecimalFormat formatter = new DecimalFormat("00");
 		
-		// Устанавливаем текущую дату
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 		Calendar calendar = Calendar.getInstance();
         String currDateStr = " "
         		+calendar.get(Calendar.DAY_OF_MONTH)+" "
@@ -79,10 +80,10 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 
             List<Holiday> holidays = getHolidays();
             
-            // Очищаем виджет
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             cleanWidget(views);
             
-            // Текущая дата
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
             views.setTextViewText(R.id.view_txt_curr_date, currDateStr);
             
             int rowCount = getRowCount(sharedPref);
@@ -116,7 +117,7 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-		
+		db.close();
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 	
@@ -163,9 +164,9 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 		restriction.setCountryes(countryIdList)
 			.setLimit(getRowCount(sharedPref));
 		
-		db.openForReading();
+//		db.openForReading();
 		List<Holiday> holidays = db.getHolidays(restriction);
-		db.close();
+//		db.close();
 		Log.w("###WIDGET UPDATE###", "GOOD!!!!");
 		return holidays;
 	}

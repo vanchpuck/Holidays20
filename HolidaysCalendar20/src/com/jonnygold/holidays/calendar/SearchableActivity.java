@@ -32,7 +32,7 @@ public class SearchableActivity extends ActionBarActivity{
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_holidays);
 
-	    holidaysBase = HolidaysDataSource.getInstance(this);
+	    holidaysBase = HolidaysDataSource.newInstance(this);
 	    holidaysBase.openForReading();
 	    
 	    // Get the intent, verify the action and get the query
@@ -97,13 +97,6 @@ public class SearchableActivity extends ActionBarActivity{
 		}
 		return super.onContextItemSelected(item);
 	}
-	
-//	private List<Holiday> getHolidays(String query){
-//		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
-//    	restriction.setTitle(query);
-//    	restriction.setLimit(MAX_ROW_COUNT);
-//    	return holidaysBase.getHolidays(restriction);
-//	}
 		
 	private List<Holiday> getHolidays(String query){
 		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
@@ -131,7 +124,7 @@ public class SearchableActivity extends ActionBarActivity{
 		}
 		restriction.setCountryes(countryIdList);
 		
-		holidaysBase.openForReading();
+		//holidaysBase.openForReading();
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
 		return holidays;
 	}

@@ -180,10 +180,20 @@ public class HolidaysDataSource {
 			} catch (IOException e) {
 				dataSource = null;
 			}
-//			dataSource = new HolidaysDataSource(context);
-//			dataSource = null;
 		}
 		return dataSource;
+	}
+	
+	public static HolidaysDataSource newInstance(Context context){		
+		HolidaysDataSource ds = null;
+		if(ds == null){
+			try {
+				ds = new HolidaysDataSource(context);
+			} catch (IOException e) {
+				ds = null;
+			}
+		}
+		return ds;
 	}
 	
 	public boolean openForReading() {
@@ -506,7 +516,7 @@ public class HolidaysDataSource {
 			
 //			Log.w("SAVE", "begin");
 			
-//			Log.w("actualDateStr", "1-й пон янв.");
+//			Log.w("actualDateStr", "1-пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ.");
 //			Log.w("title", holiday.getTitle().toString());
 //			Log.w("description", holiday.getDescription());
 //			Log.w("month", 1+"");
@@ -537,7 +547,7 @@ public class HolidaysDataSource {
 			Log.w("type", holiday.getType()+"");
 			values.put("id_priority", holiday.getType());
 		
-			// Предположим, что сохранять можно только пользовательские праздники:
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ:
 			values.put("id_image", 161);
 			long id = db.insertOrThrow("t_holidays", null, values);
 			
