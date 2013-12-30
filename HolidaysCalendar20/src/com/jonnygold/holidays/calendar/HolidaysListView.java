@@ -1,14 +1,12 @@
 package com.jonnygold.holidays.calendar;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -18,6 +18,7 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+//import android.util.Log;
 import android.util.Log;
 
 public class HolidaysDataSource {
@@ -194,9 +195,9 @@ public class HolidaysDataSource {
 			return true;
 			
 		}catch(SQLiteException exc){
-			Log.w("!!!!!", "---------|");
+//			Log.w("!!!!!", "---------|");
 			exc.printStackTrace();
-			Log.w("!!!!!", "---------|");
+//			Log.w("!!!!!", "---------|");
 			return false;
 		}
 	}
@@ -241,7 +242,7 @@ public class HolidaysDataSource {
 		if(restriction != null){
 			query += restriction.getWhereClause();
 		}
-		Log.w("QUERY", query);
+//		Log.w("QUERY", query);
 		
 		// Execute query
 		Cursor c = db.rawQuery(query, new String[]{});
@@ -257,7 +258,7 @@ public class HolidaysDataSource {
 		updateEasterDate(year);
 		updateMonthFloatDates(year);
 		updateYearFloatDates(year);
-		Log.w("UPDATE", "UPDATE");
+//		Log.w("UPDATE", "UPDATE");
 	}
 	
 	public void updateMonthFloatDates(int year){
@@ -330,7 +331,7 @@ public class HolidaysDataSource {
 				"						t_YearFloatHolidays "											+
 				"		) "
 		;	
-		Log.w("Year", query);
+//		Log.w("Year", query);
 		
 		Cursor cursor = db.rawQuery(query, new String[]{});
 		cursor.moveToFirst();
@@ -357,7 +358,7 @@ public class HolidaysDataSource {
         	month = 4;
         }
         
-        Log.w("easter", year+"/"+month+"/"+day);
+//        Log.w("easter", year+"/"+month+"/"+day);
         DecimalFormat formatter = new DecimalFormat("00");
         
         String query = 
@@ -388,7 +389,7 @@ public class HolidaysDataSource {
 				"						t_easterHolidays "									+
 				"		) "
 		;
-        Log.w("easter", query);
+//        Log.w("easter", query);
 
     	Cursor cursor = db.rawQuery(query, new String[]{});
 		cursor.moveToFirst();
@@ -503,7 +504,7 @@ public class HolidaysDataSource {
 		
 		try{
 			
-			Log.w("SAVE", "begin");
+//			Log.w("SAVE", "begin");
 			
 //			Log.w("actualDateStr", "1-й пон янв.");
 //			Log.w("title", holiday.getTitle().toString());
@@ -515,7 +516,7 @@ public class HolidaysDataSource {
 			HolidayDate date = holiday.getDate();
 			
 			
-			Log.w("SAVE", "holiday");
+//			Log.w("SAVE", "holiday");
 			
 			values = new ContentValues();
 			Log.w("title", holiday.getTitle());
@@ -537,7 +538,7 @@ public class HolidaysDataSource {
 			values.put("id_priority", holiday.getType());
 		
 			// Предположим, что сохранять можно только пользовательские праздники:
-			values.put("id_image", 23);
+			values.put("id_image", 161);
 			long id = db.insertOrThrow("t_holidays", null, values);
 			
 			values.clear();
@@ -549,32 +550,32 @@ public class HolidaysDataSource {
 			
 			
 			if(date.isMonthFloat()){
-				Log.w("SAVE", "month");
+//				Log.w("SAVE", "month");
 				
 				values.clear();
-				Log.w("id_holiday", id+"");
+//				Log.w("id_holiday", id+"");
 				values.put("id_holiday", id);
 				
-				Log.w("month", holiday.getDate().getFloatMonth()+"");
+//				Log.w("month", holiday.getDate().getFloatMonth()+"");
 				values.put("month", holiday.getDate().getFloatMonth());
 				
-				Log.w("weekDay", holiday.getDate().getWeekDay()+"");
+//				Log.w("weekDay", holiday.getDate().getWeekDay()+"");
 				values.put("weekDay", holiday.getDate().getWeekDay());
 				
-				Log.w("dayOffset", holiday.getDate().getOffset()+"");
+//				Log.w("dayOffset", holiday.getDate().getOffset()+"");
 				values.put("dayOffset", holiday.getDate().getOffset());
 				
 				db.insertOrThrow("t_MonthFloatHolidays", null, values);
 			}
 			
 			else if(date.isYearFloat()){
-				Log.w("SAVE", "year");
+//				Log.w("SAVE", "year");
 				
 				values.clear();
-				Log.w("id_holiday", id+"");
+//				Log.w("id_holiday", id+"");
 				values.put("id_holiday", id);
 				
-				Log.w("day", holiday.getDate().getYearDay()+"");
+//				Log.w("day", holiday.getDate().getYearDay()+"");
 				values.put("day", holiday.getDate().getYearDay());
 				
 				db.insertOrThrow("t_YearFloatHolidays", null, values);
@@ -583,7 +584,7 @@ public class HolidaysDataSource {
 			db.setTransactionSuccessful();
 		}
 		catch(SQLiteException exc){
-			Log.w("HolidaySaving", "Exception");
+//			Log.w("HolidaySaving", "Exception");
 			exc.printStackTrace();
 			throw new SQLiteException();
 		}

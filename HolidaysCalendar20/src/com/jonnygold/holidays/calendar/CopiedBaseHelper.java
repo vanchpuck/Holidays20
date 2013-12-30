@@ -1,5 +1,6 @@
 package com.jonnygold.holidays.calendar;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,12 +10,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class CopiedBaseHelper extends SQLiteOpenHelper{
 	
 	protected final Context context;
 	
 	protected final String databaseName;
+	
+	private File f; //Лень делать прилично
 		
 	public CopiedBaseHelper(Context context, String name, int version) throws IOException{
 		super(context, name, null, version);
@@ -25,6 +29,15 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 		// Path to database files
 		String path = context.getDatabasePath(name).getPath();
 		
+		f = context.getDatabasePath(name).getParentFile();
+		if (f.isDirectory()){
+			for(File ff : f.listFiles()){
+				ff.delete();
+			}
+		}
+		
+		Log.w("Create", path);
+		
 		// Check whether the database file exists. If not - copy file from assets
 		if(!isDatabaseExist(path)){
 			copyDatabaseFile(path);
@@ -33,17 +46,29 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {}
+	public void onCreate(SQLiteDatabase db) {
+		Log.w("OnCreate", "ON_CREATE");
+		try {
+			updateDataBaseFile(db);
+		} catch (IOException e) {
+			Log.w("OnCreate", "EXCEPTION");
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if(newVersion > oldVersion){
-			try {
-				updateDataBaseFile(db);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		Log.w("UpdateDB", "ON_UPDATE");
+//		if(newVersion > oldVersion){
+//			try {
+//				Log.w("UpdateDB", "UPDATE");
+//				Log.w("UpdateDB", "OldVersion = "+oldVersion);
+//				Log.w("UpdateDB", "NewVersion = "+newVersion);
+//				updateDataBaseFile(db);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	/**
@@ -70,19 +95,21 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	}
 	
 	private boolean updateDataBaseFile(SQLiteDatabase db) throws IOException{
-
+//		db.close();
+		Log.w("CopyDB", "1");
 		InputStream input = context.getAssets().open(databaseName);
-		 
+		Log.w("CopyDB", "2");
     	//Open the empty db as the output stream
     	OutputStream output = new FileOutputStream(db.getPath());
-    	    	
+    	Log.w("CopyDB", "3");  	
     	//transfer bytes from the inputfile to the outputfile
     	byte[] buffer = new byte[1024];
     	int length;
     	while ((length = input.read(buffer)) != -1){
+//    		Log.w("CopyDB", "COPY");
     		output.write(buffer, 0, length);
     	}
-    	
+    	Log.w("CopyDB", "4");
     	//Close the streams
     	output.flush();
     	output.close();
@@ -99,6 +126,7 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 	 * @throws IOException 
 	 */
 	private boolean copyDatabaseFile(String path) throws IOException{
+		Log.w("COPY_DB", "COPY");
 		boolean copied = true;
 				
 		// Create database file

@@ -6,9 +6,7 @@ import java.util.List;
 
 import com.jonnygold.holidays.calendar.HolidaysDataSource.QueryRestriction;
 
-import android.app.AlertDialog;
 import android.app.SearchManager;
-import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,16 +14,12 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchableActivity extends ActionBarActivity{
 

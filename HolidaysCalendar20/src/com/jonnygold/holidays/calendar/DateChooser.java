@@ -1,6 +1,5 @@
 package com.jonnygold.holidays.calendar;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;

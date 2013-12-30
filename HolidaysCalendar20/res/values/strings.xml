@@ -6,6 +6,8 @@
     <string name="db_err_title">Ошибка распаковки базы данных</string>
     <string name="db_err_message">Убедитесь, что на устройстве достаточно свободного места и переустановите приложение.</string> 
     
+    <string name="adMob">a150e51c3db4af1</string>
+    
     <!-- /Настройки\ -->
     <string name="pref_holidays_list">Список праздников</string>    
     <string name="pref_russian_holidays">Праздники России</string>

@@ -2,7 +2,6 @@ package com.jonnygold.holidays.calendar;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 public class NewHolidayView extends LinearLayout{

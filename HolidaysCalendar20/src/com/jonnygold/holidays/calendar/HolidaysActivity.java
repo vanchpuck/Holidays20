@@ -2,7 +2,6 @@ package com.jonnygold.holidays.calendar;
 
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -127,7 +126,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return;
 		}
 		
-		holidaysBase.openForWriting();
+//		holidaysBase.openForReading();
 		
 		getSupportActionBar().setTitle("Праздники");
 	    

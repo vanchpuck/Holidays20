@@ -2,7 +2,6 @@ package com.jonnygold.holidays.calendar;
 
 import java.util.List;
 
-import android.widget.BaseAdapter;
 import android.widget.SimpleAdapter;
 
 public interface AdapterManager<T> {

@@ -16,7 +16,7 @@ public class DetailActivity extends ActionBarActivity{
 		// Read Holiday object from Parcel
 		Holiday holiday = (Holiday) getIntent().getExtras().getParcelable(Holiday.class.getName());
 //		
-		Log.w("TITLE", holiday.getTitle());
+//		Log.w("TITLE", holiday.getTitle());
 		
 		ImageView iv = (ImageView)findViewById(R.id.view_icon_detail);
 		iv.setImageDrawable(holiday.getDrawable());

@@ -1,13 +1,11 @@
 package com.jonnygold.holidays.calendar;
 
 import android.content.Context;
-import android.text.style.BulletSpan;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 public class FloatMonthDateView extends DateChooser{
 
