@@ -29,7 +29,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -56,7 +55,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				EditText description = (EditText) findViewById(R.id.view_txt_new_description); 
 				
 				if(title.length() == 0){
-					Toast.makeText(getContext(), "Не указано название праздника.", Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), R.string.msg_no_title, Toast.LENGTH_LONG).show();
 					return;
 				}
 				
@@ -64,9 +63,8 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				if(date == null)
 					return;
 				
-				holidaysBase = HolidaysDataSource.getInstance(getContext());
-				
-				holidaysBase.openForWriting();
+//				holidaysBase = HolidaysDataSource.newInstance(getContext());
+//				holidaysBase.openForWriting();
 				
 				Set<Country> country = new HashSet<Country>();
 				country.add(new CountryUser());
@@ -88,21 +86,21 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 					
 					updatePager();
 					
-					Toast.makeText(getContext(), "Запись добавлена.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), R.string.msg_new_rec, Toast.LENGTH_SHORT).show();
 				}
 				catch(SQLiteException exc){
-					Toast.makeText(getContext(), "Не удалось сохранить запись.", Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), R.string.msg_del_err, Toast.LENGTH_LONG).show();
 				}
 			}
 		}
 		
-		private HolidaysDataSource holidaysBase;
+//		private HolidaysDataSource holidaysBase;
 		
 		public NewHolidayDialog(Context context) {
 			super(context);
 			this.setView(View.inflate(getContext(), R.layout.view_new_holiday, null));
-			this.setButton(BUTTON_POSITIVE, "Сохранить", new OnClickListener());
-			this.setTitle("Новый праздник");
+			this.setButton(BUTTON_POSITIVE, getString(R.string.str_save), new OnClickListener());
+			this.setTitle(R.string.str_new_holiday);
 		}	
 
 	}
@@ -118,9 +116,9 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_holidays);
+		setContentView(R.layout.activity_holidays_pager);
 		
-		holidaysBase = HolidaysDataSource.getInstance(this);
+		holidaysBase = HolidaysDataSource.newInstance(this);
 		if(holidaysBase == null ){
 			showMountError();
 			return;
@@ -128,7 +126,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 //		holidaysBase.openForReading();
 		
-		getSupportActionBar().setTitle("Праздники");
+		getSupportActionBar().setTitle(R.string.action_bar_tite);
 	    
 	}
 	
@@ -143,7 +141,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 		holidaysBase.openForReading();
 		
-		holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
+//		holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
 				
 		setPager(calendar);
         
@@ -153,7 +151,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+		holidaysBase.close();
 	}
 	
 	@Override
@@ -165,7 +163,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		holidaysBase.openForReading();
 	}
 	
 	@Override
@@ -181,8 +178,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 		Holiday holiday = (Holiday) ((HolidaysListView)acmi.targetView.getParent()).getAdapter().getItem(acmi.position);
 		
-		holidaysBase.openForReading();
-		
 		switch(item.getItemId()){
 		case R.id.action_add_to_calendar : 
 			exportToCalendar(holiday);
@@ -194,7 +189,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 //				setPager(Calendar.getInstance());
 			}
 			else{
-				Toast.makeText(this, "Только праздники пользователя доступны для удаления.", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.msg_src_del_err, Toast.LENGTH_LONG).show();
 			}
 			return true;
 		}
@@ -212,19 +207,10 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	  
 	  MenuItem searchItem = menu.findItem(R.id.action_search);
 	  SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-	  
-	  SearchableActivity act = new SearchableActivity();
-	  
-	  if(searchManager.getSearchableInfo(getComponentName()) == null){
-		  Log.w("NULL1", "NULL11");
-	  }
-	  if(searchManager.getSearchableInfo(act.getComponentName()) == null){
-		  Log.w("NULL1", "NULL11");
-	  }
-	  
+	  	  
 	  searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //	  searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-	  searchView.setQueryHint("Поиск праздника");
+	  searchView.setQueryHint(getString(R.string.str_find_holiday));
 
 	  return super.onCreateOptionsMenu(menu);
 	}
@@ -244,8 +230,10 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	            return true; 
 	        case R.id.action_go_to_date :
 	        	showDialog(DATE_PICKER_DIALOG);
+	        	return true;
 	        case R.id.action_go_to_current_date :
 	        	setPager(Calendar.getInstance());
+	        	return true;
 	        default :
 	        	return true;
 	    }
@@ -269,9 +257,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	protected Dialog onCreateDialog(int id) {
 		if (id == DATE_PICKER_DIALOG) {
-			/*
-			 * При открытии диалога сбрасывается дата
-			 */
 			OnDateSetListener myCallBack = new OnDateSetListener() {
 	    		@Override
 	    	    public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
@@ -279,7 +264,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	    			calendar.clear();
 	    			calendar.set(year, monthOfYear, dayOfMonth);
 	    			
-	    			setPager(calendar);
+	    			updatePager(calendar);
 	    	    }
         	};
         	Calendar calend = Calendar.getInstance();
@@ -290,32 +275,42 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	}
 
 	private void updatePager(){
-		LinearLayout v = (LinearLayout)viewPager.findViewWithTag(viewPager.getCurrentItem());
-		View vv = v.getChildAt(0);
-		HolidaysListView hList = (HolidaysListView) vv;
-		
-		setPager(hList.getCalendar());
+        LinearLayout v = (LinearLayout)viewPager.findViewWithTag(viewPager.getCurrentItem());
+        View vv = v.getChildAt(0);
+        HolidaysListView hList = (HolidaysListView) vv;
+        
+        updatePager(hList.getCalendar());
 	}
-	
+
+	private void updatePager(Calendar onDate){
+        holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
+	        
+        DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);   
+	}
+
 	private void setPager(Calendar onDate){
-		
-		holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
-		
-		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
-		viewPager = new ViewPager(this);
+        
+        holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
+        
+        DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setSaveEnabled(false);
         viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);     
-        Log.w("Limit", viewPager.getOffscreenPageLimit()+"");
+        //Log.w("Limit", viewPager.getOffscreenPageLimit()+"");
 
         PagerTitleStrip strip = new PagerTitleStrip(this);
-		ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
-		layoutParams.height = ViewPager.LayoutParams.WRAP_CONTENT;
-		layoutParams.width = ViewPager.LayoutParams.MATCH_PARENT;
-		layoutParams.gravity = Gravity.TOP;
+        ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
+        layoutParams.height = ViewPager.LayoutParams.WRAP_CONTENT;
+        layoutParams.width = ViewPager.LayoutParams.MATCH_PARENT;
+        layoutParams.gravity = Gravity.TOP;
+        viewPager.removeAllViews();
         viewPager.addView(strip, layoutParams);
-        
-        setContentView(viewPager);  
+
+        //setContentView(viewPager);  
 	}
 	
 	private void exportToCalendar(Holiday holiday){
@@ -323,13 +318,12 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
 		date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
 		Intent intent = new Intent(Intent.ACTION_EDIT)
-//		        .setData(Uri.parse("content://com.android.calendar/events"))
-		        .setType("vnd.android.cursor.item/event")
-		        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-		        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
-		        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
-		        .putExtra(Events.TITLE, holiday.getTitle())
-		        .putExtra(Events.DESCRIPTION, holiday.getDescription());
+	        .setType("vnd.android.cursor.item/event")
+	        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+	        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
+	        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
+	        .putExtra(Events.TITLE, holiday.getTitle())
+	        .putExtra(Events.DESCRIPTION, holiday.getDescription());
 		startActivity(intent);
 	}
 	
@@ -350,7 +344,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	private void showMountError(){
 		Builder builder = new AlertDialog.Builder(this); 
-		builder.setPositiveButton("Ок", new AlertDialog.OnClickListener() {
+		builder.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

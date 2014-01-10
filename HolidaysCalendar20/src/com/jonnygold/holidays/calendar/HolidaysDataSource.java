@@ -26,13 +26,13 @@ public class HolidaysDataSource {
 	private final static int COL_HLIDAY_TITLE = 0;
 	private final static int COL_HOLIDAY_DESCRIPTION = 1;
 	private final static int COL_HOLIDAY_DATE = 2;
-	private final static int COL_HOLIDAY_DAY = 3;
+//	private final static int COL_HOLIDAY_DAY = 3;
 	private final static int COL_PRIORITY_ID = 4;
 	private final static int COL_IMAGE = 5;
-	private final static int COL_M_FLOAT_MONTH = 6;
-	private final static int COL_M_FLOAT_WEEKDAY = 7;
-	private final static int COL_M_FLOAT_DAY_OFFSET = 8;
-	private final static int COL_Y_FLOAT_DAY = 9;
+//	private final static int COL_M_FLOAT_MONTH = 6;
+//	private final static int COL_M_FLOAT_WEEKDAY = 7;
+//	private final static int COL_M_FLOAT_DAY_OFFSET = 8;
+//	private final static int COL_Y_FLOAT_DAY = 9;
 	private final static int COL_HOLIDAY_ID = 10;
 	
 	private final static String HOLIDAYS_QUERY = 
@@ -166,24 +166,32 @@ public class HolidaysDataSource {
 	private SQLiteDatabase db;
 	
 	private HolidaysBaseHelper dbHelper;
-	
-	private static HolidaysDataSource dataSource;
-	
+		
 	private HolidaysDataSource(Context context) throws IOException{
 		dbHelper = new HolidaysBaseHelper(context);
 	}
 	
-	public static HolidaysDataSource getInstance(Context context){
-		if(dataSource == null){
-			try {
-				dataSource = new HolidaysDataSource(context);
-			} catch (IOException e) {
-				dataSource = null;
-			}
-//			dataSource = new HolidaysDataSource(context);
-//			dataSource = null;
+//	public static HolidaysDataSource getInstance(Context context){
+//		if(dataSource == null){
+//			try {
+//				dataSource = new HolidaysDataSource(context);
+//			} catch (IOException e) {
+//				dataSource = null;
+//			}
+////			dataSource = new HolidaysDataSource(context);
+////			dataSource = null;
+//		}
+//		return dataSource;
+//	}
+	
+	public static HolidaysDataSource newInstance(Context context){
+		HolidaysDataSource ds = null;
+		try {
+			ds = new HolidaysDataSource(context);
+		} catch (IOException e) {
+			ds = null;
 		}
-		return dataSource;
+		return ds;
 	}
 	
 	public boolean openForReading() {
@@ -504,14 +512,7 @@ public class HolidaysDataSource {
 		
 		try{
 			
-//			Log.w("SAVE", "begin");
-			
-//			Log.w("actualDateStr", "1-й пон янв.");
-//			Log.w("title", holiday.getTitle().toString());
-//			Log.w("description", holiday.getDescription());
-//			Log.w("month", 1+"");
-//			Log.w("day", 1+"");
-//			Log.w("id_priority", holiday.getType()+"");
+
 			
 			HolidayDate date = holiday.getDate();
 			
@@ -537,7 +538,6 @@ public class HolidaysDataSource {
 			Log.w("type", holiday.getType()+"");
 			values.put("id_priority", holiday.getType());
 		
-			// Предположим, что сохранять можно только пользовательские праздники:
 			values.put("id_image", 161);
 			long id = db.insertOrThrow("t_holidays", null, values);
 			

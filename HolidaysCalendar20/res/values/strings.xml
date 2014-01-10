@@ -8,6 +8,17 @@
     
     <string name="adMob">a150e51c3db4af1</string>
     
+    <string name="action_bar_tite">Праздники</string>
+    <string name="str_find_holiday">Поиск праздника</string>
+    <string name="str_save">Сохранить</string>
+    <string name="str_new_holiday">Новый праздник</string>
+    
+    <string name="msg_src_del_err">Только праздники пользователя доступны для удаления.</string>
+    <string name="msg_no_title">Не указано название праздника.</string>    
+    <string name="msg_new_rec">Запись добавлена.</string>
+    <string name="msg_del_err">Не удалось сохранить запись.</string>
+    
+    
     <!-- /Настройки\ -->
     <string name="pref_holidays_list">Список праздников</string>    
     <string name="pref_russian_holidays">Праздники России</string>

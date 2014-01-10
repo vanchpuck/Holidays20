@@ -164,7 +164,7 @@ public class HolidayDate {
 			}
 		}
 		else if(isYearFloat()){
-			
+			result+=(yearDay+1)+"-й день года";
 		}
 		return result;
 		

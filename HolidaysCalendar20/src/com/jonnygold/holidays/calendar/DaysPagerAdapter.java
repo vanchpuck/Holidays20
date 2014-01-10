@@ -83,7 +83,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		year = currYear;
 		
 		// Inflate view
-		View page = activity.getLayoutInflater().inflate(R.layout.activity_holidays, null);
+		View page = activity.getLayoutInflater().inflate(R.layout.view_holidays_list, null);
 		page.setTag(position);
 		
 		// Get holidays from database
@@ -143,7 +143,6 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		}
 		restriction.setCountryes(countryIdList);
 		
-		holidaysBase.openForReading();
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
 		return holidays;
 	}

@@ -32,7 +32,9 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 		f = context.getDatabasePath(name).getParentFile();
 		if (f.isDirectory()){
 			for(File ff : f.listFiles()){
-				ff.delete();
+				if(!"mydb20".equals(ff.getName())){
+					ff.delete();
+				}
 			}
 		}
 		
@@ -47,13 +49,13 @@ public class CopiedBaseHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.w("OnCreate", "ON_CREATE");
-		try {
-			updateDataBaseFile(db);
-		} catch (IOException e) {
-			Log.w("OnCreate", "EXCEPTION");
-			e.printStackTrace();
-		}
+//		Log.w("OnCreate", "ON_CREATE");
+//		try {
+//			updateDataBaseFile(db);
+//		} catch (IOException e) {
+//			Log.w("OnCreate", "EXCEPTION");
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

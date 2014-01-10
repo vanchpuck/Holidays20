@@ -52,13 +52,13 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		
-		db = HolidaysDataSource.getInstance(context);
+		db = HolidaysDataSource.newInstance(context);
+		db.openForReading();
 		
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		DecimalFormat formatter = new DecimalFormat("00");
 		
-		// Устанавливаем текущую дату
 		Calendar calendar = Calendar.getInstance();
         String currDateStr = " "
         		+calendar.get(Calendar.DAY_OF_MONTH)+" "
@@ -79,10 +79,8 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 
             List<Holiday> holidays = getHolidays();
             
-            // Очищаем виджет
             cleanWidget(views);
             
-            // Текущая дата
             views.setTextViewText(R.id.view_txt_curr_date, currDateStr);
             
             int rowCount = getRowCount(sharedPref);
@@ -116,7 +114,7 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-		
+		db.close();
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 	
@@ -134,21 +132,17 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 	private List<Holiday> getHolidays(){
 		calendar = Calendar.getInstance();
 		
-		Log.w("Step", 2+"");
 		
 		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
 		restriction.setDate(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
 			.includeAfter();
 		
-		Log.w("Step", 3+"");
 		
 		List<Integer> countryIdList = new ArrayList<Integer>(4);		
 		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
-			Log.w("WorldCountry", sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)+"");
 			countryIdList.add(CountryWorld.ID);
 		}
 		if(sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)){
-			Log.w("RusCountry", sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)+"");
 			countryIdList.add(CountryRussia.ID);
 		}
 		if(sharedPref.getBoolean(SettingsActivity.KEY_BELORUSSIAN_HOLIDAYS, true)){
@@ -163,10 +157,8 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 		restriction.setCountryes(countryIdList)
 			.setLimit(getRowCount(sharedPref));
 		
-		db.openForReading();
+		
 		List<Holiday> holidays = db.getHolidays(restriction);
-		db.close();
-		Log.w("###WIDGET UPDATE###", "GOOD!!!!");
 		return holidays;
 	}
 

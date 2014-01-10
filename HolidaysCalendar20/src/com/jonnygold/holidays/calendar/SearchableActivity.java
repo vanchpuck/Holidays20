@@ -32,7 +32,7 @@ public class SearchableActivity extends ActionBarActivity{
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_holidays);
 
-	    holidaysBase = HolidaysDataSource.getInstance(this);
+	    holidaysBase = HolidaysDataSource.newInstance(this);
 	    holidaysBase.openForReading();
 	    
 	    // Get the intent, verify the action and get the query
@@ -131,7 +131,6 @@ public class SearchableActivity extends ActionBarActivity{
 		}
 		restriction.setCountryes(countryIdList);
 		
-		holidaysBase.openForReading();
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
 		return holidays;
 	}
