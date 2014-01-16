@@ -317,7 +317,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	private void exportToCalendar(Holiday holiday){
 		Calendar date = Calendar.getInstance();
 		date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
-		date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay());
+		date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay()+1);
 		Intent intent = new Intent(Intent.ACTION_EDIT)
 	        .setType("vnd.android.cursor.item/event")
 	        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
