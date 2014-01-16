@@ -1,7 +1,7 @@
-<com.jonnygold.holidays.calendar.FloatYearDateView
+<com.jonnygold.holidays.fullcalendar.FloatYearDateView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/view_float_year_date"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" 
     android:orientation="vertical">
-</com.jonnygold.holidays.calendar.FloatYearDateView>
+</com.jonnygold.holidays.fullcalendar.FloatYearDateView>
