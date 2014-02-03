@@ -1,14 +1,32 @@
 package com.jonnygold.holidays.fullcalendar;
 
-public abstract class Country {
+import android.graphics.drawable.Drawable;
+
+public class Country {
 	
-	protected Country(){};
+	private int id;
 	
-	public abstract int getDrawableId();
+	private String title;
 	
-	public abstract String getName();
+	private Drawable icon;
 	
-	public abstract int getId();
+	public Country(int id, String title, Drawable icon){
+		this.id = id;
+		this.title = title;
+		this.icon = icon;
+	}
+	
+	public Drawable getDrawable(){
+		return icon;
+	}
+	
+	public String getTitle(){
+		return title;
+	}
+	
+	public int getId(){
+		return id;
+	}
 	
 	@Override
 	public boolean equals(Object o) {

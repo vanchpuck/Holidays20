@@ -28,7 +28,7 @@ public class HolidayDetailView extends LinearLayout{
 		ImageView flagView = null;
 		for(Country country : holiday.getCountries()){
 			flagView = (ImageView)this.findViewById(flagViews[i]);
-			flagView.setImageResource(country.getDrawableId());
+			flagView.setImageDrawable(country.getDrawable());
 			i++;
 		}
 	}

@@ -37,6 +37,8 @@ public final class DaysPagerAdapter extends PagerAdapter{
 	private Calendar currItem;
 
 	public DaysPagerAdapter(Activity activity, HolidaysDataSource holidaysBase, Calendar calendar){
+		CountryManager.init(activity);
+		CountryManager.refresh();
 		this.calendar = calendar;
 		this.year = calendar.get(Calendar.YEAR);
 		this.activity = activity;
@@ -125,8 +127,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
 	private List<Holiday> getHolidays(){
 		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
 		restriction.setDate(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-		
-		
+				
 		List<Integer> countryIdList = new ArrayList<Integer>(4);		
 		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
 			countryIdList.add(CountryWorld.ID);

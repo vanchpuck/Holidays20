@@ -68,7 +68,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 //				holidaysBase.openForWriting();
 				
 				Set<Country> country = new HashSet<Country>();
-				country.add(new CountryUser());
+				country.add(new CountryUser(getContext()));
 				
 				Holiday holiday = new Holiday(
 						-1, 

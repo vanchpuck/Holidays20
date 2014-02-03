@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.jonnygold.holidays.fullcalendar.Country;
 import com.jonnygold.holidays.fullcalendar.CountryBelorussia;
+import com.jonnygold.holidays.fullcalendar.CountryManager;
 import com.jonnygold.holidays.fullcalendar.CountryRussia;
 import com.jonnygold.holidays.fullcalendar.CountryUkrane;
 import com.jonnygold.holidays.fullcalendar.CountryUser;
@@ -27,6 +28,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
@@ -54,6 +57,9 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+		
+		CountryManager.init(context);
+		CountryManager.refresh();
 		
 		db = HolidaysDataSource.newInstance(context);
 		db.openForReading();
@@ -113,7 +119,8 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
                 int c = 0;
 //                int titleLen = MAX_TITLE_LENGTH;
                 for(Country cntr : holiday.getCountries()){
-                	views.setImageViewResource(dataRows[idx].getFlagViews()[c], cntr.getDrawableId());
+//                	views.setImageViewResource(dataRows[idx].getFlagViews()[c], cntr.getDrawableId());
+                	views.setImageViewBitmap(dataRows[idx].getFlagViews()[c], ((BitmapDrawable)cntr.getDrawable()).getBitmap());
                 	if(c >= rowCount)
                 		break;
                 	c++;

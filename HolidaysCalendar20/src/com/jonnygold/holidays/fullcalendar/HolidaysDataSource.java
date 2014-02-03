@@ -452,7 +452,7 @@ public class HolidaysDataSource {
 		// Prepare query
 		String query = 
 				"SELECT " 													+
-				"		TCH.id_country " 									+				
+				"		TCH.id_country " 											+
 				"FROM " 													+
 				"		T_CountryHolidays TCH " 							+
 				"WHERE "													+
@@ -465,6 +465,7 @@ public class HolidaysDataSource {
 		Country country = null;
 		// Fill the collection of countries 
 		while(c.moveToNext()){
+			int idd = c.getInt(0);
 			country = CountryManager.getCountry(c.getInt(0));
 			if(restriction.getCountries().contains(country.getId())){
 				countries.add(CountryManager.getCountry(c.getInt(0)));
@@ -592,6 +593,43 @@ public class HolidaysDataSource {
 			db.endTransaction();
 		}
 		
+	}
+	
+	public List<Country> getExtraCountries(){
+		// TODO realization
+		
+		// Prepare query
+		String query = 
+				"SELECT " 													+
+				"		TC._id " 											+	
+				"	,	TC.name " 											+
+				"	,	TI.image " 											+
+				"FROM " 													+
+				"		t_countries TC " 									+
+				"	LEFT JOIN t_images TI ON TC.id_image = TI._id "			+
+				"WHERE "													+
+				"		TC.id_image <> null "								+
+				"ORDER BY "													+
+				"		TCH.id_country "									
+		;
+		Cursor c = db.rawQuery(query, new String[]{});
+		
+		Country country = null;
+		ByteArrayInputStream inStream = null;
+		Drawable icon = null;
+		List<Country> countries = new ArrayList<Country>();
+		// Fill the collection of countries 
+		while(c.moveToNext()){
+			inStream = new ByteArrayInputStream(c.getBlob(COL_IMAGE));
+			icon = new BitmapDrawable(BitmapFactory.decodeStream(inStream));
+			
+			country = new Country(c.getInt(0), c.getString(1), icon);
+			countries.add(country);
+		}
+		
+		c.close();
+		
+		return null;
 	}
 	
 }

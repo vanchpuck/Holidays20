@@ -108,6 +108,9 @@ public class SearchableActivity extends ActionBarActivity{
 //	}
 		
 	private List<Holiday> getHolidays(String query){
+		CountryManager.init(this);
+		CountryManager.refresh();
+		
 		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
 		
     	restriction.setTitle(query);

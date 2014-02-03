@@ -58,7 +58,7 @@ public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 		ImageView flagView = null;
 		for(Iterator<Country> iterator=holiday.getCountries().iterator(); iterator.hasNext(); ){
 			flagView = (ImageView)listItem.findViewById(flagViews[i]);
-			flagView.setImageResource(iterator.next().getDrawableId());
+			flagView.setImageDrawable(iterator.next().getDrawable());
 			i++;
 		}
 		

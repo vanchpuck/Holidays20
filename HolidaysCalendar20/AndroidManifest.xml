@@ -16,8 +16,7 @@
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".HolidaysActivity" 
-            android:label="Календарь праздников +"
-            android:screenOrientation="portrait">
+            android:label="Календарь праздников +">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

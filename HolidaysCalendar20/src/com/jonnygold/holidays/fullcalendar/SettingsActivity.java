@@ -3,7 +3,10 @@ package com.jonnygold.holidays.fullcalendar;
 import com.jonnygold.holidays.fullcalendar.R;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 
 public class SettingsActivity extends PreferenceActivity {
 	
@@ -24,6 +27,30 @@ public class SettingsActivity extends PreferenceActivity {
 //
 //        getListView().setCacheColorHint(Color.TRANSPARENT);
         
+        //fetch the item where you wish to insert the CheckBoxPreference, in this case a PreferenceCategory with key "targetCategory"
+        PreferenceScreen targetCategory = (PreferenceScreen)findPreference("key_holidays_list");
+
+        CountryManager.init(this);
+        CountryManager.refresh();
+        
+        CheckBoxPreference checkBoxPreference = null;
+        for(Country country : CountryManager.getCountries()){
+        	checkBoxPreference = new CheckBoxPreference(this);
+            //make sure each key is unique  
+            checkBoxPreference.setKey(String.valueOf(country.getId()));
+            checkBoxPreference.setTitle(country.getTitle()+"_test");
+            checkBoxPreference.setChecked(true);
+            
+            targetCategory.addPreference(checkBoxPreference);
+        }
+//        //create one check box for each setting you need
+//        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
+//        //make sure each key is unique  
+//        checkBoxPreference.setKey("key_test");
+//        checkBoxPreference.setTitle("key_test_title");
+//        checkBoxPreference.setChecked(true);
+//
+//        targetCategory.addPreference(checkBoxPreference);
         
         
     }
