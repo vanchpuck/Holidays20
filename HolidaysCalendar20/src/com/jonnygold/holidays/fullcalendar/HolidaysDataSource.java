@@ -511,11 +511,7 @@ public class HolidaysDataSource {
 		ContentValues values = null;
 		
 		try{
-			
-
-			
 			HolidayDate date = holiday.getDate();
-			
 			
 //			Log.w("SAVE", "holiday");
 			

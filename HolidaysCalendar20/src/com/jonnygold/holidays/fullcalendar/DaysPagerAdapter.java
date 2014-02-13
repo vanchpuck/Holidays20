@@ -143,6 +143,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		if(sharedPref.getBoolean(SettingsActivity.KEY_USER_HOLIDAYS, true)){
 			countryIdList.add(CountryUser.ID);
 		}
+		sharedPref.edit().putBoolean("key_world_holidays", false).apply();
 		restriction.setCountryes(countryIdList);
 		
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);

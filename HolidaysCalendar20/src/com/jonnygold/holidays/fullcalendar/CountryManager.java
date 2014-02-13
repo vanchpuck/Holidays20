@@ -8,6 +8,7 @@ public class CountryManager {
 		case CountryRussia.ID : 	return new CountryRussia();
 		case CountryBelorussia.ID : return new CountryBelorussia();
 		case CountryUkrane.ID : 	return new CountryUkrane();
+		case CountryKazakhstan.ID : return new CountryKazakhstan();
 		case CountryUser.ID : 		return new CountryUser();
 		default : 					return null;
 		}
