@@ -19,7 +19,7 @@ public class HolidayDetailView extends LinearLayout{
 	public void setHoliday(Holiday holiday){
 		((TextView) this.findViewById(R.id.view_txt_holiday_date)).setText(holiday.getDateString());
 		((TextView) this.findViewById(R.id.view_txt_holiday_title)).setText(holiday.getTitle().toUpperCase(Locale.getDefault()));
-		((ImageView) this.findViewById(R.id.view_img_holiday_picture)).setImageDrawable(holiday.getDrawable());
+		((ImageView) this.findViewById(R.id.view_img_holiday_picture)).setImageDrawable(holiday.getPicture().getDrawable());
 		((TextView) this.findViewById(R.id.view_txt_holiday_description)).setText(holiday.getDescription());
 		
 		int[] flagViews = new int[]{R.id.view_img_info_flag_1, R.id.view_img_info_flag_2, R.id.view_img_info_flag_3, R.id.view_img_info_flag_4};

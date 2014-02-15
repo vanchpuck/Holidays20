@@ -42,13 +42,15 @@ public class HolidaysDataSource {
 			"	,	TH.actualDateStr " 												+
 			"	,	TH.day " 														+
 			"	,	TP._id "														+
-			"	,	TI.image " 														+
+			"	,	TI.image " 														+			
 			"	,	TMFH.month "													+
 			"	, 	TMFH.weekDay "													+
 			"	,	TMFH.dayOffset "												+
 			"	,	TYFH.day "														+
 			"	,	TH._id "														+
 			"	,	TH.month "														+
+			"	,	TI.description " 												+
+			"	,	TI._id " 												+
 			"FROM " 																+
 			"		T_HOLIDAYS TH " 												+
 			"	LEFT JOIN T_Images TI ON TH.id_image = TI._id "						+
@@ -412,19 +414,22 @@ public class HolidaysDataSource {
 		Holiday holiday = null;
 		Set<Country> countries = null;
 		ByteArrayInputStream inStream = null;
-		Drawable icon = null;
+		Picture icon = null;
 		
 		// Put holidays into the Set
 		while(cursor.moveToNext()){
 			// Get countries where holiday is celebrated
 			countries = getCountries(cursor.getInt(COL_HOLIDAY_ID), restriction);
 			
-			inStream = new ByteArrayInputStream(cursor.getBlob(COL_IMAGE));
-			icon = new BitmapDrawable(BitmapFactory.decodeStream(inStream)); 
+//			inStream = new ByteArrayInputStream(cursor.getBlob(COL_IMAGE));
+//			icon = new BitmapDrawable(BitmapFactory.decodeStream(inStream)); 
+			
+			icon = new Picture(cursor.getInt(13), cursor.getString(12), cursor.getBlob(COL_IMAGE));
 			
 			HolidayDate.Builder builder = new HolidayDate.Builder();
 			HolidayDate date = builder.setActualMonth(cursor.getInt(11)).setActualDay(cursor.getInt(3)).create();
 			
+						
 			// Construct Holiday object
 			holiday = new Holiday(
 					cursor.getInt(COL_HOLIDAY_ID), 

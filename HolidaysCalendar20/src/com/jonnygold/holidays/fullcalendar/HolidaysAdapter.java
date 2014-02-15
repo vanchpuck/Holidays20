@@ -50,7 +50,7 @@ public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 //		titeView.setText(holiday.getTitle().toUpperCase(Locale.getDefault()));
 		
 		ImageView pictureView = (ImageView)listItem.findViewById(R.id.view_picture);
-		pictureView.setImageDrawable(holiday.getDrawable());
+		pictureView.setImageDrawable(holiday.getPicture().getDrawable());
 				
 		int[] flagViews = new int[]{R.id.view_flag_1, R.id.view_flag_2, R.id.view_flag_3, R.id.view_flag_4};
 		

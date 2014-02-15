@@ -43,7 +43,7 @@ public class Holiday implements Parcelable{
 	
 	private int type;
 	
-	private Drawable picture;
+	private IsPicture picture;
 	
 	private String description;
 	
@@ -65,15 +65,15 @@ public class Holiday implements Parcelable{
 		
 		HolidayDate.Builder builder = new HolidayDate.Builder();
 		this.date = builder.setActualMonth(in.readInt()).setActualDay(in.readInt()).create();
+		this.picture = new Picture(in.readInt(), in.readString(), in.createByteArray());
 		
-		
-		byte[] pictureData = in.createByteArray();
-		
-		Log.w("SIZE", pictureData.toString()+"");
+//		byte[] pictureData = in.createByteArray();
 //		
-		ByteArrayInputStream is = new ByteArrayInputStream(pictureData);
+//		Log.w("SIZE", pictureData.toString()+"");
+////		
+//		ByteArrayInputStream is = new ByteArrayInputStream(pictureData);
 //		
-		this.picture = new BitmapDrawable(null, is);
+//		this.picture = new BitmapDrawable(null, is);
 	}
 	
 	public Holiday(
@@ -81,7 +81,7 @@ public class Holiday implements Parcelable{
 			String tittle, 
 			String dateStr, 
 			int type, 
-			Drawable picture, 
+			IsPicture picture, 
 			String description, 
 			Set<Country> countries,
 			HolidayDate date){
@@ -110,12 +110,12 @@ public class Holiday implements Parcelable{
 		out.writeString(description);
 		out.writeInt(date.getActualMonth());
 		out.writeInt(date.getActualDay());
-		
+		out.writeInt(picture.getId());
 		// Write picture
-		Bitmap bitmap = ((BitmapDrawable)picture).getBitmap();
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-		out.writeByteArray(stream.toByteArray());
+//		Bitmap bitmap = ((BitmapDrawable)picture).getBitmap();
+//		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		out.writeByteArray(picture.getData());
 		
 		Log.w("WRITE", "WRITE");
 				
@@ -139,7 +139,7 @@ public class Holiday implements Parcelable{
 		return type;
 	}
 	
-	public Drawable getDrawable(){
+	public IsPicture getPicture(){
 		return picture;
 	}
 	

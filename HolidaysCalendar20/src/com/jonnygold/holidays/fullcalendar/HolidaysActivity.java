@@ -75,7 +75,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 						title.getText().toString().toLowerCase(), 
 						date.toString(), 
 						Holiday.Type.USER_HOLIDAY, 
-						getContext().getResources().getDrawable(R.drawable.ic_launcher), 
+						DefaultPicture.getInstance(), 
 						description.getText().toString(), 
 						country, 
 						date
