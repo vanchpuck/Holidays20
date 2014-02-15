@@ -1,4 +1,4 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.holiday;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

@@ -1,7 +1,5 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import com.jonnygold.holidays.fullcalendar.R;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.jonnygold.holidays.fullcalendar.holiday.Country;
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 
 public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 

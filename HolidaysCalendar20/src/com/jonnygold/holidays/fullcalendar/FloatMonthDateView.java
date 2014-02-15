@@ -7,6 +7,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.jonnygold.holidays.fullcalendar.holiday.DayOrder;
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.holiday.Month;
+import com.jonnygold.holidays.fullcalendar.holiday.WeekDay;
+
 public class FloatMonthDateView extends DateChooser{
 
 	private static class MonthAdapter extends ArrayAdapter<Month>{

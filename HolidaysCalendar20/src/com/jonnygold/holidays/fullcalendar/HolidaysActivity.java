@@ -1,29 +1,24 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import com.jonnygold.holidays.fullcalendar.R;
-import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
-import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
-
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
-
-import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.provider.CalendarContract.Events;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.SearchManager;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
+import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
@@ -31,17 +26,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+
+import com.jonnygold.holidays.fullcalendar.holiday.Country;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUser;
+import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
+import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 
 public class HolidaysActivity extends ActionBarActivity implements OnQueryTextListener {
 	

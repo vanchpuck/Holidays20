@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+
 public class FloatYearDateView extends DateChooser {
 
 	@Override

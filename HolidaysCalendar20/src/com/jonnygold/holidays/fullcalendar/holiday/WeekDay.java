@@ -1,4 +1,4 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.holiday;
 
 public enum WeekDay {
 	SUNDAY("воскресенье"),

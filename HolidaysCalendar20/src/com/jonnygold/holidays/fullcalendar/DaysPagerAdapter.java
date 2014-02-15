@@ -1,13 +1,9 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import com.jonnygold.holidays.fullcalendar.R;
-import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -15,6 +11,15 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryBelorussia;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryRussia;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUkrane;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUser;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryWorld;
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
+import com.jonnygold.holidays.fullcalendar.holiday.Month;
 
 public final class DaysPagerAdapter extends PagerAdapter{
 	

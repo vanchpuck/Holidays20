@@ -15,11 +15,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-//import android.util.Log;
 import android.util.Log;
+
+import com.jonnygold.holidays.fullcalendar.holiday.Country;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.holiday.Picture;
+//import android.util.Log;
 
 public class HolidaysDataSource {
 

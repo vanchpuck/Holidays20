@@ -1,4 +1,4 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.holiday;
 
 import com.jonnygold.holidays.fullcalendar.R;
 

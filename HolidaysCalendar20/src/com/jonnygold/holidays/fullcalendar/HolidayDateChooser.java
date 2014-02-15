@@ -1,7 +1,5 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import com.jonnygold.holidays.fullcalendar.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
 
 public final class HolidayDateChooser extends LinearLayout{
 

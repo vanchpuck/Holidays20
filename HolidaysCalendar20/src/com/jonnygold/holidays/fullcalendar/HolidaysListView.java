@@ -1,7 +1,5 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import com.jonnygold.holidays.fullcalendar.R;
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -14,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 
 public final class HolidaysListView extends ListView{
 

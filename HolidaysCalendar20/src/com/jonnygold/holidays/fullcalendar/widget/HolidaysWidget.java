@@ -5,22 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.jonnygold.holidays.fullcalendar.Country;
-import com.jonnygold.holidays.fullcalendar.CountryBelorussia;
-import com.jonnygold.holidays.fullcalendar.CountryRussia;
-import com.jonnygold.holidays.fullcalendar.CountryUkrane;
-import com.jonnygold.holidays.fullcalendar.CountryUser;
-import com.jonnygold.holidays.fullcalendar.CountryWorld;
-import com.jonnygold.holidays.fullcalendar.Holiday;
-import com.jonnygold.holidays.fullcalendar.HolidayDate;
-import com.jonnygold.holidays.fullcalendar.HolidaysActivity;
-import com.jonnygold.holidays.fullcalendar.HolidaysDataSource;
-import com.jonnygold.holidays.fullcalendar.Month;
-import com.jonnygold.holidays.fullcalendar.R;
-import com.jonnygold.holidays.fullcalendar.SettingsActivity;
-import com.jonnygold.holidays.fullcalendar.WeekDay;
-import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -29,6 +13,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
+
+import com.jonnygold.holidays.fullcalendar.HolidaysActivity;
+import com.jonnygold.holidays.fullcalendar.HolidaysDataSource;
+import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
+import com.jonnygold.holidays.fullcalendar.R;
+import com.jonnygold.holidays.fullcalendar.SettingsActivity;
+import com.jonnygold.holidays.fullcalendar.holiday.Country;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryBelorussia;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryRussia;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUkrane;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUser;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryWorld;
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.holiday.Month;
+import com.jonnygold.holidays.fullcalendar.holiday.WeekDay;
 
 public abstract class HolidaysWidget extends AppWidgetProvider{
 	

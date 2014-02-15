@@ -1,6 +1,6 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.holiday;
 
-enum DayOrder{
+public enum DayOrder{
 	FIRST("Первый(я)", 0),
 	SECOND("Второй(я)", 7),
 	THIRD("Третий(я)", 14),

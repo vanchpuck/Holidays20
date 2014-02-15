@@ -1,24 +1,23 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.holiday;
 
 import com.jonnygold.holidays.fullcalendar.R;
 
-public class CountryBelorussia extends Country {
+public class CountryUkrane extends Country {
 
-	public static final int ID = 3;
+	public static final int ID = 4;
 	
 	@Override
 	public int getDrawableId() {
-		return R.drawable.flag_bel;
+		return R.drawable.flag_ukr;
 	}
 
 	@Override
 	public String getName() {
-		return "Belorussia";
+		return "Ukrane";
 	}
 	
 	@Override
 	public int getId() {
 		return ID;
 	}
-
 }

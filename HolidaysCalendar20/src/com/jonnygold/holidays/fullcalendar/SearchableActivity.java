@@ -1,12 +1,8 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import com.jonnygold.holidays.fullcalendar.R;
-import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -17,11 +13,19 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+
+import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryBelorussia;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryRussia;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUkrane;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryUser;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryWorld;
+import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 
 public class SearchableActivity extends ActionBarActivity{
 

@@ -1,4 +1,4 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.holiday;
 
 public enum Month{
 	JANUARY("‗םגאנü", "ÿםגאנÿ", 31),

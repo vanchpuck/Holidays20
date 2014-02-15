@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+
 public abstract class DateChooser extends LinearLayout{
 
 	public DateChooser(Context context) {
