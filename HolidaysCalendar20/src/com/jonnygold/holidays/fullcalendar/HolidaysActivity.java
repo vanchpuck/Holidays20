@@ -2,6 +2,7 @@ package com.jonnygold.holidays.fullcalendar;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import android.app.AlertDialog;
@@ -39,10 +40,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryUser;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayRaw;
+import com.jonnygold.holidays.fullcalendar.web.WebService;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 
@@ -71,7 +74,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 //				holidaysBase.openForWriting();
 				
 				Set<Country> country = new HashSet<Country>();
-				country.add(new CountryUser());
+				country.add(Country.USER);
 				
 				Holiday holiday = new Holiday(
 						-1, 
@@ -128,6 +131,9 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return;
 		}
 		
+		
+		
+		
 //		holidaysBase.openForReading();
 		
 		getSupportActionBar().setTitle(R.string.action_bar_tite);
@@ -144,6 +150,16 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		Calendar calendar = Calendar.getInstance();
 		
 		holidaysBase.openForReading();
+		
+//		try {
+//			List<HolidayRaw> h = WebService.getInstance().getHolidays(CountryManager.getInstance().getCountry(6));
+//			for(HolidayRaw holiday : h){
+//				holidaysBase.saveHoliday(holiday);
+//			}
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 //		holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
 				

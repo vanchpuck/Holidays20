@@ -20,11 +20,7 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryBelorussia;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryRussia;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryUkrane;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryUser;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryWorld;
+import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 
 public class SearchableActivity extends ActionBarActivity{
@@ -121,19 +117,22 @@ public class SearchableActivity extends ActionBarActivity{
 		
 		List<Integer> countryIdList = new ArrayList<Integer>(4);		
 		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
-			countryIdList.add(CountryWorld.ID);
+			countryIdList.add(Country.WORLD.getId());
 		}
 		if(sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)){
-			countryIdList.add(CountryRussia.ID);
+			countryIdList.add(Country.RUSSIA.getId());
 		}
 		if(sharedPref.getBoolean(SettingsActivity.KEY_BELORUSSIAN_HOLIDAYS, true)){
-			countryIdList.add(CountryBelorussia.ID);
+			countryIdList.add(Country.BELORUSSIA.getId());
 		}
 		if(sharedPref.getBoolean(SettingsActivity.KEY_UKRANE_HOLIDAYS, true)){
-			countryIdList.add(CountryUkrane.ID);
+			countryIdList.add(Country.UKRANE.getId());
+		}
+		if(sharedPref.getBoolean(SettingsActivity.KEY_KAZACHSTAN_HOLIDAYS, true)){
+			countryIdList.add(Country.KAZACHSTAN.getId());
 		}
 		if(sharedPref.getBoolean(SettingsActivity.KEY_USER_HOLIDAYS, true)){
-			countryIdList.add(CountryUser.ID);
+			countryIdList.add(Country.USER.getId());
 		}
 		restriction.setCountryes(countryIdList);
 		

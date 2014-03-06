@@ -1,6 +1,5 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 public final class DefaultPicture extends Graphics implements IsPicture {
@@ -17,8 +16,7 @@ public final class DefaultPicture extends Graphics implements IsPicture {
 		}
 		return instance;
 	}
-
-	@Override
+	
 	public Drawable getDrawable() {
 		return null;
 	}

@@ -5,13 +5,14 @@ import java.io.ByteArrayOutputStream;
 import java.util.Set;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-public class Holiday implements Parcelable{
+public class Holiday extends HolidayRaw implements Parcelable{
 
 	public static final class Type{
 		public static final int INTERNATIONAL_HOLIDAY = 1;
@@ -35,37 +36,24 @@ public class Holiday implements Parcelable{
 	};
 
 	
-	private int id;
-	
-	private String title;
-	
-	private String dateSrt;
-	
-	private int type;
-	
-	private IsPicture picture;
-	
-	private String description;
-	
-	private Set<Country> countries;
-	
-	private HolidayDate date;
-	
 //	private int actualMonth;
 //	
 //	private int actualDay;
 	
+	private Drawable picture;
+	
 	
 	public Holiday(Parcel in){
-		this.id = in.readInt();
-		this.title = in.readString();
-		this.dateSrt = in.readString();
-		this.type = in.readInt();
-		this.description = in.readString();
+		super(-1, null, null, -1, null, null, null, null);
+		this.setId(in.readInt());
+		this.setTitle(in.readString());
+		this.setDateSrt(in.readString());
+		this.setType(in.readInt());
+		this.setDescription(in.readString());
 		
 		HolidayDate.Builder builder = new HolidayDate.Builder();
-		this.date = builder.setActualMonth(in.readInt()).setActualDay(in.readInt()).create();
-		this.picture = new Picture(in.readInt(), in.readString(), in.createByteArray());
+		this.setDate(builder.setActualMonth(in.readInt()).setActualDay(in.readInt()).create() );
+		this.setPicture(new Picture(in.readInt(), in.readString(), in.createByteArray()) );
 		
 //		byte[] pictureData = in.createByteArray();
 //		
@@ -85,15 +73,7 @@ public class Holiday implements Parcelable{
 			String description, 
 			Set<Country> countries,
 			HolidayDate date){
-		
-		this.id = id;
-		this.title = tittle;
-		this.dateSrt = dateStr;
-		this.type = type;
-		this.picture = picture;
-		this.description = description;
-		this.countries = countries;
-		this.date = date;
+		super(id, tittle, dateStr, type, picture, description, countries, date);
 	}
 	
 	@Override
@@ -103,19 +83,19 @@ public class Holiday implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeInt(id);
-		out.writeString(title);
-		out.writeString(dateSrt);
-		out.writeInt(type);
-		out.writeString(description);
-		out.writeInt(date.getActualMonth());
-		out.writeInt(date.getActualDay());
-		out.writeInt(picture.getId());
+		out.writeInt(getId());
+		out.writeString(getTitle());
+		out.writeString(getDateString());
+		out.writeInt(getType());
+		out.writeString(getDescription());
+		out.writeInt(getDate().getActualMonth());
+		out.writeInt(getDate().getActualDay());
+		out.writeInt(getPicture().getId());
 		// Write picture
 //		Bitmap bitmap = ((BitmapDrawable)picture).getBitmap();
 //		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-		out.writeByteArray(picture.getData());
+		out.writeByteArray(getPicture().getData());
 		
 		Log.w("WRITE", "WRITE");
 				
@@ -123,41 +103,11 @@ public class Holiday implements Parcelable{
 	}
 	
 	
-	public int getId(){
-		return id;
-	}
 	
-	public String getTitle(){
-		return title;
-	}
-	
-	public String getDateString(){
-		return dateSrt;
-	}
-	
-	public int getType(){
-		return type;
-	}
-	
-	public IsPicture getPicture(){
-		return picture;
-	}
-	
-	public String getDescription(){
-		return description;
-	}
-	
-	public Set<Country> getCountries(){
-		return countries;
-	}
-	
-	public HolidayDate getDate(){
-		return date;
-	}
 
 	public boolean isDeletable(){
 		for(Country c : getCountries()){
-			if(CountryUser.class.equals(c.getClass())){
+			if(Country.USER.getClass().equals(c.getClass())){
 				return true;
 			}
 		}
@@ -182,4 +132,11 @@ public class Holiday implements Parcelable{
 	public int hashCode() {
 		return this.getId();
 	}
+
+	@SuppressWarnings("deprecation")
+	public Drawable getDrawable(){
+		ByteArrayInputStream inStream = new ByteArrayInputStream(getPicture().getData());
+		return new BitmapDrawable(BitmapFactory.decodeStream(inStream)); 
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.holiday.HolidayRaw;
 import com.jonnygold.holidays.fullcalendar.holiday.Picture;
 //import android.util.Log;
 
@@ -225,6 +227,18 @@ public class HolidaysDataSource {
 		}
 	}
 	
+	public void beginTransaction(){
+		db.beginTransaction();
+	}
+	
+	public void setTransactionSuccessful(){
+		db.setTransactionSuccessful();
+	}
+	
+	public void endTransaction(){
+		db.endTransaction();
+	}
+	
 	public boolean isOpen(){
 		return db.isOpen();
 	}
@@ -248,6 +262,19 @@ public class HolidaysDataSource {
 //		
 //		return holidays;
 //	}
+	
+	public Collection<Country> getCountries(){
+		Cursor c = db.query("t_countries", new String[]{"_id"}, null, null, null, null, "_id asc");
+	
+		List<Country> countries = new ArrayList<Country>();
+		
+		while(c.moveToNext()){
+			countries.add(CountryManager.getInstance().getCountry(c.getInt(0)));
+		}
+		c.close();
+		
+		return countries;
+	}
 	
 	public List<Holiday> getHolidays(QueryRestriction restriction){
 		// Prepare query
@@ -473,9 +500,9 @@ public class HolidaysDataSource {
 		Country country = null;
 		// Fill the collection of countries 
 		while(c.moveToNext()){
-			country = CountryManager.getCountry(c.getInt(0));
+			country = CountryManager.getInstance().getCountry(c.getInt(0));
 			if(restriction.getCountries().contains(country.getId())){
-				countries.add(CountryManager.getCountry(c.getInt(0)));
+				countries.add(CountryManager.getInstance().getCountry(c.getInt(0)));
 			}
 		}
 		
@@ -484,7 +511,7 @@ public class HolidaysDataSource {
 		return countries;
 	}
 	
-	public void deleteHoliday(Holiday holiday){
+	public void deleteHoliday(HolidayRaw holiday){
 		if(holiday.getId() == -1){
 			return;
 		}
@@ -508,8 +535,43 @@ public class HolidaysDataSource {
 			db.endTransaction();
 		}
 	}
+	
+	public void saveCountry(Country country){
+		ContentValues values = new ContentValues();
+		values.put("_id", country.getId());
+		values.put("name", country.getName());
+		values.putNull("flag");
 		
-	public void saveHoliday(Holiday holiday){
+		try{
+			db.beginTransaction();
+			db.insert("t_countries", null, values);
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+	
+	public void saveHolidays(Collection<HolidayRaw> holidays, Country country){
+		HolidayRaw[] h = new HolidayRaw[0];
+		saveHolidays(holidays.toArray(h), country);
+	}
+		
+	
+	public void saveHolidays(HolidayRaw[] holidays, Country country){
+		db.beginTransaction();
+		try{
+			for(HolidayRaw h : holidays){
+				saveHoliday(h);
+			}
+			db.setTransactionSuccessful();
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+	
+	public void saveHoliday(HolidayRaw holiday){
 		db.beginTransaction();
 		
 		if(holiday.getId() != -1){
@@ -521,28 +583,22 @@ public class HolidaysDataSource {
 		try{
 			HolidayDate date = holiday.getDate();
 			
-//			Log.w("SAVE", "holiday");
-			
 			values = new ContentValues();
-			Log.w("title", holiday.getTitle());
+			
 			values.put("title", holiday.getTitle());
 			
-			Log.w("description", holiday.getDescription());
 			values.put("description", holiday.getDescription());
 			
-			Log.w("month", holiday.getDate().getActualMonth()+"");
 			values.put("month", holiday.getDate().getActualMonth());
 			
-			Log.w("day", holiday.getDate().getActualDay()+"");
 			values.put("day", holiday.getDate().getActualDay());
 			
-			Log.w("day", holiday.getDate().toString());
 			values.put("actualDateStr", holiday.getDate().toString());
 			
-			Log.w("type", holiday.getType()+"");
 			values.put("id_priority", holiday.getType());
 		
-			values.put("id_image", 161);
+			values.put("id_image", holiday.getPicture().getId());
+			
 			long id = db.insertOrThrow("t_holidays", null, values);
 			
 			values.clear();
@@ -552,34 +608,32 @@ public class HolidaysDataSource {
 				db.insertOrThrow("t_countryholidays", null, values);
 			}
 			
+			values.clear();
+			values.put("_id", holiday.getPicture().getId());
+			values.put("description", holiday.getPicture().getTitle());
+			values.put("image", holiday.getPicture().getData());
+			db.insert("t_images", null, values);
 			
 			if(date.isMonthFloat()){
-//				Log.w("SAVE", "month");
-				
 				values.clear();
-//				Log.w("id_holiday", id+"");
+				
 				values.put("id_holiday", id);
 				
-//				Log.w("month", holiday.getDate().getFloatMonth()+"");
 				values.put("month", holiday.getDate().getFloatMonth());
 				
-//				Log.w("weekDay", holiday.getDate().getWeekDay()+"");
 				values.put("weekDay", holiday.getDate().getWeekDay());
 				
-//				Log.w("dayOffset", holiday.getDate().getOffset()+"");
 				values.put("dayOffset", holiday.getDate().getOffset());
 				
 				db.insertOrThrow("t_MonthFloatHolidays", null, values);
 			}
 			
 			else if(date.isYearFloat()){
-//				Log.w("SAVE", "year");
-				
+
 				values.clear();
-//				Log.w("id_holiday", id+"");
+				
 				values.put("id_holiday", id);
 				
-//				Log.w("day", holiday.getDate().getYearDay()+"");
 				values.put("day", holiday.getDate().getYearDay());
 				
 				db.insertOrThrow("t_YearFloatHolidays", null, values);
@@ -588,7 +642,6 @@ public class HolidaysDataSource {
 			db.setTransactionSuccessful();
 		}
 		catch(SQLiteException exc){
-//			Log.w("HolidaySaving", "Exception");
 			exc.printStackTrace();
 			throw new SQLiteException();
 		}
