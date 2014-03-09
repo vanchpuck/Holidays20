@@ -54,7 +54,7 @@ public class HolidayDate {
 	
 	public void setActualMonth(int month){
 		if(month > 11 || month < 0){
-			throw new IllegalStateException("Íåäîïóñòèìîå çíà÷åíèå ìåñÿöà.");
+			throw new IllegalStateException("ÐÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð¼ÐµÑÑÑ†Ð°.");
 		}
 		actualMonth = month;
 	}
@@ -65,7 +65,7 @@ public class HolidayDate {
 	
 	public void setActualDay(int day){
 		if(day > 31 || day < 0){
-			throw new IllegalStateException("Íåäîïóñòèìîå çíà÷åíèå äíÿ ìåñÿöà.");
+			throw new IllegalStateException("ÐÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð´Ð½Ñ Ð¼ÐµÑÑÑ†Ð°.");
 		}
 		actualDay = day;
 	}
@@ -80,7 +80,7 @@ public class HolidayDate {
 	
 	public void setFloatMonth(int floatMonth){
 		if(floatMonth > 11 || floatMonth < 0){
-			throw new IllegalStateException("Íåäîïóñòèìîå çíà÷åíèå ìåñÿöà.");
+			throw new IllegalStateException("ÐÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð¼ÐµÑÑÑ†Ð°.");
 		}
 		this.floatMonth = floatMonth;
 	}
@@ -103,7 +103,7 @@ public class HolidayDate {
 	
 	public void setYearDay(int day){
 		if(day > 366 || day < 0){
-			throw new IllegalStateException("Íåäîïóñòèìîå çíà÷åíèå äíÿ ãîäà.");
+			throw new IllegalStateException("ÐÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð´Ð½Ñ Ð³Ð¾Ð´Ð°.");
 		}
 		yearDay = day;
 	}
@@ -164,7 +164,7 @@ public class HolidayDate {
 			}
 		}
 		else if(isYearFloat()){
-			result+=(yearDay+1)+"-é äåíü ãîäà";
+			result+=(yearDay+1)+"-Ð¹ Ð´ÐµÐ½ÑŒ Ð³Ð¾Ð´Ð°";
 		}
 		return result;
 		

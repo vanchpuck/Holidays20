@@ -1,13 +1,13 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
 public enum WeekDay {
-	SUNDAY("воскресенье"),
-	MONDAY("понедельник"),
-	TUESDAY("вторник"),
-	WEDNESDAY("среда"),
-	THURSDAY("четверг"),
-	FRIDAY("пятница"),
-	SATURDAY("суббота");
+	SUNDAY("РІРѕСЃРєСЂРµСЃРµРЅСЊРµ"),
+	MONDAY("РїРѕРЅРµРґРµР»СЊРЅРёРє"),
+	TUESDAY("РІС‚РѕСЂРЅРёРє"),
+	WEDNESDAY("СЃСЂРµРґР°"),
+	THURSDAY("С‡РµС‚РІРµСЂРі"),
+	FRIDAY("РїСЏС‚РЅРёС†Р°"),
+	SATURDAY("СЃСѓР±Р±РѕС‚Р°");
 	
 	private String title;
 	

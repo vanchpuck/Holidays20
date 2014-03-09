@@ -55,16 +55,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			
 			inviteDialog = new AlertDialog.Builder(context)
 		        .setIcon(R.drawable.flag_kaz)
-		    	.setTitle("Праздники Казахстана")
-		    	.setMessage("Базу нужно загрузить")
-		    	.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+		    	.setTitle("РџСЂР°Р·РґРЅРёРєРё РљР°Р·Р°С…СЃС‚Р°РЅР°")
+		    	.setMessage("Р‘Р°Р·Сѓ РЅСѓР¶РЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ")
+		    	.setNegativeButton("РћС‚РјРµРЅР°", new DialogInterface.OnClickListener() {
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						((CheckBoxPreference)findPreference(country.getKey())).setChecked(false);
 					}
 				})
-		    	.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
+		    	.setPositiveButton("Р—Р°РіСЂСѓР·РёС‚СЊ", new DialogInterface.OnClickListener() {
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(DialogInterface dialog, int which) {						
@@ -81,7 +81,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		    	.create();
 			
 			loadingDialog = new AlertDialog.Builder(context)
-				.setTitle("Внимание!!")
+				.setTitle("Р’РЅРёРјР°РЅРёРµ!!")
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {					
 					@SuppressWarnings("deprecation")
 					@Override
@@ -99,7 +99,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		
 		AlertDialog createErrorDialog(String message){
 			return new AlertDialog.Builder(context)
-						.setTitle("Ошибка установки")
+						.setTitle("РћС€РёР±РєР° СѓСЃС‚Р°РЅРѕРІРєРё")
 						.setPositiveButton("Ok", null)
 						.setMessage(message)
 						.create();

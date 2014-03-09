@@ -53,16 +53,16 @@ public class StableDateView extends DateChooser{
 		exampleText = new TextView(getContext());
 		exampleText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		exampleText.setTextSize(10);
-		exampleText.setText("Например, 1 января...");
+		exampleText.setText("РќР°РїСЂРёРјРµСЂ, 1 СЏРЅРІР°СЂСЏ...");
 		
 //		monthSpinner = (Spinner) findViewById(R.id.spinner_stable_month);
 		monthSpinner = new Spinner(getContext());
 		monthSpinner.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		monthSpinner.setPrompt("Укажите месяц");
+		monthSpinner.setPrompt("РЈРєР°Р¶РёС‚Рµ РјРµСЃСЏС†");
 		
 		daySpinner = new Spinner(getContext());
 		daySpinner.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		daySpinner.setPrompt("Укажите день");
+		daySpinner.setPrompt("РЈРєР°Р¶РёС‚Рµ РґРµРЅСЊ");
 		
 		
 		monthSpinner.setAdapter(new MonthAdapter(getContext()));

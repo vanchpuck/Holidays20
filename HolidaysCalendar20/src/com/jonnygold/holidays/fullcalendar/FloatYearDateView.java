@@ -17,7 +17,7 @@ public class FloatYearDateView extends DateChooser {
 	public boolean checkData() {
 		Integer day = Integer.valueOf(dayNumber.getText().toString());
 		if(day == null || day > 365 || day < 1){
-			Toast.makeText(getContext(), "Ââåäèòå ÷èñëî îò 1 äî 365", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), "Ğ’Ğ²ĞµĞ´Ğ¸Ñ‚Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾ Ğ¾Ñ‚ 1 Ğ´Ğ¾ 365", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		return true;
@@ -49,14 +49,14 @@ public class FloatYearDateView extends DateChooser {
 		exampleText = new TextView(getContext());
 		exampleText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		exampleText.setTextSize(10);
-		exampleText.setText("Íàïğèìåğ, 1-é äåíü ãîäà");
+		exampleText.setText("ĞĞ°Ğ¿Ñ€Ğ¸Ğ¼ĞµÑ€, 1-Ğ¹ Ğ´ĞµĞ½ÑŒ Ğ³Ğ¾Ğ´Ğ°");
 		
 		dayNumber = new EditText(getContext());
 //		dayNumber = View.inflate(this, R.layout.et_input_number, null);
 		dayNumber.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		dayNumber.setSingleLine();
 		dayNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
-		dayNumber.setHint("Äåíü ãîäà");
+		dayNumber.setHint("Ğ”ĞµĞ½ÑŒ Ğ³Ğ¾Ğ´Ğ°");
 		dayNumber.setImeOptions(EditorInfo.IME_ACTION_DONE);
 		
 		addView(exampleText);

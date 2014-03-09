@@ -1,11 +1,11 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
 public enum DayOrder{
-	FIRST("Первый(я)", 0),
-	SECOND("Второй(я)", 7),
-	THIRD("Третий(я)", 14),
-	FOURTH("Четвертый(я)", 21),
-	LAST("Последний(я)", -7);
+	FIRST("РџРµСЂРІС‹Р№(СЏ)", 0),
+	SECOND("Р’С‚РѕСЂРѕР№(СЏ)", 7),
+	THIRD("РўСЂРµС‚РёР№(СЏ)", 14),
+	FOURTH("Р§РµС‚РІРµСЂС‚С‹Р№(СЏ)", 21),
+	LAST("РџРѕСЃР»РµРґРЅРёР№(СЏ)", -7);
 	
 	private int offset;
 	private String orderStr;

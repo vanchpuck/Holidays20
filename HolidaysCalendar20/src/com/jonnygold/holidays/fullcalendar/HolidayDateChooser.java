@@ -40,13 +40,13 @@ public final class HolidayDateChooser extends LinearLayout{
 		        // An item was selected. You can retrieve the selected item using
 		        // parent.getItemAtPosition(pos)
 				DateChooser dateChooser = null;
-				if("Фиксированная дата".equals(parent.getItemAtPosition(pos).toString())){
+				if("Р¤РёРєСЃРёСЂРѕРІР°РЅРЅР°СЏ РґР°С‚Р°".equals(parent.getItemAtPosition(pos).toString())){
 					dateChooser = (StableDateView) inflate(getContext(), R.layout.view_stable_date, null);
 				}
-				else if("Плавающая дата (месяц)".equals(parent.getItemAtPosition(pos).toString())){
+				else if("РџР»Р°РІР°СЋС‰Р°СЏ РґР°С‚Р° (РјРµСЃСЏС†)".equals(parent.getItemAtPosition(pos).toString())){
 					dateChooser = (FloatMonthDateView) inflate(getContext(), R.layout.view_float_month_date, null);
 				}
-				else if("Плавающая дата (год)".equals(parent.getItemAtPosition(pos).toString())){
+				else if("РџР»Р°РІР°СЋС‰Р°СЏ РґР°С‚Р° (РіРѕРґ)".equals(parent.getItemAtPosition(pos).toString())){
 					dateChooser = (FloatYearDateView) inflate(getContext(), R.layout.view_float_year_date, null);
 				}
 				setDateChooser(dateChooser);
