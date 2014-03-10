@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.Month;
 
@@ -128,26 +129,12 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		restriction.setDate(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 		
 		
-		List<Integer> countryIdList = new ArrayList<Integer>(4);		
-		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
-			countryIdList.add(Country.WORLD.getId());
+		List<Integer> countryIdList = new ArrayList<Integer>(8);		
+		for(Country country : CountryManager.getInstance().getCountries()){
+			if(sharedPref.getBoolean(country.getKey(), true)){
+				countryIdList.add(country.getId());
+			}
 		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)){
-			countryIdList.add(Country.RUSSIA.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_BELORUSSIAN_HOLIDAYS, true)){
-			countryIdList.add(Country.BELORUSSIA.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_UKRANE_HOLIDAYS, true)){
-			countryIdList.add(Country.UKRANE.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_KAZACHSTAN_HOLIDAYS, true)){
-			countryIdList.add(Country.KAZACHSTAN.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_USER_HOLIDAYS, true)){
-			countryIdList.add(Country.USER.getId());
-		}
-		sharedPref.edit().putBoolean("key_world_holidays", false).apply();
 		restriction.setCountryes(countryIdList);
 		
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);

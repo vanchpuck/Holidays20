@@ -37,6 +37,10 @@ public class CountryManager {
 		return keyMap.get(key);
 	}
 	
+	public Collection<Country> getCountries(){
+		return idMap.values();
+	}
+	
 	@SuppressLint("UseSparseArrays")
 	private void initIdMap(){
 		idMap = new HashMap<Integer, Country>();

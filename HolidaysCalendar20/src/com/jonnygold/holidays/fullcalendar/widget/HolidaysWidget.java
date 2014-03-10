@@ -20,6 +20,7 @@ import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
 import com.jonnygold.holidays.fullcalendar.R;
 import com.jonnygold.holidays.fullcalendar.SettingsActivity;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
 import com.jonnygold.holidays.fullcalendar.holiday.Month;
@@ -150,21 +151,11 @@ public abstract class HolidaysWidget extends AppWidgetProvider{
 			.includeAfter();
 		
 		
-		List<Integer> countryIdList = new ArrayList<Integer>(4);		
-		if(sharedPref.getBoolean(SettingsActivity.KEY_WORLD_HOLIDAYS, true)){
-			countryIdList.add(Country.WORLD.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_RUSSIAN_HOLIDAYS, true)){
-			countryIdList.add(Country.RUSSIA.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_BELORUSSIAN_HOLIDAYS, true)){
-			countryIdList.add(Country.BELORUSSIA.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_UKRANE_HOLIDAYS, true)){
-			countryIdList.add(Country.UKRANE.getId());
-		}
-		if(sharedPref.getBoolean(SettingsActivity.KEY_USER_HOLIDAYS, true)){
-			countryIdList.add(Country.USER.getId());
+		List<Integer> countryIdList = new ArrayList<Integer>(8);		
+		for(Country country : CountryManager.getInstance().getCountries()){
+			if(sharedPref.getBoolean(country.getKey(), true)){
+				countryIdList.add(country.getId());
+			}
 		}
 		restriction.setCountryes(countryIdList)
 			.setLimit(getRowCount(sharedPref));

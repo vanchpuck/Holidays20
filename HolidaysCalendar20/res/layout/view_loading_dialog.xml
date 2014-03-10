@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:orientation="horizontal">
+     
+     <ProgressBar
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         style="@android:style/Widget.ProgressBar.Horizontal"
+         android:indeterminateOnly="true"
+         android:layout_marginRight="5dp" />
+     
+</LinearLayout>

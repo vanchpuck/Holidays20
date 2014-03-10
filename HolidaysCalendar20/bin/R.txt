@@ -428,10 +428,11 @@ int layout support_simple_spinner_dropdown_item 0x7f03001c
 int layout view_float_month_date 0x7f03001d
 int layout view_float_year_date 0x7f03001e
 int layout view_holidays_list 0x7f03001f
-int layout view_new_holiday 0x7f030020
-int layout view_stable_date 0x7f030021
-int layout widget_4x1 0x7f030022
-int layout widget_4x2 0x7f030023
+int layout view_loading_dialog 0x7f030020
+int layout view_new_holiday 0x7f030021
+int layout view_stable_date 0x7f030022
+int layout widget_4x1 0x7f030023
+int layout widget_4x2 0x7f030024
 int menu holidays 0x7f0e0000
 int menu menu_holidays_contextual 0x7f0e0001
 int string abc_action_bar_home_description 0x7f0b0001

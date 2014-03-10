@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 		
@@ -79,9 +80,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 					}
 				})
 		    	.create();
-			
 			loadingDialog = new AlertDialog.Builder(context)
-				.setTitle("Внимание!!")
+				.setTitle("Загрузка календаря...")
+				.setView(getLayoutInflater().inflate(R.layout.view_loading_dialog, null) )
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {					
 					@SuppressWarnings("deprecation")
 					@Override
