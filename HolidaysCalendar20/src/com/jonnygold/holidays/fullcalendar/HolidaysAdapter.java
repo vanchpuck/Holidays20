@@ -8,8 +8,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
@@ -30,6 +32,8 @@ public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 		
 		this.holidays = holidays;
 	}
+	
+	
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -53,15 +57,22 @@ public class HolidaysAdapter extends ArrayAdapter<Holiday>{
 		ImageView pictureView = (ImageView)listItem.findViewById(R.id.view_picture);
 		pictureView.setImageDrawable(holiday.getDrawable());
 				
-		int[] flagViews = new int[]{R.id.view_flag_1, R.id.view_flag_2, R.id.view_flag_3, R.id.view_flag_4};
-		
-		int i=0;
-		ImageView flagView = null;
-		for(Iterator<Country> iterator=holiday.getCountries().iterator(); iterator.hasNext(); ){
-			flagView = (ImageView)listItem.findViewById(flagViews[i]);
-			flagView.setImageResource(iterator.next().getDrawableId());
-			i++;
+		FlagsView flagsView = (FlagsView)listItem.findViewById(R.id.flag_layout);
+		for(Country country : holiday.getCountries()){
+			flagsView.addFlag(country);
+//			flagsView.addView(new FlagView(flagsView.getContext(), country));
 		}
+		
+//		int[] flagViews = new int[]{R.id.view_flag_1, R.id.view_flag_2, R.id.view_flag_3, R.id.view_flag_4};
+//		
+//		int i=0;
+//		ImageView flagView = null;
+//		for(Iterator<Country> iterator=holiday.getCountries().iterator(); iterator.hasNext(); ){
+//			flagView = (ImageView)listItem.findViewById(flagViews[i]);
+//			flagView.setImageResource(iterator.next().getDrawableId());
+//			i++;
+//		}
+		
 		
 		return listItem;
 	}

@@ -56,8 +56,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			
 			inviteDialog = new AlertDialog.Builder(context)
 		        .setIcon(R.drawable.flag_kaz)
-		    	.setTitle("Праздники Казахстана")
-		    	.setMessage("Базу нужно загрузить")
+		    	.setTitle("Установка календаря.")
+		    	.setMessage("Необходимо загрузить календарь. Это займёт не более минуты.")
 		    	.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
 					@SuppressWarnings("deprecation")
 					@Override
@@ -100,7 +100,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		
 		AlertDialog createErrorDialog(String message){
 			return new AlertDialog.Builder(context)
-						.setTitle("Ошибка установки")
+						.setTitle("Ошибка установки.")
 						.setPositiveButton("Ok", null)
 						.setMessage(message)
 						.create();
