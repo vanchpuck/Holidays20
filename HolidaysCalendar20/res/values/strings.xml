@@ -17,6 +17,7 @@
     <string name="msg_no_title">Не указано название праздника.</string>    
     <string name="msg_new_rec">Запись добавлена.</string>
     <string name="msg_del_err">Не удалось сохранить запись.</string>
+    <string name="msg_download_offer">"Загрузка календаря займёт не более минуты."</string>
     
     
     <!-- /Настройки\ -->

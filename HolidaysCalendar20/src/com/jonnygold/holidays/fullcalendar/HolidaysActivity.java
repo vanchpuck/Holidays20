@@ -2,7 +2,6 @@ package com.jonnygold.holidays.fullcalendar;
 
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import android.app.AlertDialog;
@@ -17,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -40,12 +40,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
-import com.jonnygold.holidays.fullcalendar.holiday.HolidayRaw;
-import com.jonnygold.holidays.fullcalendar.web.WebService;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 
@@ -69,10 +66,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				HolidayDate date = dateChooser.getDate();
 				if(date == null)
 					return;
-				
-//				holidaysBase = HolidaysDataSource.newInstance(getContext());
-//				holidaysBase.openForWriting();
-				
+
 				Set<Country> country = new HashSet<Country>();
 				country.add(Country.USER);
 				
@@ -100,9 +94,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				}
 			}
 		}
-		
-//		private HolidaysDataSource holidaysBase;
-		
+			
 		public NewHolidayDialog(Context context) {
 			super(context);
 			this.setView(View.inflate(getContext(), R.layout.view_new_holiday, null));
@@ -112,7 +104,41 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 
 	}
 	
-	
+	private class UpdatePagerTask extends AsyncTask<Calendar, Calendar, Void>{
+
+		private View progressBarView = findViewById(R.id.view_progress_bar);
+		private View pagerView = findViewById(R.id.view_pager);
+		
+		@Override
+		protected Void doInBackground(Calendar... params) {
+			for(Calendar calendar : params){
+				holidaysBase.openForReading();
+				holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
+				
+				publishProgress(calendar);
+			}			
+			return null;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			progressBarView.setVisibility(View.VISIBLE);
+			pagerView.setVisibility(View.GONE);
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			progressBarView.setVisibility(View.GONE);
+			pagerView.setVisibility(View.VISIBLE);
+		}
+		
+		@Override
+		protected void onProgressUpdate(Calendar... values) {
+			for(Calendar calendar : values){
+				updatePager(calendar);
+			}
+		}
+	}
 	
 	private static final int DATE_PICKER_DIALOG = 1;
 	
@@ -131,11 +157,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return;
 		}
 		
-		
-		
-		
-//		holidaysBase.openForReading();
-		
 		getSupportActionBar().setTitle(R.string.action_bar_tite);
 	    
 	}
@@ -146,26 +167,14 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 		if(holidaysBase == null)
 			return;
-			
-		Calendar calendar = Calendar.getInstance();
 		
 		holidaysBase.openForReading();
 		
-//		try {
-//			List<HolidayRaw> h = WebService.getInstance().getHolidays(CountryManager.getInstance().getCountry(6));
-//			for(HolidayRaw holiday : h){
-//				holidaysBase.saveHoliday(holiday);
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		updateWidgets();
 		
-//		holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
-				
-		setPager(calendar);
-        
-        updateWidgets();
+		setPager(Calendar.getInstance());
+		
+		new UpdatePagerTask().execute(Calendar.getInstance());
 	}
 	
 	@Override
@@ -206,7 +215,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			if(holiday.isDeletable()){
 				holidaysBase.deleteHoliday(holiday);
 				updatePager();
-//				setPager(Calendar.getInstance());
 			}
 			else{
 				Toast.makeText(this, R.string.msg_src_del_err, Toast.LENGTH_LONG).show();
@@ -252,7 +260,10 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	        	showDialog(DATE_PICKER_DIALOG);
 	        	return true;
 	        case R.id.action_go_to_current_date :
-	        	setPager(Calendar.getInstance());
+//	        	new UpdatePagerTask().execute(Calendar.getInstance());
+//	        	updatePager(Calendar.getInstance());
+	        	new UpdatePagerTask().execute(Calendar.getInstance());
+//	        	setPager(Calendar.getInstance());
 	        	return true;
 	        default :
 	        	return true;
@@ -284,7 +295,8 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	    			calendar.clear();
 	    			calendar.set(year, monthOfYear, dayOfMonth);
 	    			
-	    			updatePager(calendar);
+	    			new UpdatePagerTask().execute(calendar);
+//	    			updatePager(calendar);
 	    	    }
         	};
         	Calendar calend = Calendar.getInstance();
@@ -299,28 +311,28 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
         View vv = v.getChildAt(0);
         HolidaysListView hList = (HolidaysListView) vv;
         
-        updatePager(hList.getCalendar());
+        new UpdatePagerTask().execute(hList.getCalendar());
+//        updatePager(hList.getCalendar());
 	}
 
 	private void updatePager(Calendar onDate){
-        holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
+//        holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
 	        
-        DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+		DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
+        viewPager = (ViewPager) findViewById(R.id.view_pager); 
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);   
+        viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);
 	}
 
-	private void setPager(Calendar onDate){
-        
-        holidaysBase.updateFloatHolidays(onDate.get(Calendar.YEAR));
-        
+	private void setPager(Calendar onDate){        
         DaysPagerAdapter pagerAdapter = new DaysPagerAdapter(this, holidaysBase, onDate);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setSaveEnabled(false);
         viewPager.setCurrentItem(DaysPagerAdapter.START_POSITION);     
         //Log.w("Limit", viewPager.getOffscreenPageLimit()+"");
+		
+//		updatePager(onDate);
 
         PagerTitleStrip strip = new PagerTitleStrip(this);
         ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();

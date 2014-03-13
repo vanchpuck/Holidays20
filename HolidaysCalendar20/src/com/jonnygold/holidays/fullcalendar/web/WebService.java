@@ -34,7 +34,7 @@ public class WebService {
 	
 	private static String NAMESPACE = "http://updatetest.holidays.jonnygold.com";
     
-	private static String URL = "http://appserver.stratoslive.wso2.com/services/t/jonnygold.com/HolidaysServiceTest?wsdl";
+	private static String URL = "http://appserver.stratoslive.wso2.com/services/t/jonnygold.com/HolidaysService_v1?wsdl";
     
 	private static String METHOD_NAME = "getHolidays";
 	
@@ -118,10 +118,10 @@ public class WebService {
 		if(weekDay != null) 
 			builder.setWeekDay(Integer.valueOf(weekDay.toString()));
 		
-		/* DOTO Поставить нужный Offset!!!! */
+		/* DOTO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Offset!!!! */
 		Object offset = soapDate.getPrimitiveProperty("offset");
 		if(offset != null) 
-			builder.setOffset(DayOrder.FIRST/*Integer.valueOf(offset.toString())*/);
+			builder.setOffset(DayOrder.getDayOrder(Integer.valueOf(offset.toString())) );
 		
 		Object yearDay = soapDate.getPrimitiveProperty("yearDay");
 		if(yearDay != null) 
@@ -129,6 +129,8 @@ public class WebService {
 		
 		
 		HolidayDate date = builder.create();
+		
+		int idHoliday = Integer.valueOf(soapHoliday.getProperty("id").toString());
 		
 		String desc = soapHoliday.getProperty("description").toString();
 		
@@ -146,7 +148,7 @@ public class WebService {
 		String title = soapHoliday.getProperty("title").toString();
 		
 		HolidayRaw raw = new HolidayRaw(
-				-1, 
+				idHoliday, 
 				title, 
 				dateStr, 
 				type, 

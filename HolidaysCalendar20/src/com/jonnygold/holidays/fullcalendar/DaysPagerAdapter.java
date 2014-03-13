@@ -35,8 +35,6 @@ public final class DaysPagerAdapter extends PagerAdapter{
 	private Date initialDate;
 	
 	private int year;
-	
-	private Calendar currItem;
 
 	public DaysPagerAdapter(Activity activity, HolidaysDataSource holidaysBase, Calendar calendar){
 		this.calendar = calendar;
@@ -59,27 +57,25 @@ public final class DaysPagerAdapter extends PagerAdapter{
 
 	@Override
 	public CharSequence getPageTitle(int position) {
+		if(position < 5){
+			return null;
+		}
 		calendar.setTime(initialDate);
 		calendar.add(Calendar.DAY_OF_YEAR, position - START_POSITION);
 		String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 		String month = Month.values()[calendar.get(Calendar.MONTH)].getGenitive();
 		return day+" "+month;
 	}
-	
-//	@Override
-//	public void setPrimaryItem(ViewGroup container, int position, Object object) {
-//		currItem = Calendar.getInstance();
-//		currItem.setTime(calendar.getTime());
-//		//super.setPrimaryItem(container, position, object);
-//	}
-		
+			
 	@Override
 	public Object instantiateItem(View collection, int position){
-	
+		// Добавим проверку, чтобы избежать инициализации двух первых страниц
+		if(position < 5){
+			return null;
+		}
 		// Set appropriate date to calendar
 		calendar.setTime(initialDate);
 		calendar.add(Calendar.DAY_OF_YEAR, position - START_POSITION);
-		
 		int currYear = calendar.get(Calendar.YEAR);
 		if(currYear != year){
 			holidaysBase.updateFloatHolidays(currYear);
@@ -91,7 +87,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		page.setTag(position);
 		
 		// Get holidays from database
-		final List<Holiday> holidays = getHolidays();
+		final List<Holiday> holidays = /*Collections.emptyList();*/getHolidays();
 		
 		// Configure holidays ListView
 		HolidaysListView holidaysView = (HolidaysListView)page.findViewById(R.id.view_holidays);
@@ -111,15 +107,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
     public void destroyItem(View collection, int position, Object view){
         ((ViewPager) collection).removeView((View) view);
     }
-//	
-	public Calendar getCurrentView(){
-		return currItem;
-	}
-	
-//	public Calendar getCalendar(){
-//		return calendar;
-//	}
-	
+
 	public void setDate(Date date){
 		calendar.setTime(date);
 	}

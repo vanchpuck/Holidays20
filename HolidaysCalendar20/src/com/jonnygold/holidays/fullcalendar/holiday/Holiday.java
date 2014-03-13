@@ -107,7 +107,7 @@ public class Holiday extends HolidayRaw implements Parcelable{
 
 	public boolean isDeletable(){
 		for(Country c : getCountries()){
-			if(Country.USER.getClass().equals(c.getClass())){
+			if(Country.USER == c){
 				return true;
 			}
 		}

@@ -56,8 +56,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			
 			inviteDialog = new AlertDialog.Builder(context)
 		        .setIcon(R.drawable.flag_kaz)
-		    	.setTitle("Установка календаря.")
-		    	.setMessage("Необходимо загрузить календарь. Это займёт не более минуты.")
+		    	.setTitle(R.string.msg_download_offer)
+		    	//.setView(getLayoutInflater().inflate(R.layout.view_invite_dialog, null) )
+		    	.setMessage("Размер календаря: 1.6 Mb\n Размер календаря: 1.6 Mb")
+//		    	.setMessage("Необходимо загрузить календарь. Это займёт не более минуты.")
 		    	.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
 					@SuppressWarnings("deprecation")
 					@Override

@@ -574,9 +574,9 @@ public class HolidaysDataSource {
 	public void saveHoliday(HolidayRaw holiday){
 		db.beginTransaction();
 		
-		if(holiday.getId() != -1){
-			deleteHoliday(holiday);
-		}
+//		if(holiday.getId() != -1){
+//			deleteHoliday(holiday);
+//		}
 		
 		ContentValues values = null;
 		
@@ -599,7 +599,11 @@ public class HolidaysDataSource {
 		
 			values.put("id_image", holiday.getPicture().getId());
 			
-			long id = db.insertOrThrow("t_holidays", null, values);
+			long id = holiday.getId();
+			if(id == -1){
+				id = db.insertOrThrow("t_holidays", null, values);
+			}
+//			long id = db.insertOrThrow("t_holidays", null, values);
 			
 			values.clear();
 			for(Country country : holiday.getCountries()){

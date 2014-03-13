@@ -48,35 +48,6 @@
  		android:layout_height="wrap_content"
  		android:layout_gravity="center_vertical"
  		android:orientation="vertical" >
-		<!-- 
-		<ImageView
- 			android:id="@+id/view_flag_1"
- 			android:layout_width="wrap_content"
- 			android:layout_height="wrap_content"
- 			android:layout_marginRight="2dp" 
- 			android:src="@drawable/hole" />
-		
-		<ImageView
- 			android:id="@+id/view_flag_2"
- 			android:layout_width="wrap_content"
- 			android:layout_height="wrap_content"
- 			android:layout_marginRight="2dp"
- 			android:src="@drawable/hole" />
-		
-		<ImageView
- 			android:id="@+id/view_flag_3"
- 			android:layout_width="wrap_content"
- 			android:layout_height="wrap_content"
- 			android:layout_marginRight="2dp"
- 			android:src="@drawable/hole" />
- 			
- 		<ImageView
- 			android:id="@+id/view_flag_4"
- 			android:layout_width="wrap_content"
- 			android:layout_height="wrap_content"
- 			android:layout_marginRight="2dp"
- 			android:src="@drawable/hole" />
-		 -->
 	</com.jonnygold.holidays.fullcalendar.FlagsView> 
 	
 </LinearLayout>

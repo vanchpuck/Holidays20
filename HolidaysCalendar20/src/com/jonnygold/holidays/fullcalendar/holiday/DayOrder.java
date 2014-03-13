@@ -15,6 +15,23 @@ public enum DayOrder{
 		this.orderStr = orderStr;
 	}
 	
+	public static DayOrder getDayOrder(int offset){
+		switch(offset){
+		case 0 :
+			return DayOrder.FIRST;
+		case 7 :
+			return DayOrder.SECOND;
+		case 14 :
+			return DayOrder.THIRD;
+		case 21 :
+			return DayOrder.FOURTH;
+		case -7 :
+			return DayOrder.LAST;
+		default :
+			throw new IllegalArgumentException("Недопустимое смещение плавающего праздника.");
+		}
+	}
+	
 	public int getOffset(){
 		return offset;
 	}
