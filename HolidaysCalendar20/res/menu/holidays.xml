@@ -27,6 +27,12 @@
         app:showAsAction="ifRoom" />
     
     <item
+        android:id="@+id/action_calendars"
+        android:icon="@drawable/action_settings"
+        android:title="@string/action_calendars"
+        app:showAsAction="never" />
+    
+    <item
         android:id="@+id/action_preferences"
         android:icon="@drawable/action_settings"
         android:title="@string/action_preferences"

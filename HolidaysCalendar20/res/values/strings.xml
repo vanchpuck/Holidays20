@@ -17,7 +17,7 @@
     <string name="msg_no_title">Не указано название праздника.</string>    
     <string name="msg_new_rec">Запись добавлена.</string>
     <string name="msg_del_err">Не удалось сохранить запись.</string>
-    <string name="msg_download_offer">"Загрузка календаря займёт не более минуты."</string>
+    <string name="msg_download_offer">"Установка календаря"</string>
     
     
     <!-- /Настройки\ -->
@@ -45,6 +45,7 @@
     <string name="action_search">Найти праздник</string>
     <string name="action_go_to_date">Выбрать дату</string>
     <string name="action_add_holiday">Добавить праздник</string>
+    <string name="action_calendars">Список календарей</string>
     <string name="action_preferences">Настройки</string>
     <!-- \Меню/ -->
 

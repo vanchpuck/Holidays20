@@ -14,6 +14,7 @@ import com.jonnygold.holidays.fullcalendar.holiday.HolidayRaw;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -49,18 +50,26 @@ public class UpdateService extends Service {
 							holidaysBase.saveHoliday(h);
 						else
 							return;
+						
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					if(!Thread.interrupted()){
 						holidaysBase.setTransactionSuccessful();
+						result = UpdateState.SUCCESS;
 					}
 				}
 				finally{
 					holidaysBase.endTransaction();
 					holidaysBase.close();
 				}
-				if(!Thread.interrupted()){
-					result = UpdateState.SUCCESS;
-				}				
+//				if(!Thread.interrupted()){
+//					result = UpdateState.SUCCESS;
+//				}				
 			} 
 			catch (HttpResponseException e) {
 				result = UpdateState.BAD_RESPONSE;
@@ -70,7 +79,10 @@ public class UpdateService extends Service {
 			}
 			catch (XmlPullParserException e) {
 				result = UpdateState.OTHER;
-			}			
+			}	
+			catch (SQLiteException e) {
+				result = UpdateState.OTHER;
+			}
 			finally{
 				stopSelf();
 			}

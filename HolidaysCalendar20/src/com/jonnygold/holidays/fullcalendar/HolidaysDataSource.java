@@ -552,6 +552,14 @@ public class HolidaysDataSource {
 		}
 	}
 	
+	public boolean isExists(Country country){
+		Cursor c = db.query("t_countries", new String[]{"_id"}, "_id=?", new String[]{String.valueOf(country.getId())}, null, null, null);
+		while(c.moveToNext()){
+			return true;
+		}
+		return false;
+	}
+	
 	public void saveHolidays(Collection<HolidayRaw> holidays, Country country){
 		HolidayRaw[] h = new HolidayRaw[0];
 		saveHolidays(holidays.toArray(h), country);
@@ -571,7 +579,7 @@ public class HolidaysDataSource {
 		}
 	}
 	
-	public void saveHoliday(HolidayRaw holiday){
+	public void saveHoliday(HolidayRaw holiday) throws SQLiteException{
 		db.beginTransaction();
 		
 //		if(holiday.getId() != -1){
@@ -629,7 +637,7 @@ public class HolidaysDataSource {
 				
 				values.put("dayOffset", holiday.getDate().getOffset());
 				
-				db.insertOrThrow("t_MonthFloatHolidays", null, values);
+				db.insert("t_MonthFloatHolidays", null, values);
 			}
 			
 			else if(date.isYearFloat()){
@@ -640,7 +648,7 @@ public class HolidaysDataSource {
 				
 				values.put("day", holiday.getDate().getYearDay());
 				
-				db.insertOrThrow("t_YearFloatHolidays", null, values);
+				db.insert("t_YearFloatHolidays", null, values);
 			}
 						
 			db.setTransactionSuccessful();

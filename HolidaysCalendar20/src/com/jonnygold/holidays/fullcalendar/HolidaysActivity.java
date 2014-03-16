@@ -9,6 +9,7 @@ import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -165,6 +166,9 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	protected void onStart() {
 		super.onStart();
 		
+		NotificationManager m = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		m.cancel(001);
+		
 		if(holidaysBase == null)
 			return;
 		
@@ -251,6 +255,10 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	        case R.id.action_preferences :
 	            Intent intent = new Intent(this, SettingsActivity.class);
 	            startActivity(intent);
+	            return true; 
+	        case R.id.action_calendars :
+	            Intent calendIntent = new Intent(this, CalendarManagerActivity.class);
+	            startActivity(calendIntent);
 	            return true; 
 	        case R.id.action_add_holiday :
 	        	NewHolidayDialog addDialog = new NewHolidayDialog(this);

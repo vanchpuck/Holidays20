@@ -9,6 +9,8 @@ import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +21,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
@@ -58,7 +61,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		        .setIcon(R.drawable.flag_kaz)
 		    	.setTitle(R.string.msg_download_offer)
 		    	//.setView(getLayoutInflater().inflate(R.layout.view_invite_dialog, null) )
-		    	.setMessage("Размер календаря: 1.6 Mb\n Размер календаря: 1.6 Mb")
+		    	.setMessage("Загрузить календарь(1.6 Mb)?")
 //		    	.setMessage("Необходимо загрузить календарь. Это займёт не более минуты.")
 		    	.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
 					@SuppressWarnings("deprecation")
@@ -109,10 +112,37 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		}
 		
 		public void startDownloading(final CheckBoxPreference pref){
-			if(loader != null){
-				loader.loadingDialog.show();
-				startService(loader.serviceIntent);
-			}
+			
+			Intent resultIntent = new Intent(context, HolidaysActivity.class);
+			
+			PendingIntent resultPendingIntent =
+				    PendingIntent.getActivity(
+				    context,
+				    0,
+				    resultIntent,
+				    PendingIntent.FLAG_UPDATE_CURRENT
+				);
+			
+			NotificationCompat.Builder mBuilder =
+				    new NotificationCompat.Builder(context)
+				    .setSmallIcon(R.drawable.ic_launcher)
+				    .setContentTitle("My notification")
+				    .setContentText("Hello World!")
+				    .setContentIntent(resultPendingIntent);;
+			
+			int mNotificationId = 001;
+			// Gets an instance of the NotificationManager service
+			NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			// Builds the notification and issues it.
+			mNotifyMgr.notify(mNotificationId, mBuilder.build());
+				    
+			// Because clicking the notification opens a new ("special") activity, there's
+			// no need to create an artificial back stack.
+			
+//			if(loader != null){
+//				loader.loadingDialog.show();
+//				startService(loader.serviceIntent);
+//			}
 		}
 		
 	}

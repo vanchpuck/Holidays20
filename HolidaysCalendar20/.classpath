@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="D:/Programming/Android/android-sdk/extras/google/admob_ads_sdk/GoogleAdMobAdsSdk-6.4.1.jar"/>
 	<classpathentry kind="lib" path="libs/android-sqlite-asset-helper.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vanchpuck/Downloads/ksoap2-android-assembly-3.1.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

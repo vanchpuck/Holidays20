@@ -1,18 +1,32 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.content.Context;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jonnygold.holidays.fullcalendar.HolidaysDataSource;
+
 
 public class CountryManager {
+	
+	private class StateManager{
+		
+		
+		
+	}
 	
 	private static CountryManager instance;
 	
 	private Map<Integer, Country> idMap;
 	
 	private Map<String, Country> keyMap;
+	
+	private HolidaysDataSource holidaysBase;
 	
 	private CountryManager(){
 		initIdMap();
@@ -28,7 +42,7 @@ public class CountryManager {
 	public Country getCountry(int id){
 		return idMap.get(id);
 	}
-	
+		
 	public Country getCountry(String key){
 		if(keyMap == null){
 			keyMap = new HashMap<String, Country>();
@@ -40,6 +54,16 @@ public class CountryManager {
 	public Collection<Country> getCountries(){
 		return idMap.values();
 	}
+	
+//	public boolean isInstalled(Context context, Country country){
+//		if(holidaysBase == null){
+//			holidaysBase = HolidaysDataSource.newInstance(context);
+//		}
+//		holidaysBase.openForReading();
+//		boolean result = holidaysBase.isInstalled(country);
+//		holidaysBase.close();
+//		return result;
+//	}
 	
 	@SuppressLint("UseSparseArrays")
 	private void initIdMap(){
@@ -55,31 +79,5 @@ public class CountryManager {
 			keyMap.put(c.getKey(), c);
 		}
 	}
-	
-//	public static Country getCountry(int id){
-//		switch(id){
-//		case CountryWorld.ID : 		return new CountryWorld();
-//		case CountryRussia.ID : 	return new CountryRussia();
-//		case CountryBelorussia.ID : return new CountryBelorussia();
-//		case CountryUkrane.ID : 	return new CountryUkrane();
-//		case CountryKazakhstan.ID : return new CountryKazakhstan();
-//		case CountryUser.ID : 		return new CountryUser();
-//		default : 					return null;
-//		}
-//		Country.
-//	}
-	
-	
 
-//	public static Class<Country>[] getCountries(){
-//		return new Class<Country>[]{
-//				CountryWorld.class, 
-//				CountryRussia.class, 
-//				CountryBelorussia.class, 
-//				CountryUkrane.class,
-//				CountryKazakhstan.class,
-//				CountryUser.class}
-//		;
-//	}
-	
 }
