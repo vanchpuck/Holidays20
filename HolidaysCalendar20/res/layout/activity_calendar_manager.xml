@@ -5,17 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.jonnygold.holidays.fullcalendar.CalendarsListView
+    <ExpandableListView
     	android:id="@+id/view_calendars"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:dividerHeight="2dp"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" >
-    </com.jonnygold.holidays.fullcalendar.CalendarsListView>
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+    </ExpandableListView>
 
     
 </LinearLayout>

@@ -2,17 +2,25 @@ package com.jonnygold.holidays.fullcalendar.holiday;
 
 import com.jonnygold.holidays.fullcalendar.HolidaysDataSource;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
-import com.jonnygold.holidays.fullcalendar.web.UpdateSeviceTest;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 
 public class CountryStateManager {
 
 	public enum State{
-		NOT_INSTALLED,
-		INSTALLED
+		INSTALLED ("Установленные календари"),
+		NOT_INSTALLED ("Доступные календари");
+		
+		private String title;
+		
+		State(String title){
+			this.title = title;
+		}
+		
+		@Override
+		public String toString() {
+			return this.title;
+		}
 	}
 	
 	private HolidaysDataSource holidaysBase;
