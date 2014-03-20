@@ -107,14 +107,19 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	private class UpdatePagerTask extends AsyncTask<Calendar, Calendar, Void>{
 
+		private HolidaysDataSource ds;
 		private View progressBarView = findViewById(R.id.view_progress_bar);
 		private View pagerView = findViewById(R.id.view_pager);
+		
+		UpdatePagerTask(Context context){
+			ds = HolidaysDataSource.newInstance(context);
+		}
 		
 		@Override
 		protected Void doInBackground(Calendar... params) {
 			for(Calendar calendar : params){
-				holidaysBase.openForReading();
-				holidaysBase.updateFloatHolidays(calendar.get(Calendar.YEAR));
+				ds.openForReading();
+				ds.updateFloatHolidays(calendar.get(Calendar.YEAR));
 				
 				publishProgress(calendar);
 			}			
@@ -178,7 +183,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 		setPager(Calendar.getInstance());
 		
-		new UpdatePagerTask().execute(Calendar.getInstance());
+		new UpdatePagerTask(this).execute(Calendar.getInstance());
 	}
 	
 	@Override
@@ -270,7 +275,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	        case R.id.action_go_to_current_date :
 //	        	new UpdatePagerTask().execute(Calendar.getInstance());
 //	        	updatePager(Calendar.getInstance());
-	        	new UpdatePagerTask().execute(Calendar.getInstance());
+	        	new UpdatePagerTask(this).execute(Calendar.getInstance());
 //	        	setPager(Calendar.getInstance());
 	        	return true;
 	        default :
@@ -303,7 +308,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	    			calendar.clear();
 	    			calendar.set(year, monthOfYear, dayOfMonth);
 	    			
-	    			new UpdatePagerTask().execute(calendar);
+	    			new UpdatePagerTask(view.getContext()).execute(calendar);
 //	    			updatePager(calendar);
 	    	    }
         	};
@@ -319,7 +324,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
         View vv = v.getChildAt(0);
         HolidaysListView hList = (HolidaysListView) vv;
         
-        new UpdatePagerTask().execute(hList.getCalendar());
+        new UpdatePagerTask(this).execute(hList.getCalendar());
 //        updatePager(hList.getCalendar());
 	}
 

@@ -53,6 +53,10 @@
         <service
             android:name=".web.UpdateService"
             android:exported="false"/>
+        
+        <service
+            android:name=".web.UpdateServiceTest"
+            android:exported="false"/>
 	            
         <receiver
             android:name=".widget.HolidaysWidget4x1"

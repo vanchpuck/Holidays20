@@ -78,10 +78,10 @@ public class UpdateService extends Service {
 				result = UpdateState.NOT_CONNECTED;
 			}
 			catch (XmlPullParserException e) {
-				result = UpdateState.OTHER;
+				result = UpdateState.FAULT;
 			}	
 			catch (SQLiteException e) {
-				result = UpdateState.OTHER;
+				result = UpdateState.FAULT;
 			}
 			finally{
 				stopSelf();
@@ -90,18 +90,19 @@ public class UpdateService extends Service {
 		
 	}
 	
-	public enum UpdateState implements Serializable {
-		FAULT (-1, "Не установлено"),
-		SUCCESS (1, "Установлено"),
-		BAD_RESPONSE (2, "Ошибка связи с серветом. Повторите попытку позже."),
-		NOT_CONNECTED (3, "Нет связи с сервером. Проверьте интернет-соединение."),
-		OTHER (4 , "Не удалось установить календарь. Повторите попытку позже.");
+	public enum UpdateState {
+		SUCCESS (0, "Загрузка завершена.", "Календарь успешно установлен."),
+		FAULT (1, "Ошибка установки.", "Не удалось установить календарь. Повторите попытку позже."),
+		BAD_RESPONSE (2, "Ошибка установки.", "Ошибка связи с серветом. Повторите попытку позже."),
+		NOT_CONNECTED (3, "Ошибка установки.", "Нет связи с сервером. Проверьте интернет-соединение.");
 		
 		public final int code;
 		public String message;
+		public String title;
 		
-		private UpdateState(int code, String message) {
+		private UpdateState(int code, String title, String message) {
 			this.code = code;
+			this.title = title;
 			this.message = message;
 		}
 		

@@ -19,6 +19,9 @@
     <string name="msg_del_err">Не удалось сохранить запись.</string>
     <string name="msg_download_offer">"Установка календаря"</string>
     
+    <string name="msg_downloading">"Идёт загрузка календаря&#8230;"</string>
+    <string name="msg_downloaded">"Календарь загружен."</string>
+    <string name="msg_not_downloaded">"Не удалось загрузить календарь."</string>
     
     <!-- /Настройки\ -->
     <string name="pref_holidays_list">Список праздников</string>    

@@ -155,41 +155,41 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         
         holidaysBase = HolidaysDataSource.newInstance(this);
         
-        BroadcastReceiver receiver = new BroadcastReceiver(){
-
-			@Override
-			public void onReceive(Context arg0, Intent intent) {
-				
-				UpdateService.UpdateState response = (UpdateService.UpdateState) intent.getExtras().getSerializable("Result");
-				switch (response) {
-				case SUCCESS :
-					CheckBoxPreference pref = (CheckBoxPreference)findPreference(loader.country.getKey());
-					isDownloaded = true;
-					holidaysBase.openForReading();  
-					installed = new HashSet<Country>(holidaysBase.getCountries());
-					pref.setChecked(true);
-					break;
-				case BAD_RESPONSE :
-					loader.createErrorDialog(response.message).show();
-					break;
-				case NOT_CONNECTED :
-					loader.createErrorDialog(response.message).show();
-					break;
-				case OTHER :
-					loader.createErrorDialog(response.message).show();
-					break;
-				default:
-					break;
-				}
-				loader.loadingDialog.cancel();
-			}
-        	
-        };
+//        BroadcastReceiver receiver = new BroadcastReceiver(){
+//
+//			@Override
+//			public void onReceive(Context arg0, Intent intent) {
+//				
+//				UpdateService.UpdateState response = (UpdateService.UpdateState) intent.getExtras().getSerializable("Result");
+//				switch (response) {
+//				case SUCCESS :
+//					CheckBoxPreference pref = (CheckBoxPreference)findPreference(loader.country.getKey());
+//					isDownloaded = true;
+//					holidaysBase.openForReading();  
+//					installed = new HashSet<Country>(holidaysBase.getCountries());
+//					pref.setChecked(true);
+//					break;
+//				case BAD_RESPONSE :
+//					loader.createErrorDialog(response.message).show();
+//					break;
+//				case NOT_CONNECTED :
+//					loader.createErrorDialog(response.message).show();
+//					break;
+//				case OTHER :
+//					loader.createErrorDialog(response.message).show();
+//					break;
+//				default:
+//					break;
+//				}
+//				loader.loadingDialog.cancel();
+//			}
+//        	
+//        };
         
         IntentFilter filter = new IntentFilter("Broadcast");
         
-        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
-        manager.registerReceiver(receiver, filter);
+//        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
+//        manager.registerReceiver(receiver, filter);
         
         
 //		PreferenceScreen targetCategory = (PreferenceScreen)findPreference("key_holidays_list");
