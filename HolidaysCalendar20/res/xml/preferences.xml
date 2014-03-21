@@ -7,6 +7,11 @@
         android:persistent="true">
         
         <CheckBoxPreference
+	        android:key="key_user_holidays"
+	        android:title="@string/pref_user_holidays"
+	        android:defaultValue="true" />
+        
+        <CheckBoxPreference
 	        android:key="key_world_holidays"
 	        android:title="@string/pref_world_holidays"
 	        android:defaultValue="true" />
@@ -25,19 +30,7 @@
 	        android:key="key_ukrane_holidays"
 	        android:title="@string/pref_ukrane_holidays"
 	        android:defaultValue="true" />
-        
-        <!-- 
-        <CheckBoxPreference
-	        android:key="key_kazachstan_holidays"
-	        android:title="@string/pref_kazachstan_holidays"
-	        android:defaultValue="false" /> -->
-        
-        <CheckBoxPreference
-	        android:key="key_user_holidays"
-	        android:title="@string/pref_user_holidays"
-	        android:defaultValue="true" />
-        
-                
+          
     </PreferenceScreen>
     
     <PreferenceScreen

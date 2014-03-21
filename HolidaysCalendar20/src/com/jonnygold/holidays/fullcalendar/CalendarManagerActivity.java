@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -270,7 +271,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	    	
 	    	if(response == UpdateState.SUCCESS){
 	    		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-	    		sharedPref.edit().putBoolean(country.getKey(), true).commit();
+	    		sharedPref.edit().putBoolean(country.getKey(), true).apply();
+
 	    	}
 	    }
 	}
