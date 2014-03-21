@@ -3,6 +3,7 @@ package com.jonnygold.holidays.fullcalendar;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jonnygold.holidays.fullcalendar.holiday.Calendar;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager;
@@ -19,8 +20,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -82,17 +85,6 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			notificationMgr.notify(NOTIFICATION_ID, mBuilder.build());
 		}
 		
-//		public void showErrorNotification(Country country){
-//			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-//		    .setSmallIcon(R.drawable.ic_launcher)
-//		    .setContentTitle(country.getName())
-//		    .setContentText(context.getResources().getString(R.string.msg_not_downloaded))
-//		    .setContentIntent(intent);
-//	
-//			// Builds the notification and issues it.
-//			notificationMgr.notify(NOTIFICATION_ID, mBuilder.build());
-//		}
-		
 	}
 	
 	private class CalendarsListAdapter extends BaseExpandableListAdapter{
@@ -105,7 +97,7 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		
 		private List<List<Country>> countries;
 		
-		CalendarsListAdapter (Context context, List<Country> countries){
+		CalendarsListAdapter (Context context, List<Calendar> calendars){
 			this.context = context;
 			this.inflater = LayoutInflater.from(context);
 			this.countries = new ArrayList<List<Country>>();
@@ -118,10 +110,10 @@ public class CalendarManagerActivity extends ActionBarActivity {
 				this.countries.add(new ArrayList<Country>());
 			}
 			
-			for(Country country : countries){
+			for(Calendar calendar : calendars){
 				for(int i=0; i<groups.length; i++){ 
-					if(groups[i] == stateManager.getState(country)){
-						this.countries.get(i).add(country);
+					if(groups[i] == stateManager.getState(calendar.country)){
+						this.countries.get(i).add(calendar.country);
 					}
 				}
 			}
@@ -209,8 +201,11 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	public class OnCalendarClickListener implements OnChildClickListener{		
 		private Context context;
 		
+		private CountryStateManager stateManager;
+		
 		public OnCalendarClickListener (Context context){
 			this.context = context;
+			this.stateManager = new CountryStateManager(context);
 		}
 		
 		@Override
@@ -222,9 +217,37 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			@SuppressWarnings("unused")
 			Object o = adapter.getChild(groupPosition, childPosition);
 			
-			Country country = (Country) adapter.getChild(groupPosition, childPosition);
+			final Country country = (Country) adapter.getChild(groupPosition, childPosition);
 
-			startDownloading(country);
+//			startDownloading(country);
+			
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+			dialogBuilder.setTitle(country.getName())
+					.setIcon(country.getDrawableId())
+					.setMessage(Calendar.getCalendar(country).description)
+					.setNegativeButton("Отмена", null);
+			
+			switch (stateManager.getState(country)) {
+			case INSTALLED :
+				dialogBuilder.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Реализовать возможность удаления календарей.
+					}
+				});
+				break;
+			case NOT_INSTALLED :
+				dialogBuilder.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						startDownloading(country);
+					}
+				});
+				break;
+			default:
+				break;
+			}
+			dialogBuilder.create().show();
 			
 			return false;
 		}
@@ -244,6 +267,11 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	    			CountryManager.getInstance().getCountry(intent.getExtras().getInt(UpdateServiceTest.TARGET_COUNTRY_ID));
 	    	
 	    	notifier.showDoneNotification(country, response);
+	    	
+	    	if(response == UpdateState.SUCCESS){
+	    		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+	    		sharedPref.edit().putBoolean(country.getKey(), true).commit();
+	    	}
 	    }
 	}
 	
@@ -271,19 +299,10 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		
 		
 		ExpandableListView calendarsView = (ExpandableListView)findViewById(R.id.view_calendars);
-		
-		List<Country> countries = new ArrayList<Country>();
-		for(Country c : Country.values()){
-			if(c != Country.USER)
-				countries.add(c);
-		}
-		CalendarsListAdapter adapter = new CalendarsListAdapter(this, countries);
-		calendarsView.setAdapter(adapter);
-		
 		calendarsView.setOnChildClickListener(new OnCalendarClickListener(this));
-		
-		for (int i = 0; i < adapter.getGroupCount(); i++)
-			calendarsView.expandGroup(i);
+	
+		fillList(calendarsView);
+
 	}
 	
 	public void startDownloading(Country country){
@@ -294,6 +313,16 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		notifier.showLoadingNotification(country);
 	}
 	
-	
+	private void fillList(ExpandableListView calendarsView){		
+		List<Calendar> calendars = new ArrayList<Calendar>();
+		for(Calendar c : Calendar.values()){
+			calendars.add(c);
+		}
+		CalendarsListAdapter adapter = new CalendarsListAdapter(this, calendars);
+		calendarsView.setAdapter(adapter);
+		
+		for (int i = 0; i < adapter.getGroupCount(); i++)
+			calendarsView.expandGroup(i);
+	}
 	
 }

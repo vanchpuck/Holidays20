@@ -26,10 +26,11 @@
 	        android:title="@string/pref_ukrane_holidays"
 	        android:defaultValue="true" />
         
+        <!-- 
         <CheckBoxPreference
 	        android:key="key_kazachstan_holidays"
 	        android:title="@string/pref_kazachstan_holidays"
-	        android:defaultValue="false" />
+	        android:defaultValue="false" /> -->
         
         <CheckBoxPreference
 	        android:key="key_user_holidays"
