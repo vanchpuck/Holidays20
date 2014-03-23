@@ -511,25 +511,65 @@ public class HolidaysDataSource {
 		return countries;
 	}
 	
+	public void deleteCountry(Country country) throws SQLiteException {
+		db.beginTransaction();
+		try{
+//			Cursor c = db.query(
+//					"t_countryholidays", 
+//					new String[]{"id_holiday"}, 
+//					"id_country=?", 
+//					new String[]{String.valueOf(country.getId())}, 
+//					null, 
+//					null, 
+//					null
+//			);
+//			List<String> idList = new ArrayList<String>();
+//			while(c.moveToNext()){
+//				idList.add(c.getString(0));
+//			}
+//			String[] idHolidays = new String[0];
+//			idHolidays = idList.toArray(idHolidays);
+			
+			db.delete("t_countryholidays", "id_country=?", new String[]{String.valueOf(country.getId())});
+			
+//			db.delete("t_montfloatholidays", "id_country=?", idHolidays);
+//			
+//			db.delete("t_yearfloatholidays", "id_country=?", idHolidays);
+//			
+//			db.delete("t_easterholidays", "id_country=?", idHolidays);
+			
+//			db.delete("t_holidays", "_id=?", idHolidays);
+			
+			db.delete("t_countries", "_id=?", new String[]{String.valueOf(country.getId())});
+
+			db.setTransactionSuccessful();
+		} catch (SQLiteException exc){
+			throw new SQLiteException(exc.getMessage());
+		}
+		finally{
+			db.endTransaction();
+		}
+	}
+	
 	public void deleteHoliday(HolidayRaw holiday){
 		if(holiday.getId() == -1){
 			return;
 		}
 		db.beginTransaction();
 		try{
-			db.delete("t_countryholidays", "id_country=?", new String[]{String.valueOf(holiday.getId())});
+			db.delete("t_countryholidays", "id_holiday=?", new String[]{String.valueOf(holiday.getId())});
 			if(holiday.getDate().isMonthFloat()){
 				db.delete("t_MonthFloatHolidays", "id_country=?", new String[]{String.valueOf(holiday.getId())});
 			}
 			if(holiday.getDate().isYearFloat()){
 				db.delete("t_YearFloatholidays", "id_country=?", new String[]{String.valueOf(holiday.getId())});
 			}
+			db.delete("t_easterholidays", "id_holiday=?", new String[]{String.valueOf(holiday.getId())});
 			db.delete("t_holidays", "_id=?", new String[]{String.valueOf(holiday.getId())});
 			db.setTransactionSuccessful();
 		}
 		catch(SQLiteException exc){
-			exc.getMessage();
-			throw new SQLiteException();
+			throw new SQLiteException(exc.getMessage());
 		}
 		finally{
 			db.endTransaction();
@@ -580,87 +620,94 @@ public class HolidaysDataSource {
 	}
 	
 	public void saveHoliday(HolidayRaw holiday) throws SQLiteException{
-		db.beginTransaction();
-		
-//		if(holiday.getId() != -1){
-//			deleteHoliday(holiday);
+		throw new SQLiteException();
+//		SQLiteDatabase.releaseMemory();
+//		db.beginTransaction();
+////		if(holiday.getId() != -1){
+////			deleteHoliday(holiday);
+////		}
+//		
+//		ContentValues values = null;
+//		
+//		try{
+//			HolidayDate date = holiday.getDate();
+//			
+//			values = new ContentValues();
+//			values.put("_id", holiday.getPicture().getId());
+//			values.put("description", holiday.getPicture().getTitle());
+//			values.put("image", holiday.getPicture().getData());
+//			db.insert("t_images", null, values);
+//			
+//			
+//			values.clear();
+//			
+//			values.put("title", holiday.getTitle());
+//			
+//			values.put("description", holiday.getDescription());
+//			
+//			values.put("month", holiday.getDate().getActualMonth());
+//			
+//			values.put("day", holiday.getDate().getActualDay());
+//			
+//			values.put("actualDateStr", holiday.getDate().toString());
+//			
+//			values.put("id_priority", holiday.getType());
+//		
+//			values.put("id_image", holiday.getPicture().getId());
+//			
+//			long id = holiday.getId();
+//			if(id == -1){
+//				id = db.insertOrThrow("t_holidays", null, values);
+//			}
+//			
+//			values.clear();
+//			for(Country country : holiday.getCountries()){
+//				values.put("id_country", country.getId());
+//				values.put("id_holiday", id);
+//				db.insertOrThrow("t_countryholidays", null, values);
+//			}
+//			
+////			values.clear();
+////			values.put("_id", holiday.getPicture().getId());
+////			values.put("description", holiday.getPicture().getTitle());
+////			values.put("image", holiday.getPicture().getData());
+////			db.insert("t_images", null, values);
+//			
+//			if(date.isMonthFloat()){
+//				values.clear();
+//				
+//				values.put("id_holiday", id);
+//				
+//				values.put("month", holiday.getDate().getFloatMonth());
+//				
+//				values.put("weekDay", holiday.getDate().getWeekDay());
+//				
+//				values.put("dayOffset", holiday.getDate().getOffset());
+//				
+//				db.insert("t_MonthFloatHolidays", null, values);
+//			}
+//			
+//			else if(date.isYearFloat()){
+//
+//				values.clear();
+//				
+//				values.put("id_holiday", id);
+//				
+//				values.put("day", holiday.getDate().getYearDay());
+//				
+//				db.insert("t_YearFloatHolidays", null, values);
+//			}
+//						
+//			db.setTransactionSuccessful();
 //		}
-		
-		ContentValues values = null;
-		
-		try{
-			HolidayDate date = holiday.getDate();
-			
-			values = new ContentValues();
-			
-			values.put("title", holiday.getTitle());
-			
-			values.put("description", holiday.getDescription());
-			
-			values.put("month", holiday.getDate().getActualMonth());
-			
-			values.put("day", holiday.getDate().getActualDay());
-			
-			values.put("actualDateStr", holiday.getDate().toString());
-			
-			values.put("id_priority", holiday.getType());
-		
-			values.put("id_image", holiday.getPicture().getId());
-			
-			long id = holiday.getId();
-			if(id == -1){
-				id = db.insertOrThrow("t_holidays", null, values);
-			}
-//			long id = db.insertOrThrow("t_holidays", null, values);
-			
-			values.clear();
-			for(Country country : holiday.getCountries()){
-				values.put("id_country", country.getId());
-				values.put("id_holiday", id);
-				db.insertOrThrow("t_countryholidays", null, values);
-			}
-			
-			values.clear();
-			values.put("_id", holiday.getPicture().getId());
-			values.put("description", holiday.getPicture().getTitle());
-			values.put("image", holiday.getPicture().getData());
-			db.insert("t_images", null, values);
-			
-			if(date.isMonthFloat()){
-				values.clear();
-				
-				values.put("id_holiday", id);
-				
-				values.put("month", holiday.getDate().getFloatMonth());
-				
-				values.put("weekDay", holiday.getDate().getWeekDay());
-				
-				values.put("dayOffset", holiday.getDate().getOffset());
-				
-				db.insert("t_MonthFloatHolidays", null, values);
-			}
-			
-			else if(date.isYearFloat()){
-
-				values.clear();
-				
-				values.put("id_holiday", id);
-				
-				values.put("day", holiday.getDate().getYearDay());
-				
-				db.insert("t_YearFloatHolidays", null, values);
-			}
-						
-			db.setTransactionSuccessful();
-		}
-		catch(SQLiteException exc){
-			exc.printStackTrace();
-			throw new SQLiteException();
-		}
-		finally{
-			db.endTransaction();
-		}
-		
+//		catch(SQLiteException exc){
+//			exc.printStackTrace();
+//			throw new SQLiteException();
+//		}
+//		finally{
+//			db.endTransaction();
+//		}
+//		
 	}
 	
 }

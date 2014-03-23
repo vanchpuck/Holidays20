@@ -5,8 +5,12 @@
      <ProgressBar
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         style="@android:style/Widget.ProgressBar.Horizontal"
-         android:indeterminateOnly="true"
-         android:layout_marginRight="5dp" />
+         style="@android:style/Widget.ProgressBar"
+         android:indeterminateOnly="true" />
+     
+     <TextView 
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/msg_please_wait"/>
      
 </LinearLayout>

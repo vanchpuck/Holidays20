@@ -6,6 +6,8 @@ import java.util.Set;
 import com.jonnygold.holidays.fullcalendar.R;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager;
+import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager.State;
 import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 
 import android.app.AlertDialog;
@@ -49,9 +51,12 @@ public class SettingsActivity extends PreferenceActivity {
         
         holidaysBase = HolidaysDataSource.newInstance(this);
         
+        CountryStateManager stateManager = new CountryStateManager(this);
+        
         PreferenceScreen targetCategory = (PreferenceScreen)findPreference("key_holidays_list");
+        targetCategory.removeAll();
         for(Country c : Country.values()){
-        	if(targetCategory.findPreference(c.getKey()) == null){
+        	if(stateManager.getState(c) == State.INSTALLED){
         		CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
         		checkBoxPreference.setKey(c.getKey());
         		checkBoxPreference.setTitle(CountryManager.getInstance().getCountry(c.getKey()).getName());
@@ -59,6 +64,18 @@ public class SettingsActivity extends PreferenceActivity {
         		targetCategory.addPreference(checkBoxPreference);
         	}
         }
+//        for(Country c : Country.values()){
+//        	if(targetCategory.findPreference(c.getKey()) == null){
+//        		CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
+//        		checkBoxPreference.setKey(c.getKey());
+//        		checkBoxPreference.setTitle(CountryManager.getInstance().getCountry(c.getKey()).getName());
+//        		checkBoxPreference.setChecked(true);
+//        		targetCategory.addPreference(checkBoxPreference);
+//        	}
+//        	else if(stateManager.getState(c) == State.NOT_INSTALLED){
+//        		targetCategory.removePreference(findPreference(c.getKey()));
+//        	}
+//        }
         
 //        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
 //        manager.registerReceiver(receiver, filter);

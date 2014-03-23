@@ -3,11 +3,11 @@ package com.jonnygold.holidays.fullcalendar.holiday;
 import com.jonnygold.holidays.fullcalendar.R;
 
 public enum Country {
+	USER (5, "key_user_holidays", "Праздники пользователя", R.drawable.flag_user),
 	WORLD (1, "key_world_holidays", "Мировые праздники", R.drawable.flag_wrld),
 	RUSSIA (2, "key_russian_holidays", "Праздники России", R.drawable.flag_rus),
 	BELORUSSIA (3, "key_belorussian_holidays", "Праздники Белоруссии", R.drawable.flag_bel),
 	UKRANE (4, "key_ukrane_holidays", "Праздники Украины", R.drawable.flag_ukr),
-	USER (5, "key_user_holidays", "Праздники пользователя", R.drawable.flag_user),
 	KAZACHSTAN (6, "key_kazachstan_holidays", "Праздники Казахстана", R.drawable.flag_kaz);
 	
 	private final int id;

@@ -60,13 +60,15 @@ public class UpdateServiceTest extends IntentService {
 		// Установка календаря
 		try {
 			holidaysBase.openForWriting();
-			holidaysBase.beginTransaction();
+			
 			
 			// Если календарь уже установлен - выходим
 			if(holidaysBase.isExists(country)){
 				report(country, UpdateState.SUCCESS);
 				return;
 			}
+			
+//			holidaysBase.beginTransaction();
 			
 			// Грузим данные с сервера
 			List<HolidayRaw> holidays = null;
@@ -81,6 +83,9 @@ public class UpdateServiceTest extends IntentService {
 			} catch (XmlPullParserException e) {
 				report(country, UpdateState.FAULT);
 				return;
+			} catch (Exception e) {
+				report(country, UpdateState.FAULT);
+				return;
 			}
 			
 			// Сохраняем в базу страну
@@ -91,17 +96,23 @@ public class UpdateServiceTest extends IntentService {
 				holidaysBase.saveHoliday(h);
 			}
 			
-			holidaysBase.setTransactionSuccessful();
+//			holidaysBase.setTransactionSuccessful();
+			report(country, UpdateState.SUCCESS);
 			
 		} catch (SQLiteException e) {
+			holidaysBase.deleteCountry(country);
 			report(country, UpdateState.FAULT);
 			return;
-		} 
+		} catch (Exception e) {
+			holidaysBase.deleteCountry(country);
+			report(country, UpdateState.FAULT);
+			return;
+		}
 		finally{
-			holidaysBase.endTransaction();
+//			holidaysBase.endTransaction();
 			holidaysBase.close();
 		}
-		report(country, UpdateState.SUCCESS);
+//		report(country, UpdateState.SUCCESS);
 	}
 	
 	private void report(Country country, UpdateState state){

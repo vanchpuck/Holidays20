@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
@@ -17,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -44,6 +47,7 @@ import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.web.UpdateServiceTest;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 
@@ -171,8 +175,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	protected void onStart() {
 		super.onStart();
 		
-		NotificationManager m = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		m.cancel(001);
+		
 		
 		if(holidaysBase == null)
 			return;
@@ -186,15 +189,31 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		new UpdatePagerTask(this).execute(Calendar.getInstance());
 	}
 	
+	private boolean isMyServiceRunning() {
+	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+	        if (UpdateServiceTest.class.getName().equals(service.service.getClassName())) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
+		if(viewPager != null){
+			viewPager = null;
+		}
 		holidaysBase.close();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(viewPager != null){
+			viewPager = null;
+		}
 		holidaysBase.close();
 	}
 	
@@ -236,20 +255,20 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	  MenuInflater inflater = getMenuInflater();
-	  inflater.inflate(R.menu.holidays, menu);
-
-	  SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	  
-	  
-	  MenuItem searchItem = menu.findItem(R.id.action_search);
-	  SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-	  	  
-	  searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//	  searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-	  searchView.setQueryHint(getString(R.string.str_find_holiday));
-
-	  return super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.holidays, menu);
+		
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		  
+		  
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		 	  
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		//	  searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+		searchView.setQueryHint(getString(R.string.str_find_holiday));
+		
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	
@@ -264,6 +283,9 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	        case R.id.action_calendars :
 	            Intent calendIntent = new Intent(this, CalendarManagerActivity.class);
 	            startActivity(calendIntent);
+	            return true; 
+	        case R.id.action_full_version :
+	        	openMarketLink();
 	            return true; 
 	        case R.id.action_add_holiday :
 	        	NewHolidayDialog addDialog = new NewHolidayDialog(this);
@@ -282,6 +304,21 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	        	return true;
 	    }
 	    
+	}
+	
+	private void openMarketLink(){
+		try{
+			Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+	        marketIntent.setData(Uri.parse("market://details?id=com.jonnygold.holidays.fullcalendar"));
+	        startActivity(marketIntent);
+		} catch (Exception exc){
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.msg_error)
+					.setMessage(R.string.msg_market_link_error)
+					.setPositiveButton(R.string.msg_ok, null)
+					.create()
+					.show();
+		}
 	}
 	
 	public HolidaysDataSource getHolidaysBase(){

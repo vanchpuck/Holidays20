@@ -7,37 +7,40 @@ import com.jonnygold.holidays.fullcalendar.holiday.Calendar;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager;
-import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
-import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 import com.jonnygold.holidays.fullcalendar.web.UpdateServiceTest;
 import com.jonnygold.holidays.fullcalendar.web.UpdateServiceTest.UpdateState;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ActivityManager.RunningServiceInfo;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
+import android.database.sqlite.SQLiteException;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
+
 import android.preference.PreferenceManager;
+
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListAdapter;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class CalendarManagerActivity extends ActionBarActivity {
 
@@ -47,22 +50,21 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		
 		private Context context;
 		
-		private PendingIntent intent;
-		
 		private NotificationManager notificationMgr;
 		
 		public Notifier(Context context) {
 			this.context = context;
-			this.intent = PendingIntent.getActivity(
-					context,
-					0,
-					new Intent(context, CalendarManagerActivity.class),
-			    	PendingIntent.FLAG_UPDATE_CURRENT
-			);
 			this.notificationMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 		}
 		
 		public void showLoadingNotification(Country country){			
+			PendingIntent intent = PendingIntent.getActivity(
+					context,
+					0,
+					new Intent(/*context, CalendarManagerActivity.class*/),
+			    	PendingIntent.FLAG_UPDATE_CURRENT
+			);
+			
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 				    .setSmallIcon(country.getDrawableId())
 				    .setProgress(0, 0, true)
@@ -75,6 +77,13 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		}
 		
 		public void showDoneNotification(Country country, UpdateState state){
+			PendingIntent intent = PendingIntent.getActivity(
+					context,
+					0,
+					new Intent(context, HolidaysActivity.class),
+			    	PendingIntent.FLAG_UPDATE_CURRENT
+			);
+			
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 				    .setSmallIcon(country.getDrawableId())
 				    .setContentTitle(state.title)
@@ -84,6 +93,70 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			
 			// Builds the notification and issues it.
 			notificationMgr.notify(NOTIFICATION_ID, mBuilder.build());
+		}
+		
+	}
+	
+	private class DeleteTask extends AsyncTask<Country, Country, Country[]>{
+
+		private Context context;
+		
+		private HolidaysDataSource db;
+		
+		private AlertDialog dialog;
+		
+		public DeleteTask(Context context){
+			this.context = context;
+			this.db = HolidaysDataSource.newInstance(context);
+		}
+		
+		@Override
+		protected Country[] doInBackground(Country... params) {
+			db.openForWriting();
+			for(Country country : params){
+				db.beginTransaction();
+				try{
+					db.deleteCountry(country);
+					db.setTransactionSuccessful();
+				} catch (SQLiteException exc){
+					// TODO Сообщение об ошибке
+				}
+				finally{
+					db.endTransaction();
+					db.close();
+				}
+			}
+			publishProgress();
+			return params;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			dialog = new AlertDialog.Builder(context)
+					.setTitle("Удаление календаря...")
+					.setCancelable(false)
+					.setView(LayoutInflater.from(context).inflate(R.layout.view_loading_dialog, null))
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {						
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							
+						}
+					}).create();
+			dialog.show();
+		}
+		
+		@Override
+		protected void onPostExecute(Country[] countries) {
+			for(Country country : countries){
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+	    		sharedPref.edit().remove(country.getKey());
+			}
+			dialog.cancel();
+		}
+		
+		@Override
+		protected void onProgressUpdate(Country ... values) {
+			fillList();
 		}
 		
 	}
@@ -215,13 +288,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			
 			CalendarsListAdapter adapter = (CalendarsListAdapter)parent.getExpandableListAdapter();
 			
-			@SuppressWarnings("unused")
-			Object o = adapter.getChild(groupPosition, childPosition);
-			
 			final Country country = (Country) adapter.getChild(groupPosition, childPosition);
 
-//			startDownloading(country);
-			
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 			dialogBuilder.setTitle(country.getName())
 					.setIcon(country.getDrawableId())
@@ -233,7 +301,7 @@ public class CalendarManagerActivity extends ActionBarActivity {
 				dialogBuilder.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Реализовать возможность удаления календарей.
+						new DeleteTask(context).execute(country);
 					}
 				});
 				break;
@@ -246,11 +314,11 @@ public class CalendarManagerActivity extends ActionBarActivity {
 				});
 				break;
 			default:
-				break;
+				return false;
 			}
 			dialogBuilder.create().show();
 			
-			return false;
+			return true;
 		}
 	}
 	
@@ -269,17 +337,30 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	    	
 	    	notifier.showDoneNotification(country, response);
 	    	
+	    	if(loadingDialog != null){
+	    		loadingDialog.cancel();
+	    	}
+	    	
 	    	if(response == UpdateState.SUCCESS){
 	    		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 	    		sharedPref.edit().putBoolean(country.getKey(), true).apply();
-
+	    		fillList();
 	    	}
+	    	
+//	    	showProgress(false);
+	    	
 	    }
 	}
 	
 	
 	
 	private Notifier notifier;
+	
+	private AlertDialog loadingDialog;
+	
+	private ExpandableListView calendarsView;
+	
+	private View progressBarView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -300,12 +381,27 @@ public class CalendarManagerActivity extends ActionBarActivity {
                 mStatusIntentFilter);
 		
 		
-		ExpandableListView calendarsView = (ExpandableListView)findViewById(R.id.view_calendars);
+		calendarsView = (ExpandableListView)findViewById(R.id.view_calendars);
+//		progressBarView = findViewById(R.id.view_loading_progress_bar);
+		
 		calendarsView.setOnChildClickListener(new OnCalendarClickListener(this));
-	
-		fillList(calendarsView);
+		
+//		showProgress(false);
+//		calendarsView.setOnChildClickListener(new OnCalendarClickListener(this));
+		
+		fillList();
 
 	}
+	
+//	@Override
+//	protected void onStart() {
+//		if(isMyServiceRunning()){
+//			showProgress(true);
+//		}else{
+//			fillList();
+//		}
+//		super.onStart();
+//	}
 	
 	public void startDownloading(Country country){
 		Intent serviceIntent = new Intent(this, UpdateServiceTest.class);
@@ -313,9 +409,23 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		
 		startService(serviceIntent);
 		notifier.showLoadingNotification(country);
+		
+		loadingDialog = new AlertDialog.Builder(this)
+				.setTitle("Установка календаря...")
+				.setCancelable(false)
+				.setView(LayoutInflater.from(this).inflate(R.layout.view_loading_dialog, null))
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {						
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						
+					}
+				}).create();
+		loadingDialog.show();
+		
+//		showProgress(true);
 	}
 	
-	private void fillList(ExpandableListView calendarsView){		
+	private void fillList(){	
 		List<Calendar> calendars = new ArrayList<Calendar>();
 		for(Calendar c : Calendar.values()){
 			calendars.add(c);
@@ -327,4 +437,25 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			calendarsView.expandGroup(i);
 	}
 	
+//	private void showProgress(boolean value){
+//		if(value){
+//			progressBarView.setVisibility(View.VISIBLE);
+//	    	calendarsView.setVisibility(View.GONE);
+//		} else{
+//			progressBarView.setVisibility(View.GONE);
+//	    	calendarsView.setVisibility(View.VISIBLE);
+//		}
+//		
+//	}
+	
+	private boolean isMyServiceRunning() {
+	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+	        if (UpdateServiceTest.class.getName().equals(service.service.getClassName())) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+		
 }
