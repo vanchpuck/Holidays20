@@ -188,17 +188,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		
 		new UpdatePagerTask(this).execute(Calendar.getInstance());
 	}
-	
-	private boolean isMyServiceRunning() {
-	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	        if (UpdateServiceTest.class.getName().equals(service.service.getClassName())) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	
+		
 	@Override
 	protected void onStop() {
 		super.onStop();

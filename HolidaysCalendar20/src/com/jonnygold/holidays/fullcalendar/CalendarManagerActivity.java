@@ -24,6 +24,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -34,6 +35,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -393,16 +397,45 @@ public class CalendarManagerActivity extends ActionBarActivity {
 
 	}
 	
-//	@Override
-//	protected void onStart() {
-//		if(isMyServiceRunning()){
-//			showProgress(true);
-//		}else{
-//			fillList();
-//		}
-//		super.onStart();
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_manager, menu);
+		return true;
+	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_preferences :
+	            Intent intent = new Intent(this, SettingsActivity.class);
+	            startActivity(intent);
+	            return true; 
+	        case R.id.action_full_version :
+	        	openMarketLink();
+	            return true; 
+	        default :
+	        	return true;
+	    }
+	    
+	}
+	
+	private void openMarketLink(){
+		try{
+			Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+	        marketIntent.setData(Uri.parse("market://details?id=com.jonnygold.holidays.fullcalendar"));
+	        startActivity(marketIntent);
+		} catch (Exception exc){
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.msg_error)
+					.setMessage(R.string.msg_market_link_error)
+					.setPositiveButton(R.string.msg_ok, null)
+					.create()
+					.show();
+		}
+	}
+		
 	public void startDownloading(Country country){
 		Intent serviceIntent = new Intent(this, UpdateServiceTest.class);
 		serviceIntent.putExtra(UpdateServiceTest.TARGET_COUNTRY_ID, country.getId());
@@ -436,26 +469,5 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		for (int i = 0; i < adapter.getGroupCount(); i++)
 			calendarsView.expandGroup(i);
 	}
-	
-//	private void showProgress(boolean value){
-//		if(value){
-//			progressBarView.setVisibility(View.VISIBLE);
-//	    	calendarsView.setVisibility(View.GONE);
-//		} else{
-//			progressBarView.setVisibility(View.GONE);
-//	    	calendarsView.setVisibility(View.VISIBLE);
-//		}
-//		
-//	}
-	
-	private boolean isMyServiceRunning() {
-	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	        if (UpdateServiceTest.class.getName().equals(service.service.getClassName())) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-		
+				
 }
