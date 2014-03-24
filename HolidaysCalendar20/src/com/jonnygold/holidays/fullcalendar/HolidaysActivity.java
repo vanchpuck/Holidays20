@@ -167,7 +167,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return;
 		}
 		
-		getSupportActionBar().setTitle(R.string.action_bar_tite);
+		getSupportActionBar().setTitle(R.string.str_action_bar_tite);
 	    
 	}
 	

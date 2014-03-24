@@ -8,7 +8,8 @@
     
     <string name="adMob">a150e51c3db4af1</string>
     
-    <string name="action_bar_tite">Праздники</string>
+    <string name="str_action_bar_tite">Праздники</string>
+    <string name="str_manager_action_bar_tite">Календари</string>
     <string name="str_find_holiday">Поиск праздника</string>
     <string name="str_save">Сохранить</string>
     <string name="str_new_holiday">Новый праздник</string>

@@ -15,7 +15,6 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ActivityManager.RunningServiceInfo;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,24 +22,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
-
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.preference.PreferenceManager;
-
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
-
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -371,6 +366,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calendar_manager);
 		
+		getSupportActionBar().setTitle(R.string.str_manager_action_bar_tite);
+		
 		notifier = new Notifier(this);
 		
 		IntentFilter mStatusIntentFilter = new IntentFilter(
@@ -443,10 +440,15 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		startService(serviceIntent);
 		notifier.showLoadingNotification(country);
 		
-		loadingDialog = new AlertDialog.Builder(this)
+		ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.DialogBaseTheme);
+		
+//		HolidayDetailView detailView = (HolidayDetailView)LayoutInflater.from(wrapper).inflate(R.layout.dialog_detail, null);
+//		detailView.setHoliday(holiday);
+		
+		loadingDialog = new AlertDialog.Builder(wrapper)
 				.setTitle("Установка календаря...")
 				.setCancelable(false)
-				.setView(LayoutInflater.from(this).inflate(R.layout.view_loading_dialog, null))
+				.setView(LayoutInflater.from(wrapper).inflate(R.layout.view_loading_dialog, null))
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {						
 					@Override
 					public void onCancel(DialogInterface dialog) {
