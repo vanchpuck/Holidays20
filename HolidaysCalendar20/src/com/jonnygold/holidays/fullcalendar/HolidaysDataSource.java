@@ -640,6 +640,8 @@ public class HolidaysDataSource {
 			
 			values.clear();
 			
+//			values.put("_id", holiday.getId());
+			
 			values.put("title", holiday.getTitle());
 			
 			values.put("description", holiday.getDescription());
@@ -650,11 +652,20 @@ public class HolidaysDataSource {
 			
 			values.put("actualDateStr", holiday.getDate().toString());
 			
-			values.put("id_priority", holiday.getType());
-		
+			values.put("id_priority", holiday.getType());		
+			
 			values.put("id_image", holiday.getPicture().getId());
 			
-			long id = db.insert("t_holidays", null, values);
+			long id = holiday.getId();
+			if(id != -1){
+				values.put("_id", holiday.getId());
+				db.insert("t_holidays", null, values);
+			}
+			else{
+				id = db.insert("t_holidays", null, values);
+			}
+			
+//			long id = db.insert("t_holidays", null, values);
 //			long id = holiday.getId();
 //			if(id == -1){
 //				id = db.insertOrThrow("t_holidays", null, values);
