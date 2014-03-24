@@ -110,9 +110,7 @@ public class WebService {
 		if(actualMonth != null) 
 			builder.setActualMonth(Integer.valueOf(actualMonth.toString()));
 		
-		Object floatMonth = soapDate.getPrimitiveProperty("floatMonth");
-		if(floatMonth != null) 
-			builder.setFloaMonth(Integer.valueOf(floatMonth.toString()));
+		
 		
 		Object weekDay = soapDate.getPrimitiveProperty("weekDay");
 		if(weekDay != null) 
@@ -120,9 +118,25 @@ public class WebService {
 		
 		/* DOTO ��������� ������ Offset!!!! */
 		Object offset = soapDate.getPrimitiveProperty("offset");
-		if(offset != null) 
-			builder.setOffset(DayOrder.getDayOrder(Integer.valueOf(offset.toString())) );
-		
+		Object floatMonth = soapDate.getPrimitiveProperty("floatMonth");
+		if(offset != null && floatMonth != null){
+			DayOrder order = DayOrder.getDayOrder(Integer.valueOf(offset.toString()));
+			builder.setOffset(order);
+			
+			int fm = Integer.valueOf(floatMonth.toString());
+			if(order == DayOrder.LAST){
+				if(fm == 11){
+					builder.setFloaMonth(0);
+				}
+				else{
+					builder.setFloaMonth(fm+1);
+				}
+			}
+			else{
+				builder.setFloaMonth(fm);
+			}
+		}
+				
 		Object yearDay = soapDate.getPrimitiveProperty("yearDay");
 		if(yearDay != null) 
 			builder.setYearDay(Integer.valueOf(yearDay.toString()));

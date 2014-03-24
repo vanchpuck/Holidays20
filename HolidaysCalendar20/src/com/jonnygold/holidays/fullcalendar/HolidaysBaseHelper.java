@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class HolidaysBaseHelper extends SQLiteAssetHelper {
 
-	public static final int DATABASE_VERSION = 21;
+	public static final int DATABASE_VERSION = 22;
 	
 	public static final String DATABASE_NAME = "mydb20";
 	
