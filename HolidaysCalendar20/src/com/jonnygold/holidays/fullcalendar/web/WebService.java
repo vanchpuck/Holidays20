@@ -111,7 +111,6 @@ public class WebService {
 			builder.setActualMonth(Integer.valueOf(actualMonth.toString()));
 		
 		
-		
 		Object weekDay = soapDate.getPrimitiveProperty("weekDay");
 		if(weekDay != null) 
 			builder.setWeekDay(Integer.valueOf(weekDay.toString()));
