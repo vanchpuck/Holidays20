@@ -7,8 +7,8 @@ import com.jonnygold.holidays.fullcalendar.holiday.Calendar;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager;
-import com.jonnygold.holidays.fullcalendar.web.UpdateServiceTest;
-import com.jonnygold.holidays.fullcalendar.web.UpdateServiceTest.UpdateState;
+import com.jonnygold.holidays.fullcalendar.web.UpdateService;
+import com.jonnygold.holidays.fullcalendar.web.UpdateService.UpdateState;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -45,7 +45,7 @@ public class CalendarManagerActivity extends ActionBarActivity {
 
 	private static class Notifier{
 		
-		private static final int NOTIFICATION_ID = 1;
+		public static final int NOTIFICATION_ID = 1;
 		
 		private Context context;
 		
@@ -54,6 +54,10 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		public Notifier(Context context) {
 			this.context = context;
 			this.notificationMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+		}
+		
+		public NotificationManager getNotificationManager(){
+			return notificationMgr;
 		}
 		
 		public void showLoadingNotification(Country country){			
@@ -131,10 +135,12 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		
 		@Override
 		protected void onPreExecute() {
-			dialog = new AlertDialog.Builder(context)
+			ContextThemeWrapper wrapper = new ContextThemeWrapper(context, R.style.DialogBaseTheme);
+			
+			dialog = new AlertDialog.Builder(wrapper)
 					.setTitle("Удаление календаря...")
 					.setCancelable(false)
-					.setView(LayoutInflater.from(context).inflate(R.layout.view_loading_dialog, null))
+					.setView(LayoutInflater.from(wrapper).inflate(R.layout.view_loading_dialog, null))
 					.setOnCancelListener(new DialogInterface.OnCancelListener() {						
 						@Override
 						public void onCancel(DialogInterface dialog) {
@@ -328,11 +334,11 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	{
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
-	    	UpdateServiceTest.UpdateState response = 
-	    			(UpdateServiceTest.UpdateState) intent.getExtras().getSerializable(UpdateServiceTest.UPDATE_STATUS);
+	    	UpdateService.UpdateState response = 
+	    			(UpdateService.UpdateState) intent.getExtras().getSerializable(UpdateService.UPDATE_STATUS);
 	    	
 	    	Country country = 
-	    			CountryManager.getInstance().getCountry(intent.getExtras().getInt(UpdateServiceTest.TARGET_COUNTRY_ID));
+	    			CountryManager.getInstance().getCountry(intent.getExtras().getInt(UpdateService.TARGET_COUNTRY_ID));
 	    	
 	    	notifier.showDoneNotification(country, response);
 	    	
@@ -371,7 +377,7 @@ public class CalendarManagerActivity extends ActionBarActivity {
 		notifier = new Notifier(this);
 		
 		IntentFilter mStatusIntentFilter = new IntentFilter(
-                UpdateServiceTest.BROADCAST_ACTION);
+				UpdateService.BROADCAST_ACTION);
 
 		DownloadStateReceiver mDownloadStateReceiver =
                 new DownloadStateReceiver();
@@ -434,8 +440,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	}
 		
 	public void startDownloading(Country country){
-		Intent serviceIntent = new Intent(this, UpdateServiceTest.class);
-		serviceIntent.putExtra(UpdateServiceTest.TARGET_COUNTRY_ID, country.getId());
+		final Intent serviceIntent = new Intent(this, UpdateService.class);
+		serviceIntent.putExtra(UpdateService.TARGET_COUNTRY_ID, country.getId());
 		
 		startService(serviceIntent);
 		notifier.showLoadingNotification(country);
@@ -449,17 +455,18 @@ public class CalendarManagerActivity extends ActionBarActivity {
 				.setTitle("Установка календаря...")
 				.setCancelable(false)
 				.setView(LayoutInflater.from(wrapper).inflate(R.layout.view_loading_dialog, null))
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {						
+				.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
 					@Override
-					public void onCancel(DialogInterface dialog) {
-						
+					public void onClick(DialogInterface dialog, int which) {
+						notifier.getNotificationManager().cancel(Notifier.NOTIFICATION_ID);
+						stopService(serviceIntent);
 					}
 				}).create();
 		loadingDialog.show();
 		
 //		showProgress(true);
 	}
-	
+		
 	private void fillList(){	
 		List<Calendar> calendars = new ArrayList<Calendar>();
 		for(Calendar c : Calendar.values()){

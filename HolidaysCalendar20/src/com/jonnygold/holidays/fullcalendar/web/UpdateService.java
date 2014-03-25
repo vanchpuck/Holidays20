@@ -19,15 +19,22 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
 public class UpdateService extends Service {
+
+	public static final String BROADCAST_ACTION = "com.jonnygold.holidays.fullcalendar.web.BROADCAST";
+	
+	public static final String UPDATE_STATUS = "com.jonnygold.holidays.fullcalendar.web.STATUS";
+	
+	public static final String TARGET_COUNTRY_ID = "com.jonnygold.holidays.fullcalendar.web.TARGET_COUNTRY";
+		
 	
 	private UpdateState result = UpdateState.FAULT;
-	
-	private List<HolidayRaw> holidays;
-	
+		
 	private HolidaysDataSource holidaysBase;
 		
 	private class JobThread extends Thread{
 		private Country country;
+		private List<HolidayRaw> holidays;
+		
 		public JobThread(Country country){
 			this.country = country;
 		}
@@ -42,49 +49,47 @@ public class UpdateService extends Service {
 					holidaysBase.beginTransaction();
 					if(!Thread.interrupted())
 						holidaysBase.saveCountry(country);
-					else
+					else{
 						return;
+					}
 					
 					for(HolidayRaw h : holidays){
 						if(!Thread.interrupted())
 							holidaysBase.saveHoliday(h);
-						else
+						else{
 							return;
-						
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
 					}
 					if(!Thread.interrupted()){
 						holidaysBase.setTransactionSuccessful();
-						result = UpdateState.SUCCESS;
+						report(country, UpdateState.SUCCESS);
+//						result = UpdateState.SUCCESS;
 					}
+					else{
+						return;
+					}
+				}
+				catch (SQLiteException e) {
+					report(country, UpdateState.FAULT);
+//					result = UpdateState.FAULT;
 				}
 				finally{
 					holidaysBase.endTransaction();
 					holidaysBase.close();
-				}
-//				if(!Thread.interrupted()){
-//					result = UpdateState.SUCCESS;
-//				}				
+					stopSelf();
+				}		
 			} 
 			catch (HttpResponseException e) {
-				result = UpdateState.BAD_RESPONSE;
+				report(country, UpdateState.BAD_RESPONSE);
+//				result = UpdateState.BAD_RESPONSE;
 			}
 			catch (IOException e) {
-				result = UpdateState.NOT_CONNECTED;
+				report(country, UpdateState.NOT_CONNECTED);
+//				result = UpdateState.NOT_CONNECTED;
 			}
 			catch (XmlPullParserException e) {
-				result = UpdateState.FAULT;
-			}	
-			catch (SQLiteException e) {
-				result = UpdateState.FAULT;
-			}
-			finally{
-				stopSelf();
+				report(country, UpdateState.FAULT);
+//				result = UpdateState.FAULT;
 			}
 		}
 		
@@ -94,7 +99,8 @@ public class UpdateService extends Service {
 		SUCCESS (0, "Загрузка завершена.", "Календарь успешно установлен."),
 		FAULT (1, "Ошибка установки.", "Не удалось установить календарь. Повторите попытку позже."),
 		BAD_RESPONSE (2, "Ошибка установки.", "Ошибка связи с серветом. Повторите попытку позже."),
-		NOT_CONNECTED (3, "Ошибка установки.", "Нет связи с сервером. Проверьте интернет-соединение.");
+		NOT_CONNECTED (3, "Ошибка установки.", "Нет связи с сервером. Проверьте интернет-соединение."),
+		;//CANCELLED (4, "Установка отменена", "Установка отменена");
 		
 		public final int code;
 		public String message;
@@ -121,7 +127,7 @@ public class UpdateService extends Service {
 //		flag = false;
 //	}
 
-	JobThread job;
+	private JobThread job;
 	
 	@Override
 	public void onCreate() {
@@ -130,7 +136,7 @@ public class UpdateService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {		
-		job = new JobThread(CountryManager.getInstance().getCountry(intent.getExtras().getInt("countryId")));
+		job = new JobThread(CountryManager.getInstance().getCountry(intent.getExtras().getInt(TARGET_COUNTRY_ID)));
 		job.start();
 		return START_STICKY;
 	}
@@ -145,9 +151,17 @@ public class UpdateService extends Service {
 		if(job != null){
 			job.interrupt();
 		}
-		Intent intent = new Intent("Broadcast");
-		intent.putExtra("Result", result);
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//		Intent intent = new Intent("Broadcast");
+//		intent.putExtra("Result", result);
+//		
+//		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+	}
+	
+	private void report(Country country, UpdateState state){
+		Intent localIntent = new Intent(BROADCAST_ACTION)
+	            .putExtra(UPDATE_STATUS, state)
+		 		.putExtra(TARGET_COUNTRY_ID, country.getId());
+		LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
 	}
 
 }

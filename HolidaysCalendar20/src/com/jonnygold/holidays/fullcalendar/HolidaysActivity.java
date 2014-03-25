@@ -47,7 +47,6 @@ import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
-import com.jonnygold.holidays.fullcalendar.web.UpdateServiceTest;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 

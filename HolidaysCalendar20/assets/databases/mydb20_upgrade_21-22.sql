@@ -1,4 +1,4 @@
-﻿update t_holidays set description='День Эколога был утвержден во «Всемирный день окружающей среды», ежегодно отмечаемый 5 июня. Таким образом, главный праздник экологов совпал с главной международной экологической датой.' 
+update t_holidays set description='День Эколога был утвержден во «Всемирный день окружающей среды», ежегодно отмечаемый 5 июня. Таким образом, главный праздник экологов совпал с главной международной экологической датой.' 
 where _id = 106;
 
 update t_holidays set description='Был учрежден указом президиума Верховного Совета СССР от 29 сентября 1965 года. В Белоруссии, Казахстане, Киргизии, Латвии, Молдавии, Украине отмечается в первое воскресенье октября.' 
@@ -101,6 +101,32 @@ values (
 insert into t_countryholidays(id_country, id_holiday) values (3, 100008);
 insert into t_countryholidays(id_country, id_holiday) values (4, 100008);
 
+insert into t_holidays(_id, title, description, month, day, actualDateStr, id_priority, id_image) 
+values (
+100009,
+'Всемирный день ди-джея', 
+'Праздник был учрежден организацией ЮНЕСКО в благотворительных целях. Организаторы фонда World DJ Day Foundation призывают диджеев пожертвовать сегодня все заработанные в эту ночь деньги детским домам и благотворительным организациям.',
+2, 9, '9 марта', 1, 147);
+insert into t_countryholidays(id_country, id_holiday) values (1, 100009);
+
+insert into t_holidays(_id, title, description, month, day, actualDateStr, id_priority, id_image) 
+values (
+100010,
+'день работника налоговой и таможенной службы Украины', 
+'Согласно указу президента Украины от 11 октября 2013 года, датой празднования дня работника налоговой и таможенной службы Украины стало 18 марта. Таким образом, существовавшие ранее "День таможенной службы" и "День работников налоговой службы" были объединены в одну праздничную дату. 
+',
+2, 18, '18 марта', 2, 48);
+insert into t_countryholidays(id_country, id_holiday) values (4, 100010);
+
+insert into t_holidays(_id, title, description, month, day, actualDateStr, id_priority, id_image) 
+values (
+100011,
+'Международный день театра кукол', 
+'Идея празднования во всем мире Международного дня кукольника  пришла известному деятелю кукольного театра Дживада Золфагарихо из Ирана. Первое празднование прошло 21 марта 2003 года.',
+2, 21, '21 марта', 2, 72);
+insert into t_countryholidays(id_country, id_holiday) values (1, 100011);
+
+
 delete from t_countryholidays where id_holiday = 51;
 delete from t_monthfloatholidays where id_holiday = 51;
 delete from t_holidays where _id = 51;
@@ -112,6 +138,11 @@ where _id = 222;
 update t_holidays set day = 1, actualDateStr = '1 ноября',
 description='День судебного пристава Российской Федерации отмечается ежегодно 1 ноября, начиная с 2009 года. Ранее, с 1997 по 2008 годы, российские судебные приставы России отмечали свой профессиональный праздник неофициально, приурочив его к дате 6 ноября, являющейся днём вступления в силу Федерального закона от 21 июля 1997 года «О судебных приставах» и Федерального закона от 21 июля 1997 года «Об исполнительном производстве».'
 where _id = 221;
+
+update t_holidays set description='Профессиональный праздник работников, занятых в торговле (в том числе розничной), тружеников сферы услуг, а также трудящихся, чьи специальности непосредственно связаны с ЖКХ. После обретения всеми пятнадцатью республиками СССР независимости друг от друга, сохранился в ряде государств СНГ. В некоторых странах «День работников торговли» и  «День работников ЖЭК» стали самостоятельными праздниками.',
+title = 'день работников жилищно-коммунального хозяйства и бытового обслуживания населения'
+where _id = 85;
+insert into t_countryholidays(id_country, id_holiday) values (4, 85);
 
 update t_holidays set actualDateStr = '21 ноября' where _id = 158;
 
@@ -128,4 +159,10 @@ actualDateStr='Третье воскресенье декабря'
 where _id = 258;
 insert into t_monthfloatholidays(id_holiday, month, weekday, dayoffset) values(258, 11, 0, 14);
 delete from t_countryholidays where id_holiday = 258 and id_country in (3, 4);
+
+delete from t_countryholidays where id_holiday = 157;
+delete from t_holidays where _id = 157;
+
+delete from t_countryholidays where id_holiday = 228;
+delete from t_holidays where _id = 228;
 
