@@ -343,7 +343,8 @@ insert into t_countryholidays(id_country, id_holiday) values (4, 59);
 
 insert into t_countryholidays(id_country, id_holiday) values (3, 267);
 
-delete from t_countryholidays where id_holiday = 87;
+delete from t_countryholidays where id_holiday = 87 and id_country = 3;
+delete from t_countryholidays where id_holiday = 87 and id_country = 2;
 
 
 

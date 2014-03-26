@@ -301,7 +301,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			
 			switch (stateManager.getState(country)) {
 			case INSTALLED :
-				dialogBuilder.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+				dialogBuilder.setTitle("Загрузка календаря")
+						.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						new DeleteTask(context).execute(country);
@@ -309,7 +310,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 				});
 				break;
 			case NOT_INSTALLED :
-				dialogBuilder.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
+				dialogBuilder.setTitle("Удаление календаря")
+						.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						startDownloading(country);
