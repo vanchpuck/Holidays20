@@ -1,7 +1,6 @@
 package com.jonnygold.holidays.fullcalendar.web;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import org.ksoap2.transport.HttpResponseException;
@@ -26,9 +25,7 @@ public class UpdateService extends Service {
 	
 	public static final String TARGET_COUNTRY_ID = "com.jonnygold.holidays.fullcalendar.web.TARGET_COUNTRY";
 		
-	
-	private UpdateState result = UpdateState.FAULT;
-		
+			
 	private HolidaysDataSource holidaysBase;
 		
 	private class JobThread extends Thread{

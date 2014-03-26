@@ -18,7 +18,6 @@ import com.jonnygold.holidays.fullcalendar.HolidaysActivity;
 import com.jonnygold.holidays.fullcalendar.HolidaysDataSource;
 import com.jonnygold.holidays.fullcalendar.HolidaysDataSource.QueryRestriction;
 import com.jonnygold.holidays.fullcalendar.R;
-import com.jonnygold.holidays.fullcalendar.SettingsActivity;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;

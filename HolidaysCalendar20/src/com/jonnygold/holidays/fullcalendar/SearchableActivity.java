@@ -47,24 +47,7 @@ public class SearchableActivity extends ActionBarActivity{
 	    	HolidaysListView holidaysView = (HolidaysListView)findViewById(R.id.view_holidays);
 	    	holidaysView.setHolidays(getHolidays(query));
 	    	holidaysView.setOnItemClickListener(new HolidaysListView.OnHolidayClickListener());
-	      
-	    	// Configure holidays ListView
-//			HolidaysAdapter listAdapter = new HolidaysAdapter(this, getHolidays());
-//			ListView holidaysView = (ListView)findViewById(R.id.view_holidays);
-//			holidaysView.setAdapter(listAdapter);
-			
-//			holidaysView.setOnItemClickListener(new OnItemClickListener() {
-//				@Override
-//				public void onItemClick(AdapterView<?> parent, View view, int idx,	long id) {
-//					Holiday holiday = holidays.get(idx);
-//					
-//					Builder builder = new AlertDialog.Builder(activity);				
-//					builder.setPositiveButton("Ok", null)
-//						.setView(getHolidayDetail(holiday)) 
-//						.show();
-//				}
-//			});
-			
+	
 	    }
 	    holidaysBase.close();
 	}
@@ -101,13 +84,6 @@ public class SearchableActivity extends ActionBarActivity{
 		return super.onContextItemSelected(item);
 	}
 	
-//	private List<Holiday> getHolidays(String query){
-//		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
-//    	restriction.setTitle(query);
-//    	restriction.setLimit(MAX_ROW_COUNT);
-//    	return holidaysBase.getHolidays(restriction);
-//	}
-		
 	private List<Holiday> getHolidays(String query){
 		QueryRestriction restriction = new HolidaysDataSource.QueryRestriction();
 		

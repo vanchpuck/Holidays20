@@ -1,10 +1,8 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Set;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -34,13 +32,6 @@ public class Holiday extends HolidayRaw implements Parcelable{
 		    return new Holiday[size];
 		}
 	};
-
-	
-//	private int actualMonth;
-//	
-//	private int actualDay;
-	
-	private Drawable picture;
 	
 	
 	public Holiday(Parcel in){

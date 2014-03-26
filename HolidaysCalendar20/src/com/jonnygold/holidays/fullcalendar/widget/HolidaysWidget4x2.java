@@ -3,7 +3,6 @@ package com.jonnygold.holidays.fullcalendar.widget;
 import android.content.SharedPreferences;
 
 import com.jonnygold.holidays.fullcalendar.R;
-import com.jonnygold.holidays.fullcalendar.SettingsActivity;
 
 public final class HolidaysWidget4x2 extends HolidaysWidget{
 	

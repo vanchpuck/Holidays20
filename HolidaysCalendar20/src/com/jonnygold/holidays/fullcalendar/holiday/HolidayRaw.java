@@ -1,9 +1,6 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
-import java.io.Serializable;
 import java.util.Set;
-
-import org.xml.sax.Parser;
 
 import android.os.Parcel;
 import android.os.Parcelable;

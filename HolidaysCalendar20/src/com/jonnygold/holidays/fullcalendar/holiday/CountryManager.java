@@ -1,32 +1,18 @@
 package com.jonnygold.holidays.fullcalendar.holiday;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
-import android.content.Context;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jonnygold.holidays.fullcalendar.HolidaysDataSource;
-
-
 public class CountryManager {
-	
-	private class StateManager{
 		
-		
-		
-	}
-	
 	private static CountryManager instance;
 	
 	private Map<Integer, Country> idMap;
 	
 	private Map<String, Country> keyMap;
-	
-	private HolidaysDataSource holidaysBase;
 	
 	private CountryManager(){
 		initIdMap();
@@ -54,17 +40,7 @@ public class CountryManager {
 	public Collection<Country> getCountries(){
 		return idMap.values();
 	}
-	
-//	public boolean isInstalled(Context context, Country country){
-//		if(holidaysBase == null){
-//			holidaysBase = HolidaysDataSource.newInstance(context);
-//		}
-//		holidaysBase.openForReading();
-//		boolean result = holidaysBase.isInstalled(country);
-//		holidaysBase.close();
-//		return result;
-//	}
-	
+
 	@SuppressLint("UseSparseArrays")
 	private void initIdMap(){
 		idMap = new HashMap<Integer, Country>();

@@ -11,7 +11,6 @@ import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
@@ -19,15 +18,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Base64;
 
-import com.jonnygold.holidays.fullcalendar.HolidaysBaseHelper;
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.DayOrder;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
-import com.jonnygold.holidays.fullcalendar.holiday.HolidayPack;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayRaw;
 import com.jonnygold.holidays.fullcalendar.holiday.IsPicture;
-import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate.Builder;
 import com.jonnygold.holidays.fullcalendar.holiday.Picture;
 
 public class WebService {
@@ -53,8 +48,7 @@ public class WebService {
 	}
 	
 	public List<HolidayRaw> getHolidays(Country country) throws HttpResponseException, IOException, XmlPullParserException {
-		String resTxt = null;
-        // Create request
+		// Create request
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
         // Property which holds input parameters
         PropertyInfo sayHelloPI = new PropertyInfo();

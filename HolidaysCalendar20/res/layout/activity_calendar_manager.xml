@@ -35,6 +35,16 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp" >
     </ExpandableListView>
+    
+    <!-- Реклама -->
+	<com.google.ads.AdView
+		android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/adMob"
+        ads:loadAdOnCreate="true"/>
 
     
 </LinearLayout>

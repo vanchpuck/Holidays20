@@ -1,9 +1,7 @@
 package com.jonnygold.holidays.fullcalendar;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager;
-import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager.State;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -11,7 +9,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;

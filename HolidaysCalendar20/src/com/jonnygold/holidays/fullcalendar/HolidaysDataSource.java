@@ -16,7 +16,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.CountryManager;
@@ -24,7 +23,6 @@ import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayRaw;
 import com.jonnygold.holidays.fullcalendar.holiday.Picture;
-//import android.util.Log;
 
 public class HolidaysDataSource {
 
@@ -91,9 +89,6 @@ public class HolidaysDataSource {
 		
 		public QueryRestriction setCountryes(List<Integer> countries){
 			this.countries = countries;
-//			for(Iterator<Country> itr=countries.iterator(); itr.hasNext(); ){
-//				countryIdList.add(itr.next().getId());
-//			}
 			return this;
 		}
 		

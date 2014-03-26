@@ -7,7 +7,7 @@ public enum Calendar {
 	WORLD (Country.WORLD, "Включает описание 150 всемирных праздников и памятных дат."),
 	RUSSIA (Country.RUSSIA, "Содержит описание более 200 праздников, отмечаемых на территории Российской Федерации."),
 	BELORUSSIA (Country.BELORUSSIA, "Содержит описание 80 праздничных дат, отмечаемых в Республике Беларусь."),
-	KAZACHSTAN (Country.KAZACHSTAN, "Включает описание праздники Казахстана"),
+	KAZACHSTAN (Country.KAZACHSTAN, "Содержит сведения о 50 праздничных датах Республики Казахстан."),
 	UKRANE (Country.UKRANE, "Включает более 100 праздничных и памятных дат Украины.");
 	
 	private static final Map<Country, Calendar> map;

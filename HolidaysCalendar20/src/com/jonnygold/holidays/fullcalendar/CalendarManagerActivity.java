@@ -10,11 +10,9 @@ import com.jonnygold.holidays.fullcalendar.holiday.CountryStateManager;
 import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 import com.jonnygold.holidays.fullcalendar.web.UpdateService.UpdateState;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -296,7 +294,7 @@ public class CalendarManagerActivity extends ActionBarActivity {
 			final Country country = (Country) adapter.getChild(groupPosition, childPosition);
 
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-			dialogBuilder.setTitle(country.getName())
+			dialogBuilder.setTitle("Загрузка календаря")
 					.setIcon(country.getDrawableId())
 					.setMessage(Calendar.getCalendar(country).description)
 					.setNegativeButton("Отмена", null);
