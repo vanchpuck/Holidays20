@@ -415,30 +415,12 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	            Intent intent = new Intent(this, SettingsActivity.class);
 	            startActivity(intent);
 	            return true; 
-	        case R.id.action_full_version :
-	        	openMarketLink();
-	            return true; 
 	        default :
 	        	return true;
 	    }
 	    
 	}
-	
-	private void openMarketLink(){
-		try{
-			Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-	        marketIntent.setData(Uri.parse("market://details?id=com.jonnygold.holidays.fullcalendar"));
-	        startActivity(marketIntent);
-		} catch (Exception exc){
-			new AlertDialog.Builder(this)
-					.setTitle(R.string.msg_error)
-					.setMessage(R.string.msg_market_link_error)
-					.setPositiveButton(R.string.msg_ok, null)
-					.create()
-					.show();
-		}
-	}
-		
+			
 	public void startDownloading(Country country){
 		final Intent serviceIntent = new Intent(this, UpdateService.class);
 		serviceIntent.putExtra(UpdateService.TARGET_COUNTRY_ID, country.getId());

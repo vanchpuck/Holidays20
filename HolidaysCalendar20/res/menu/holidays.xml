@@ -27,12 +27,6 @@
         app:showAsAction="ifRoom" />
     
     <item
-        android:id="@+id/action_full_version"
-        android:icon="@drawable/rating_good"
-        android:title="@string/action_full_version"
-        app:showAsAction="never" />
-    
-    <item
         android:id="@+id/action_calendars"
         android:icon="@drawable/action_settings"
         android:title="@string/action_calendars"

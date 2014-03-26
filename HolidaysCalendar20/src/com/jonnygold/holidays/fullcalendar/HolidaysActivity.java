@@ -269,10 +269,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	        case R.id.action_calendars :
 	            Intent calendIntent = new Intent(this, CalendarManagerActivity.class);
 	            startActivity(calendIntent);
-	            return true; 
-	        case R.id.action_full_version :
-	        	openMarketLink();
-	            return true; 
+	            return true; 	        
 	        case R.id.action_add_holiday :
 	        	NewHolidayDialog addDialog = new NewHolidayDialog(this);
 	        	addDialog.show();

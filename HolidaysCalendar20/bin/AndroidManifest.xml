@@ -10,7 +10,6 @@
         android:targetSdkVersion="18" />
     
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
     <application
         android:allowBackup="true"
@@ -19,7 +18,7 @@
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".HolidaysActivity" 
-            android:label="Календарь праздников +"
+            android:label="Календарь праздников ++"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,12 +54,7 @@
 	        <meta-data android:name="android.app.searchable"
 	                   android:resource="@xml/searchable"/>
 	    </activity>
-	    
-        <activity
-            android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-        
-	    
+	    	    
         <service
             android:name=".web.UpdateService"
             android:exported="false"/>
