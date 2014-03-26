@@ -42,12 +42,12 @@
 		android:text=""
 	 	android:textSize="16sp" />
 	
-	<com.jonnygold.holidays.fullcalendar.FlagsView
+	<com.jonnygold.holidays.calendar.FlagsView
  		android:id="@+id/flag_layout"
  		android:layout_width="wrap_content"
  		android:layout_height="wrap_content"
  		android:layout_gravity="center_vertical"
  		android:orientation="vertical" >
-	</com.jonnygold.holidays.fullcalendar.FlagsView> 
+	</com.jonnygold.holidays.calendar.FlagsView> 
 	
 </LinearLayout>

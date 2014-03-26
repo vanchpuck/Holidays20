@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jonnygold.holidays.fullcalendar"
+    package="com.jonnygold.holidays.calendar"
     android:installLocation="auto"
     android:versionCode="11"
     android:versionName="2.2.0" >
@@ -18,8 +18,8 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
-            android:name=".HolidaysActivity" 
-            android:label="Календарь праздников +"
+            android:name="com.jonnygold.holidays.calendar.HolidaysActivity" 
+            android:label="Календарь праздников"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,9 +29,9 @@
         </activity>
              
         <activity
-            android:name=".CalendarManagerActivity"
+            android:name="com.jonnygold.holidays.calendar.CalendarManagerActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".HolidaysActivity"
+            android:parentActivityName="com.jonnygold.holidays.calendar.HolidaysActivity"
             android:screenOrientation="portrait" >
             <meta-data
 		        android:name="android.support.PARENT_ACTIVITY"
@@ -39,14 +39,14 @@
         </activity>
         
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.jonnygold.holidays.calendar.SettingsActivity"
             android:label="@string/app_name" 
             android:theme="@style/PreferencesTheme"
             android:screenOrientation="portrait">
         </activity>
         
         <activity 
-            android:name=".SearchableActivity"
+            android:name="com.jonnygold.holidays.calendar.SearchableActivity"
             android:label="Результаты поиска"
             android:screenOrientation="portrait" >
 	        <intent-filter>
@@ -60,7 +60,6 @@
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         
-	    
         <service
             android:name=".web.UpdateService"
             android:exported="false"/>
@@ -73,7 +72,7 @@
             </intent-filter>
 
             <meta-data
-                android:name="android.appwidget.provider"
+    			android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_4x1" />
         </receiver>
         

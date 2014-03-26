@@ -1,7 +1,7 @@
-<com.jonnygold.holidays.fullcalendar.StableDateView
+<com.jonnygold.holidays.calendar.StableDateView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/view_stable_date"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" 
     android:orientation="vertical">
-</com.jonnygold.holidays.fullcalendar.StableDateView>
+</com.jonnygold.holidays.calendar.StableDateView>

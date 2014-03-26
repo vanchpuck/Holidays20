@@ -28,7 +28,7 @@
 	   	android:layout_height="0dp"
 	   	android:layout_weight="1">
                 
-        <com.jonnygold.holidays.fullcalendar.HolidaysListView
+        <com.jonnygold.holidays.calendar.HolidaysListView
           	android:id="@+id/view_holidays"
           	android:layout_width="match_parent"
           	android:layout_height="match_parent"
@@ -37,7 +37,7 @@
      		android:paddingLeft="@dimen/activity_horizontal_margin"
      		android:paddingRight="@dimen/activity_horizontal_margin"
      		android:paddingTop="@dimen/activity_vertical_margin" >
-        </com.jonnygold.holidays.fullcalendar.HolidaysListView>
+        </com.jonnygold.holidays.calendar.HolidaysListView>
         
    	</android.support.v4.view.ViewPager>
    	

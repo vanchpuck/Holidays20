@@ -1,4 +1,4 @@
-<com.jonnygold.holidays.fullcalendar.HolidayDetailView
+<com.jonnygold.holidays.calendar.HolidayDetailView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
@@ -95,4 +95,4 @@
 	        
     </ScrollView> 
 	
-</com.jonnygold.holidays.fullcalendar.HolidayDetailView>
+</com.jonnygold.holidays.calendar.HolidayDetailView>
