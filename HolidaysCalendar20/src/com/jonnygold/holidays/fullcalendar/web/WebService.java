@@ -29,7 +29,7 @@ public class WebService {
 	
 	private static String NAMESPACE = "http://updatetest.holidays.jonnygold.com";
     
-	private static String URL = "http://appserver.stratoslive.wso2.com/services/t/jonnygold.com/HolidaysService_v1?wsdl";
+	private static String URL = "http://holidays-jonnygold.rhcloud.com/axis2/services/HolidaysService_v1";
     
 	private static String METHOD_NAME = "getHolidays";
 	
