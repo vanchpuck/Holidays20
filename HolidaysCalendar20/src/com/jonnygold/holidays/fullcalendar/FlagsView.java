@@ -23,10 +23,16 @@ public class FlagsView extends LinearLayout {
 	
 	public void addFlag(Country country){
 		LinearLayout.LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		int t = getChildCount();
+		
 		switch(getChildCount()){
 		case 0 :
 			layoutParams.setMargins(0, 0, 0, 0); break;
+		case 4 :
+			layoutParams.setMargins(0, -20, 0, 0); 
+			for(int i=1; i<getChildCount(); i++){
+				getChildAt(i).setLayoutParams(layoutParams);
+			}
+			break;
 		default :
 			layoutParams.setMargins(0, -14, 0, 0); break;
 		}

@@ -101,6 +101,14 @@
 		 		android:layout_height="fill_parent"
 		 		android:layout_marginLeft="-14dp"
 		 		android:src="@drawable/hole">
+			</ImageView>	
+			
+			<ImageView
+		 		android:id="@+id/flag_15"
+		 		android:layout_width="match_parent"
+		 		android:layout_height="fill_parent"
+		 		android:layout_marginLeft="-14dp"
+		 		android:src="@drawable/hole">
 			</ImageView>		
 		</LinearLayout>
 	</LinearLayout>
@@ -161,6 +169,14 @@
 			
 			<ImageView
 		 		android:id="@+id/flag_24"
+		 		android:layout_width="match_parent"
+		 		android:layout_height="fill_parent"
+		 		android:layout_marginLeft="-14dp"
+		 		android:src="@drawable/hole">
+			</ImageView>	
+			
+			<ImageView
+		 		android:id="@+id/flag_25"
 		 		android:layout_width="match_parent"
 		 		android:layout_height="fill_parent"
 		 		android:layout_marginLeft="-14dp"
@@ -230,6 +246,14 @@
 		 		android:layout_marginLeft="-14dp"
 		 		android:src="@drawable/hole">
 			</ImageView>	
+			
+			<ImageView
+		 		android:id="@+id/flag_35"
+		 		android:layout_width="match_parent"
+		 		android:layout_height="fill_parent"
+		 		android:layout_marginLeft="-14dp"
+		 		android:src="@drawable/hole">
+			</ImageView>	
 		</LinearLayout>
 	</LinearLayout>
 	
@@ -289,6 +313,14 @@
 			
 			<ImageView
 		 		android:id="@+id/flag_44"
+		 		android:layout_width="match_parent"
+		 		android:layout_height="fill_parent"
+		 		android:layout_marginLeft="-14dp"
+		 		android:src="@drawable/hole">
+			</ImageView>	
+			
+			<ImageView
+		 		android:id="@+id/flag_45"
 		 		android:layout_width="match_parent"
 		 		android:layout_height="fill_parent"
 		 		android:layout_marginLeft="-14dp"
