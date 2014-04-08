@@ -124,8 +124,9 @@ public final class DaysPagerAdapter extends PagerAdapter{
 			}
 		}
 		restriction.setCountryes(countryIdList);
-		
-		holidaysBase.openForReading();
+		if(!holidaysBase.isOpen()){
+			holidaysBase.openForReading();
+		}
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
 		return holidays;
 	}
