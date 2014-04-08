@@ -2,6 +2,8 @@ package com.jonnygold.holidays.calendar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -126,9 +128,13 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		}
 		restriction.setCountryes(countryIdList);
 		
-		holidaysBase.openForReading();
-		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
-		return holidays;
+//		if(!holidaysBase.isOpen()){
+//			holidaysBase.openForReading();
+//		}
+		if(holidaysBase.isOpen()){
+			return holidaysBase.getHolidays(restriction);
+		}
+		return Collections.emptyList();
 	}
 
 }
