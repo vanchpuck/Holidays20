@@ -300,6 +300,8 @@ public class CalendarManagerActivity extends ActionBarActivity {
 					.setMessage(Calendar.getCalendar(country).description)
 					.setNegativeButton("Отмена", null);
 			
+			
+			
 			switch (stateManager.getState(country)) {
 			case INSTALLED :
 				dialogBuilder.setTitle("Удалить календарь?")
@@ -318,6 +320,16 @@ public class CalendarManagerActivity extends ActionBarActivity {
 						startDownloading(country);
 					}
 				});
+				
+				if(!Calendar.getCalendar(country).isFree()){
+					dialogBuilder.setNeutralButton("Полная версия", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							openMarketLink();
+						}
+					});
+				}
 				break;
 			default:
 				return false;

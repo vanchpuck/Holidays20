@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Calendar {
-	WORLD (Country.WORLD, "Включает описание 150 всемирных праздников и памятных дат."),
-	RUSSIA (Country.RUSSIA, "Содержит описание более 200 праздников, отмечаемых на территории Российской Федерации."),
-	BELORUSSIA (Country.BELORUSSIA, "Содержит описание 80 праздничных дат, отмечаемых в Республике Беларусь."),
-	KAZACHSTAN (Country.KAZACHSTAN, "Содержит сведения о 50 праздничных датах Республики Казахстан."),
-	UKRANE (Country.UKRANE, "Включает более 100 праздничных и памятных дат Украины.");
+	WORLD (Country.WORLD, "Включает описание 150 всемирных праздников и памятных дат.", true),
+	RUSSIA (Country.RUSSIA, "Содержит описание более 200 праздников, отмечаемых на территории Российской Федерации.", true),
+	BELORUSSIA (Country.BELORUSSIA, "Содержит описание 80 праздничных дат, отмечаемых в Республике Беларусь.", true),
+	KAZACHSTAN (Country.KAZACHSTAN, "Содержит сведения о 50 праздничных датах Республики Казахстан.", true),
+	UKRANE (Country.UKRANE, "Включает более 100 праздничных и памятных дат Украины.", true),
+	USSR (Country.USSR, "Праздники СССР.", false);
 	
 	private static final Map<Country, Calendar> map;
 	static{
@@ -22,13 +23,19 @@ public enum Calendar {
 	
 	public String description;
 	
-	private Calendar(Country country, String description){
+	private boolean isFree;
+	
+	private Calendar(Country country, String description, boolean isFree){
 		this.country = country;
 		this.description = description;
 	}
 	
 	public static Calendar getCalendar(Country country){
 		return map.get(country);
+	}
+	
+	public boolean isFree(){
+		return isFree;
 	}
 	
 }

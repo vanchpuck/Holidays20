@@ -126,6 +126,7 @@ public final class DaysPagerAdapter extends PagerAdapter{
 		}
 		restriction.setCountryes(countryIdList);
 		
+		holidaysBase.openForReading();
 		List<Holiday> holidays = holidaysBase.getHolidays(restriction);
 		return holidays;
 	}
