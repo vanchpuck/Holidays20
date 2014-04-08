@@ -1,5 +1,6 @@
 package com.jonnygold.holidays.calendar.holiday;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public enum Calendar {
 	private Calendar(Country country, String description, boolean isFree){
 		this.country = country;
 		this.description = description;
+		this.isFree = isFree;
 	}
 	
 	public static Calendar getCalendar(Country country){
