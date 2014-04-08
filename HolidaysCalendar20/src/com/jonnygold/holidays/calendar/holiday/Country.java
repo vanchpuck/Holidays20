@@ -9,7 +9,7 @@ public enum Country {
 	BELORUSSIA (3, "key_belorussian_holidays", "Праздники Белоруссии", R.drawable.flag_bel),
 	UKRANE (4, "key_ukrane_holidays", "Праздники Украины", R.drawable.flag_ukr),
 	KAZACHSTAN (6, "key_kazachstan_holidays", "Праздники Казахстана", R.drawable.flag_kaz),
-	USSR (7, "key_ussr_holidays", "Праздники СССР", R.drawable.flag_ussr);
+	USSR (7, "key_ussr_holidays", "Праздники СССР (Демо)", R.drawable.flag_ussr);
 	
 	private final int id;
 	private final String key;

@@ -1,6 +1,5 @@
 package com.jonnygold.holidays.calendar.holiday;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +9,7 @@ public enum Calendar {
 	BELORUSSIA (Country.BELORUSSIA, "Содержит описание 80 праздничных дат, отмечаемых в Республике Беларусь.", true),
 	KAZACHSTAN (Country.KAZACHSTAN, "Содержит сведения о 50 праздничных датах Республики Казахстан.", true),
 	UKRANE (Country.UKRANE, "Включает более 100 праздничных и памятных дат Украины.", true),
-	USSR (Country.USSR, "Праздники СССР.", false);
+	USSR (Country.USSR, "Демоверсия календаря содержит описание 20 праздников, отмечавшихся в Советском Союзе. Все праздники СССР доступны в полной версии приложения.", false);
 	
 	private static final Map<Country, Calendar> map;
 	static{
