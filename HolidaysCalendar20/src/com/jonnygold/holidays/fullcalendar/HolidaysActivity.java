@@ -1,6 +1,8 @@
 package com.jonnygold.holidays.fullcalendar;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -148,9 +150,13 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	private static final int DATE_PICKER_DIALOG = 1;
 	
+	private static final int REQUEST_LOGIN = 1;
+	
 	private HolidaysDataSource holidaysBase;
 	
 	private ViewPager viewPager;
+	
+	private VKShareMaster master;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
@@ -162,6 +168,8 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			showMountError();
 			return;
 		}
+		
+		master = new VKShareMaster(this);
 		
 		getSupportActionBar().setTitle(R.string.str_action_bar_tite);
 	    
@@ -212,6 +220,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(Menu.NONE, R.id.action_add_to_calendar, Menu.NONE, R.string.action_add_to_calendar);
+		menu.add(Menu.NONE, R.id.action_share_vk, Menu.NONE, R.string.action_share_vk);
 		menu.add(Menu.NONE, R.id.action_del_holiday, Menu.NONE, R.string.action_del_holiday);
 	}
 	
@@ -224,6 +233,12 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		switch(item.getItemId()){
 		case R.id.action_add_to_calendar : 
 			exportToCalendar(holiday);
+			return true;
+		case R.id.action_share_vk : 
+			if(!master.isAuthorized()){
+				startLoginActivity();
+			}
+			master.postToWall(holiday);
 			return true;
 		case R.id.action_del_holiday :
 			if(holiday.isDeletable()){
@@ -239,6 +254,25 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 
 	}
 	
+	private void startLoginActivity() {
+        Intent intent = new Intent();
+        intent.putExtra("app_id", VKShareMaster.APP_ID);
+        intent.setClass(this, LoginActivity.class);
+        startActivityForResult(intent, REQUEST_LOGIN);
+    }
+    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_LOGIN) {
+			if (resultCode == RESULT_OK) {
+				// авторизовались успешно
+				VKAccount account = new VKAccount(data.getStringExtra("token"),
+						data.getLongExtra("user_id", 0));
+				master.authorize(account);
+			}
+		}
+	}
+    	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();

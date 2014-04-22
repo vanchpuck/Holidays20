@@ -6,6 +6,10 @@
         android:title="@string/action_add_to_calendar" />
     
     <item 
+        android:id="@+id/action_share_vk"
+        android:title="@string/action_share_vk" />
+    
+    <item 
         android:id="@+id/action_del_holiday"
         android:title="@string/action_del_holiday" />
 
