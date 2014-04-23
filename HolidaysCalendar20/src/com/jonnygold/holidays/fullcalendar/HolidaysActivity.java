@@ -236,9 +236,11 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return true;
 		case R.id.action_share_vk : 
 			if(!master.isAuthorized()){
-				startLoginActivity();
+				startLoginActivity(holiday);
 			}
-			master.postToWall(holiday);
+			else{
+				master.postToWall(holiday);
+			}
 			return true;
 		case R.id.action_del_holiday :
 			if(holiday.isDeletable()){
@@ -254,9 +256,10 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 
 	}
 	
-	private void startLoginActivity() {
+	private void startLoginActivity(Holiday holiday) {
         Intent intent = new Intent();
         intent.putExtra("app_id", VKShareMaster.APP_ID);
+        intent.putExtra("holiday", holiday);
         intent.setClass(this, LoginActivity.class);
         startActivityForResult(intent, REQUEST_LOGIN);
     }
@@ -269,6 +272,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				VKAccount account = new VKAccount(data.getStringExtra("token"),
 						data.getLongExtra("user_id", 0));
 				master.authorize(account);
+				master.postToWall((Holiday)data.getExtras().getParcelable("holiday"));
 			}
 		}
 	}

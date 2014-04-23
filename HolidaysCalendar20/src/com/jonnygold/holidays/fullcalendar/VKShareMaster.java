@@ -44,19 +44,23 @@ public class VKShareMaster {
 	}
 	
 	public void postToWall(final Holiday holiday) {
-        //Общение с сервером в отдельном потоке чтобы не блокировать UI поток
-        new Thread(){
-            @Override
-            public void run(){
-                try {
-                	Collection<String> att = Arrays.asList(new String[]{"photo-64581135_327763037", "photo-64581135_327763036", "photo-64581135_327763032", "photo-64581135_327763030", "photo-64581135_327763035"});
-                    api.createWallPost(account.getUserId(), holiday.getTitle().toUpperCase()+"\n\n"+holiday.getDescription(), att, null, false, false, false, null, null, null, null, null, null);
-                    
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
+		if(isAuthorized()){
+	        //Общение с сервером в отдельном потоке чтобы не блокировать UI поток
+	        new Thread(){
+	            @Override
+	            public void run(){
+	                try {
+	                	Api a = api;
+	                	VKAccount ac = account;
+	                	Collection<String> att = Arrays.asList(new String[]{"photo-64581135_327790571"});
+	                    api.createWallPost(account.getUserId(), holiday.getTitle().toUpperCase()+"\n\n"+holiday.getDescription(), att, null, false, false, false, null, null, null, null, null, null);
+	                    
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }.start();
+		}
     }
 	
 }
