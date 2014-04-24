@@ -13,16 +13,19 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
@@ -46,6 +49,10 @@ import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
+import com.jonnygold.holidays.fullcalendar.vk.PostService;
+import com.jonnygold.holidays.fullcalendar.vk.VKAccount;
+import com.jonnygold.holidays.fullcalendar.vk.VKShareMaster;
+import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 
@@ -107,6 +114,10 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 
 	}
 	
+	/**
+	 * Выполняет обновление спискапраздников в отдельном потоке.
+	 * @author Vanchpuck
+	 */
 	private class UpdatePagerTask extends AsyncTask<Calendar, Calendar, Void>{
 
 		private HolidaysDataSource ds;
@@ -148,6 +159,20 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		}
 	}
 	
+	/**
+	 * Принимает рассылку от PostService.
+	 * @author Vanchpuck
+	 */
+//	private static class PostStateReceiver extends BroadcastReceiver{
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			PostService.PostState response = 
+//	    			(PostService.PostState) intent.getExtras().getSerializable(PostService.UPDATE_STATUS);
+//	    	
+//			Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show();
+//		}		
+//	}
+	
 	private static final int DATE_PICKER_DIALOG = 1;
 	
 	private static final int REQUEST_LOGIN = 1;
@@ -169,8 +194,25 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return;
 		}
 		
+		/*
+		 * Приблуда для контакта.
+		 */
 		master = new VKShareMaster(this);
 		
+		/*
+		 * Регистрируем слушателя для рассылки.
+		 */
+//		IntentFilter mStatusIntentFilter = new IntentFilter(
+//				PostService.BROADCAST_ACTION);
+//
+//		PostStateReceiver postStateReceiver =
+//                new PostStateReceiver();
+//		
+//        LocalBroadcastManager.getInstance(this).registerReceiver(
+//        		postStateReceiver,
+//                mStatusIntentFilter);
+		
+        
 		getSupportActionBar().setTitle(R.string.str_action_bar_tite);
 	    
 	}
@@ -456,5 +498,5 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		});
 		builder.setTitle(R.string.db_err_title).setMessage(R.string.db_err_message).show();
 	}
-
+	
 }

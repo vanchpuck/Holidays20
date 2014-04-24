@@ -3,6 +3,7 @@ package com.perm.kate.api;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,8 +16,13 @@ import com.perm.utils.Utils;
 import com.perm.utils.WrongResponseCodeException;
 import android.util.Log;
 
-public class Api {
-    static final String TAG="Kate.Api";
+public class Api implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7290969469963433213L;
+
+	static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
     public static final String API_VERSION="5.5";

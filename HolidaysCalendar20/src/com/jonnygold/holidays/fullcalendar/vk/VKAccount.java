@@ -1,12 +1,19 @@
-package com.jonnygold.holidays.fullcalendar;
+package com.jonnygold.holidays.fullcalendar.vk;
+
+import java.io.Serializable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-public class VKAccount {
+public class VKAccount implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7978025533736143333L;
+	
 	private String accessToken;
 	private long userId;
 	

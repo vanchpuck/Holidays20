@@ -63,6 +63,10 @@
             android:name=".web.UpdateService"
             android:exported="false"/>
         
+        <service
+            android:name=".vk.PostService"
+            android:exported="false"/>
+        
         <receiver
             android:name=".widget.HolidaysWidget4x1"
             android:label="Праздники 4x1" >
