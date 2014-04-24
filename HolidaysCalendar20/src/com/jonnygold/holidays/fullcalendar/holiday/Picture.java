@@ -4,8 +4,8 @@ public class Picture extends Graphics implements IsPicture {
 
 //	private Drawable drawable;
 	
-	public Picture(int id, String title, byte[] data) {
-		super(id, title, data);		
+	public Picture(int id, String title, byte[] data, String vkPicture) {
+		super(id, title, data, vkPicture);		
 //		this.drawable = toDrawable(data);
 	}
 	

@@ -145,8 +145,8 @@ public class WebService {
 		IsPicture picture = new Picture(
 				Integer.valueOf(soapImage.getProperty("id").toString()), 
 				soapImage.getProperty("title").toString(), 
-				Base64.decode(soapImage.getProperty("data").toString(), Base64.DEFAULT)
-				);
+				Base64.decode(soapImage.getProperty("data").toString(), Base64.DEFAULT),
+				"photo-64581135_319801459");
 		
 		Integer type = Integer.valueOf(soapHoliday.getProperty("type").toString());
 		

@@ -8,4 +8,6 @@ public interface IsPicture {
 	
 	public String getTitle();
 	
+	public String getVkPicture();
+	
 }

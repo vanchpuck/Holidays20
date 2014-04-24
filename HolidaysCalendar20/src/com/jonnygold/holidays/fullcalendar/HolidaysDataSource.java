@@ -53,14 +53,15 @@ public class HolidaysDataSource {
 			"	,	TH._id "														+
 			"	,	TH.month "														+
 			"	,	TI.description " 												+
-			"	,	TI._id " 												+
+			"	,	TI._id " 														+
+			"	,	TI.vk_picture " 												+
 			"FROM " 																+
 			"		T_HOLIDAYS TH " 												+
 			"	LEFT JOIN T_Images TI ON TH.id_image = TI._id "						+
 			"	LEFT JOIN T_Priority TP ON TH.id_priority = TP._id "				+
 			"	LEFT JOIN T_MonthFloatHolidays TMFH ON TH._id = TMFH.id_holiday "	+
 			"	LEFT JOIN T_YearFloatHolidays TYFH ON TH._id = TYFH.id_holiday "	+
-			"	LEFT JOIN T_CountryHolidays TCH ON TH._id = TCH.id_holiday "
+			"	LEFT JOIN T_CountryHolidays TCH ON TH._id = TCH.id_holiday "	
 	;
 	
 	private final static String HOLIDAYS_DATE_TERMS = 
@@ -449,7 +450,7 @@ public class HolidaysDataSource {
 //			inStream = new ByteArrayInputStream(cursor.getBlob(COL_IMAGE));
 //			icon = new BitmapDrawable(BitmapFactory.decodeStream(inStream)); 
 			
-			icon = new Picture(cursor.getInt(13), cursor.getString(12), cursor.getBlob(COL_IMAGE));
+			icon = new Picture(cursor.getInt(13), cursor.getString(12), cursor.getBlob(COL_IMAGE), cursor.getString(14));
 			
 			HolidayDate.Builder builder = new HolidayDate.Builder();
 			HolidayDate date = builder.setActualMonth(cursor.getInt(11)).setActualDay(cursor.getInt(3)).create();

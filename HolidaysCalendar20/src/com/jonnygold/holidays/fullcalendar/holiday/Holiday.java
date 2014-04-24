@@ -44,7 +44,7 @@ public class Holiday extends HolidayRaw implements Parcelable{
 		
 		HolidayDate.Builder builder = new HolidayDate.Builder();
 		this.setDate(builder.setActualMonth(in.readInt()).setActualDay(in.readInt()).create() );
-		this.setPicture(new Picture(in.readInt(), null, in.createByteArray()) );
+		this.setPicture(new Picture(in.readInt(), null, in.createByteArray(), in.readString()) );
 		
 //		byte[] pictureData = in.createByteArray();
 //		
@@ -82,11 +82,13 @@ public class Holiday extends HolidayRaw implements Parcelable{
 		out.writeInt(getDate().getActualMonth());
 		out.writeInt(getDate().getActualDay());
 		out.writeInt(getPicture().getId());
+		
 		// Write picture
 //		Bitmap bitmap = ((BitmapDrawable)picture).getBitmap();
 //		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 		out.writeByteArray(getPicture().getData());
+		out.writeString(getPicture().getVkPicture());
 		
 		Log.w("WRITE", "WRITE");
 				

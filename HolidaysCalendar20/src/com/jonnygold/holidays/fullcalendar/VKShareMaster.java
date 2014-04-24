@@ -45,15 +45,15 @@ public class VKShareMaster {
 	
 	public void postToWall(final Holiday holiday) {
 		if(isAuthorized()){
-	        //Общение с сервером в отдельном потоке чтобы не блокировать UI поток
 	        new Thread(){
 	            @Override
 	            public void run(){
 	                try {
-	                	Api a = api;
-	                	VKAccount ac = account;
-	                	Collection<String> att = Arrays.asList(new String[]{"photo-64581135_327790571"});
-	                    api.createWallPost(account.getUserId(), holiday.getTitle().toUpperCase()+"\n\n"+holiday.getDescription(), att, null, false, false, false, null, null, null, null, null, null);
+	                	Collection<String> att = Arrays.asList(new String[]{holiday.getPicture().getVkPicture(), "https://play.google.com/store/apps/details?id=com.jonnygold.holidays.fullcalendar"});
+	                    api.createWallPost(
+	                    		account.getUserId(), holiday.getDate().toString()+
+	                    		"\n\n"+holiday.getTitle().toUpperCase()+"\n\n"+holiday.getDescription(), 
+	                    		att, null, false, false, false, null, null, null, null, null, null);
 	                    
 	                } catch (Exception e) {
 	                    e.printStackTrace();
