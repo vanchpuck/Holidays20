@@ -17,6 +17,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.DayOrder;
@@ -146,7 +147,9 @@ public class WebService {
 				Integer.valueOf(soapImage.getProperty("id").toString()), 
 				soapImage.getProperty("title").toString(), 
 				Base64.decode(soapImage.getProperty("data").toString(), Base64.DEFAULT),
-				"photo-64581135_319801459");
+				soapImage.getProperty("vkPicture").toString());
+		
+		Log.w("###soapImage", soapImage.getProperty("vkPicture").toString());
 		
 		Integer type = Integer.valueOf(soapHoliday.getProperty("type").toString());
 		

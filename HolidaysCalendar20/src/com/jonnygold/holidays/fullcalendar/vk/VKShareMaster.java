@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
@@ -55,6 +56,8 @@ public class VKShareMaster {
 	}
 	
 	public void authorize(VKAccount account){
+		Log.w("VKShareMaster", "TOKEN: "+account.getAccessToken());
+		Log.w("VKShareMaster", "USER: "+account.getUserId());
 		this.account = account;
 		this.account.save(context);
 	}

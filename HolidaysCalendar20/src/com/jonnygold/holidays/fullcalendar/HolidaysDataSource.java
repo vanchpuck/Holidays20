@@ -630,6 +630,7 @@ public class HolidaysDataSource {
 			values = new ContentValues();
 			values.put("_id", holiday.getPicture().getId());
 			values.put("description", holiday.getPicture().getTitle());
+			values.put("vk_picture", holiday.getPicture().getVkPicture());
 			values.put("image", holiday.getPicture().getData());
 			db.insert("t_images", null, values);
 			

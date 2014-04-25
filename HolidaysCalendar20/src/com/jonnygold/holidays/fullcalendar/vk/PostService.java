@@ -1,13 +1,9 @@
 package com.jonnygold.holidays.fullcalendar.vk;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.json.JSONException;
-
 import com.perm.kate.api.Api;
-import com.perm.kate.api.KException;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -41,10 +37,9 @@ public class PostService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {		
-		Api api = (Api) intent.getSerializableExtra("api");
+//		Api api = (Api) intent.getSerializableExtra("api");
 		VKAccount account = (VKAccount) intent.getSerializableExtra("account");
-		
-		String s = intent.getStringExtra("vkPicture");
+		Api api = new Api(account.getAccessToken(), VKShareMaster.APP_ID);
 		
 		if(api != null && account != null){
 			Collection<String> attach = Arrays.asList(new String[]{intent.getStringExtra("vkPicture"), intent.getStringExtra("link")});
@@ -53,11 +48,11 @@ public class PostService extends IntentService {
 						account.getUserId(), intent.getStringExtra("dateStr").toString()+
 						"\n\n"+intent.getStringExtra("title").toUpperCase()+"\n\n"+intent.getStringExtra("description"), 
 						attach, null, false, false, false, null, null, null, null, null, null);
+				report(PostState.SUCCESS);
 			} catch (Exception e) {
 				report(PostState.FAULT);
 				e.printStackTrace();
 			} 
-            report(PostState.SUCCESS);
 		}
 	}
 	
