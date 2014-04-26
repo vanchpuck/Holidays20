@@ -48,6 +48,7 @@
     <!-- /Меню\ -->
     <string name="action_settings">Settings</string>
     <string name="action_add_to_calendar">Выгрузить в календарь</string>
+    <string name="action_share_vk">Поделиться</string>
     <string name="action_del_holiday">Удалить праздник</string>
     <string name="action_go_to_current_date">Сегодняшний день</string>
     <string name="action_search">Найти праздник</string>

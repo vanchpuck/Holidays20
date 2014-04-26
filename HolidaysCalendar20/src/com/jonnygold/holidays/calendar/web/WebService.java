@@ -17,6 +17,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.jonnygold.holidays.calendar.holiday.Country;
 import com.jonnygold.holidays.calendar.holiday.DayOrder;
@@ -31,7 +32,7 @@ public class WebService {
     
 	private static String URL = "http://holidays-jonnygold.rhcloud.com/axis2/services/HolidaysService_v1";
     
-	private static String METHOD_NAME = "getFreeHolidays";
+	private static String METHOD_NAME = "getHolidays";
 	
 	private static String SOAP_ACTION = NAMESPACE+"/"+METHOD_NAME;
 	
@@ -145,8 +146,10 @@ public class WebService {
 		IsPicture picture = new Picture(
 				Integer.valueOf(soapImage.getProperty("id").toString()), 
 				soapImage.getProperty("title").toString(), 
-				Base64.decode(soapImage.getProperty("data").toString(), Base64.DEFAULT)
-				);
+				Base64.decode(soapImage.getProperty("data").toString(), Base64.DEFAULT),
+				soapImage.getProperty("vkPicture").toString());
+		
+		Log.w("###soapImage", soapImage.getProperty("vkPicture").toString());
 		
 		Integer type = Integer.valueOf(soapHoliday.getProperty("type").toString());
 		

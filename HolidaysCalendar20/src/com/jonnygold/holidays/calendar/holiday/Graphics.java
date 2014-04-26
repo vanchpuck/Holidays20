@@ -10,16 +10,20 @@ private final int id;
 	
 	private final byte[] data;
 	
+	private final String vkPicture;
+	
 	public Graphics(int id){
 		this.id = id;
 		this.title = null;
 		this.data = null;
+		this.vkPicture = null;
 	}
 	
-	public Graphics(int id, String title, byte[] data){
+	public Graphics(int id, String title, byte[] data, String vkPicture){
 		this.id = id;
 		this.title = title;
 		this.data = data;
+		this.vkPicture = vkPicture;
 	}
 	
 	public int getId() {
@@ -32,6 +36,10 @@ private final int id;
 	
 	public byte[] getData() {
 		return Arrays.copyOf(data, data.length);
+	}
+	
+	public String getVkPicture() {
+		return vkPicture;
 	}
 		
 	@Override

@@ -44,6 +44,8 @@ import com.jonnygold.holidays.calendar.holiday.Country;
 import com.jonnygold.holidays.calendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.calendar.holiday.Holiday;
 import com.jonnygold.holidays.calendar.holiday.HolidayDate;
+import com.jonnygold.holidays.calendar.vk.VKAccount;
+import com.jonnygold.holidays.calendar.vk.VKShareMaster;
 import com.jonnygold.holidays.calendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.calendar.widget.HolidaysWidget4x2;
 import com.jonnygold.holidays.calendar.R;
@@ -149,9 +151,13 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	
 	private static final int DATE_PICKER_DIALOG = 1;
 	
+	private static final int REQUEST_LOGIN = 1;
+	
 	private HolidaysDataSource holidaysBase;
 	
 	private ViewPager viewPager;
+	
+	private VKShareMaster master;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
@@ -164,6 +170,11 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 			return;
 		}
 		
+		/*
+		 * Приблуда для контакта.
+		 */
+		master = new VKShareMaster(this);
+		
 		getSupportActionBar().setTitle(R.string.str_action_bar_tite);
 	    
 	}
@@ -171,8 +182,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
-		
 		
 		if(holidaysBase == null)
 			return;
@@ -213,6 +222,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(Menu.NONE, R.id.action_add_to_calendar, Menu.NONE, R.string.action_add_to_calendar);
+		menu.add(Menu.NONE, R.id.action_share_vk, Menu.NONE, R.string.action_share_vk);
 		menu.add(Menu.NONE, R.id.action_del_holiday, Menu.NONE, R.string.action_del_holiday);
 	}
 	
@@ -226,6 +236,14 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		case R.id.action_add_to_calendar : 
 			exportToCalendar(holiday);
 			return true;
+		case R.id.action_share_vk : 
+			if(!master.isAuthorized()){
+				startLoginActivity(holiday);
+			}
+			else{
+				master.postToWall(holiday);
+			}
+			return true;
 		case R.id.action_del_holiday :
 			if(holiday.isDeletable()){
 				holidaysBase.deleteHoliday(holiday);
@@ -238,6 +256,27 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		}
 		return super.onContextItemSelected(item);
 
+	}
+	
+	private void startLoginActivity(Holiday holiday) {
+        Intent intent = new Intent();
+        intent.putExtra("app_id", VKShareMaster.APP_ID);
+        intent.putExtra("holiday", holiday);
+        intent.setClass(this, LoginActivity.class);
+        startActivityForResult(intent, REQUEST_LOGIN);
+    }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_LOGIN) {
+			if (resultCode == RESULT_OK) {
+				// авторизовались успешно
+				VKAccount account = new VKAccount(data.getStringExtra("token"),
+						data.getLongExtra("user_id", 0));
+				master.authorize(account);
+				master.postToWall((Holiday)data.getExtras().getParcelable("holiday"));
+			}
+		}
 	}
 	
 	@Override
