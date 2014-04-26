@@ -1,6 +1,5 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -63,17 +62,7 @@ public class HolidaysDataSource {
 			"	LEFT JOIN T_YearFloatHolidays TYFH ON TH._id = TYFH.id_holiday "	+
 			"	LEFT JOIN T_CountryHolidays TCH ON TH._id = TCH.id_holiday "	
 	;
-	
-	private final static String HOLIDAYS_DATE_TERMS = 
-			"WHERE " 													+
-			"		TH.month = ? " 										+
-			"	AND TH.day = ? " 
-	;
-	
-	private final static String HOLIDAYS_LIMIT = 
-			"LIMIT 20 " 
-	;
-	
+		
 	public static class QueryRestriction{
 		
 		private StringBuilder restriction = new StringBuilder(10);
@@ -439,7 +428,6 @@ public class HolidaysDataSource {
 		// Prepare temporary objects
 		Holiday holiday = null;
 		Set<Country> countries = null;
-		ByteArrayInputStream inStream = null;
 		Picture icon = null;
 		
 		// Put holidays into the Set
@@ -470,9 +458,7 @@ public class HolidaysDataSource {
 									
 			holidays.add(holiday);
 		}
-		
-		try{inStream.close();}catch(Exception exc){}
-		
+				
 		return holidays;
 	}
 	

@@ -1,8 +1,5 @@
 package com.jonnygold.holidays.fullcalendar.vk;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
-import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 import com.perm.kate.api.Api;
 
 public class VKShareMaster {

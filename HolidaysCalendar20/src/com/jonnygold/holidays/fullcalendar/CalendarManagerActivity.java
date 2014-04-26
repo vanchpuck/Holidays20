@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -364,8 +363,6 @@ public class CalendarManagerActivity extends ActionBarActivity {
 	private AlertDialog loadingDialog;
 	
 	private ExpandableListView calendarsView;
-	
-	private View progressBarView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

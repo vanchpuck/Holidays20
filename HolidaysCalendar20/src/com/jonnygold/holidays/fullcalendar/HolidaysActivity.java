@@ -1,8 +1,6 @@
 package com.jonnygold.holidays.fullcalendar;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,25 +11,23 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -49,10 +45,8 @@ import com.jonnygold.holidays.fullcalendar.holiday.Country;
 import com.jonnygold.holidays.fullcalendar.holiday.DefaultPicture;
 import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 import com.jonnygold.holidays.fullcalendar.holiday.HolidayDate;
-import com.jonnygold.holidays.fullcalendar.vk.PostService;
 import com.jonnygold.holidays.fullcalendar.vk.VKAccount;
 import com.jonnygold.holidays.fullcalendar.vk.VKShareMaster;
-import com.jonnygold.holidays.fullcalendar.web.UpdateService;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x1;
 import com.jonnygold.holidays.fullcalendar.widget.HolidaysWidget4x2;
 
@@ -159,20 +153,6 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		}
 	}
 	
-	/**
-	 * Принимает рассылку от PostService.
-	 * @author Vanchpuck
-	 */
-//	private static class PostStateReceiver extends BroadcastReceiver{
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			PostService.PostState response = 
-//	    			(PostService.PostState) intent.getExtras().getSerializable(PostService.UPDATE_STATUS);
-//	    	
-//			Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show();
-//		}		
-//	}
-	
 	private static final int DATE_PICKER_DIALOG = 1;
 	
 	private static final int REQUEST_LOGIN = 1;
@@ -198,30 +178,14 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 		 * Приблуда для контакта.
 		 */
 		master = new VKShareMaster(this);
-		
-		/*
-		 * Регистрируем слушателя для рассылки.
-		 */
-//		IntentFilter mStatusIntentFilter = new IntentFilter(
-//				PostService.BROADCAST_ACTION);
-//
-//		PostStateReceiver postStateReceiver =
-//                new PostStateReceiver();
-//		
-//        LocalBroadcastManager.getInstance(this).registerReceiver(
-//        		postStateReceiver,
-//                mStatusIntentFilter);
-		
-        
+		        
 		getSupportActionBar().setTitle(R.string.str_action_bar_tite);
-	    
+	    		
 	}
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
-		
 		
 		if(holidaysBase == null)
 			return;
@@ -313,6 +277,8 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 				// авторизовались успешно
 				VKAccount account = new VKAccount(data.getStringExtra("token"),
 						data.getLongExtra("user_id", 0));
+				Log.w("TOKEN", data.getStringExtra("token"));
+				Log.w("USER", data.getLongExtra("user_id", 0)+"");
 				master.authorize(account);
 				master.postToWall((Holiday)data.getExtras().getParcelable("holiday"));
 			}
@@ -368,22 +334,7 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	    }
 	    
 	}
-	
-	private void openMarketLink(){
-		try{
-			Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-	        marketIntent.setData(Uri.parse("market://details?id=com.jonnygold.holidays.fullcalendar"));
-	        startActivity(marketIntent);
-		} catch (Exception exc){
-			new AlertDialog.Builder(this)
-					.setTitle(R.string.msg_error)
-					.setMessage(R.string.msg_market_link_error)
-					.setPositiveButton(R.string.msg_ok, null)
-					.create()
-					.show();
-		}
-	}
-	
+		
 	public HolidaysDataSource getHolidaysBase(){
 		return holidaysBase;
 	}

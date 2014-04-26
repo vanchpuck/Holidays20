@@ -5,22 +5,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends ActionBarActivity {
     private static final String TAG = "Kate.LoginActivity";
     private static final String APP_ID = "4319903";
 
-    WebView webview;
+    private WebView webview;
+    
+    private View progressView;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        
+        progressView = (View) findViewById(R.id.view_progress_bar);
         
         webview = (WebView) findViewById(R.id.vkontakteview);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -42,9 +48,20 @@ public class LoginActivity extends Activity {
     class VkontakteWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
+            super.onPageStarted(view, url, favicon);      
+            progressView.setVisibility(View.VISIBLE);
+        	webview.setVisibility(View.GONE);
             parseUrl(url);
         }
+        
+        @Override
+        public void onPageFinished(WebView view, String url) {
+        	super.onPageFinished(view, url);
+        	Log.w("URL", url);
+        	progressView.setVisibility(View.GONE);
+        	webview.setVisibility(View.VISIBLE);
+        }
+        
     }
     
     private void parseUrl(String url) {
@@ -59,8 +76,6 @@ public class LoginActivity extends Activity {
                     Intent intent=new Intent();
                     intent.putExtra("token", auth[0]);
                     intent.putExtra("user_id", Long.parseLong(auth[1]));
-                    Intent inte = getIntent();
-                    Object h = inte.getExtras().getParcelable("holiday");
                     intent.putExtra("holiday", getIntent().getParcelableExtra("holiday"));
                     setResult(Activity.RESULT_OK, intent);
                 }
