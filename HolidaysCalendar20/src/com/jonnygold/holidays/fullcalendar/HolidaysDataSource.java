@@ -231,7 +231,7 @@ public class HolidaysDataSource {
 	public void close(){
 		db.close();
 	}
-	
+		
 	
 //	public List<Holiday> getHolidays(){
 //		// Prepare query
@@ -249,6 +249,7 @@ public class HolidaysDataSource {
 //	}
 	
 	public Collection<Country> getCountries(){
+		openForReading();
 		Cursor c = db.query("t_countries", new String[]{"_id"}, null, null, null, null, "_id asc");
 	
 		List<Country> countries = new ArrayList<Country>();
@@ -270,6 +271,7 @@ public class HolidaysDataSource {
 //		Log.w("QUERY", query);
 		
 		// Execute query
+		openForReading();
 		Cursor c = db.rawQuery(query, new String[]{});
 		
 		List<Holiday> holidays = getHolidays(c, restriction);
@@ -322,6 +324,7 @@ public class HolidaysDataSource {
 				"						t_MonthFloatHolidays "																							 			+
 				"		) "
 		;	
+		openForReading();
 		Cursor cursor = db.rawQuery(query, new String[]{});
 		cursor.moveToFirst();
 		cursor.close();
@@ -358,6 +361,7 @@ public class HolidaysDataSource {
 		;	
 //		Log.w("Year", query);
 		
+		openForReading();
 		Cursor cursor = db.rawQuery(query, new String[]{});
 		cursor.moveToFirst();
 		cursor.close();
@@ -416,6 +420,7 @@ public class HolidaysDataSource {
 		;
 //        Log.w("easter", query);
 
+        openForReading();
     	Cursor cursor = db.rawQuery(query, new String[]{});
 		cursor.moveToFirst();
 		cursor.close();
@@ -477,6 +482,7 @@ public class HolidaysDataSource {
 				"ORDER BY "													+
 				"		TCH.id_country "									
 		;
+		openForReading();
 		Cursor c = db.rawQuery(query, new String[]{String.valueOf(idHoliday)});
 		
 		Country country = null;

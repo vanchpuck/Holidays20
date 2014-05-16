@@ -17,13 +17,26 @@ import com.jonnygold.holidays.fullcalendar.holiday.Holiday;
 
 public final class HolidaysListView extends ListView{
 
+	private static class Wrapper extends ContextThemeWrapper {
+		private Holiday holiday;
+		
+		public Wrapper(Context context, int style, Holiday holiday){
+			super(context, style);
+			this.holiday = holiday;
+		}
+		
+		public void shareToCalendar(View view){
+			GoogleCalendar.getInstance().addHoliday(this, holiday);
+		}
+	}
+	
 	public static class OnHolidayClickListener implements OnItemClickListener{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int idx,long id) {
 			Holiday holiday = (Holiday) parent.getAdapter().getItem(idx);
 			
 			
-			ContextThemeWrapper wrapper = new ContextThemeWrapper(view.getContext(), R.style.DialogBaseTheme);
+			Wrapper wrapper = new Wrapper(view.getContext(), R.style.DialogBaseTheme, holiday);
 
 			HolidayDetailView detailView = (HolidayDetailView)LayoutInflater.from(wrapper).inflate(R.layout.dialog_detail, null);
 			detailView.setHoliday(holiday);
@@ -55,5 +68,5 @@ public final class HolidaysListView extends ListView{
 	public Calendar getCalendar(){
 		return calendar;
 	}
-	
+		
 }

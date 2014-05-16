@@ -409,19 +409,9 @@ public class HolidaysActivity extends ActionBarActivity implements OnQueryTextLi
 	}
 	
 	private void exportToCalendar(Holiday holiday){
-		Calendar date = Calendar.getInstance();
-		date.set(Calendar.MONTH, holiday.getDate().getActualMonth());
-		date.set(Calendar.DAY_OF_MONTH, holiday.getDate().getActualDay()+1);
-		Intent intent = new Intent(Intent.ACTION_EDIT)
-	        .setType("vnd.android.cursor.item/event")
-	        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-	        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, date.getTimeInMillis())
-	        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, date.getTimeInMillis())
-	        .putExtra(Events.TITLE, holiday.getTitle())
-	        .putExtra(Events.DESCRIPTION, holiday.getDescription());
-		startActivity(intent);
+		GoogleCalendar.getInstance().addHoliday(this, holiday);
 	}
-	
+			
 	private void updateWidgets(){
         int[] ids1 = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), HolidaysWidget4x1.class));
         int[] ids2 = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), HolidaysWidget4x2.class));

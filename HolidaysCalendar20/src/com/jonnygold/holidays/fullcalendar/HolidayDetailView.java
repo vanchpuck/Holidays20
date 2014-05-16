@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +39,10 @@ public class HolidayDetailView extends LinearLayout{
 			flagView.setImageResource(country.getDrawableId());
 			i++;
 		}
+	}
+	
+	public void shareToCalendar(View view){
+		
 	}
 	
 }
